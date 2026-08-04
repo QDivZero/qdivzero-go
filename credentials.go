@@ -15,6 +15,7 @@ type credentialsFile struct {
 	Password     string `json:"password"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+	APIKey       string `json:"api_key"`
 }
 
 // loadCredentialsFile reads ~/.qdivzero/credentials, if present. A missing

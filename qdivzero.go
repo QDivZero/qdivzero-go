@@ -109,6 +109,9 @@ func NewAPI(opts ...Option) (*API, error) {
 	if cfg.password == "" {
 		cfg.password = cf.Password
 	}
+	if cfg.apiKey == "" {
+		cfg.apiKey = cf.APIKey
+	}
 
 	plain, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{
 		Transport: cfg.httpClient.Transport,
@@ -173,6 +176,13 @@ func (a *API) SetRefreshToken(token string) {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()
 	a.auth.refreshToken = token
+}
+
+// APIKey returns the API key currently in use.
+func (a *API) APIKey() string {
+	a.auth.mu.Lock()
+	defer a.auth.mu.Unlock()
+	return a.auth.apiKey
 }
 
 // SetAPIKey authenticates with a QDivZero API key.

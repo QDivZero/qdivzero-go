@@ -99,3 +99,14 @@ func TestOptionsOverrideCredentialsFile(t *testing.T) {
 		t.Fatalf("AccessToken = %q, want %q", got, "option-access")
 	}
 }
+
+func TestCredentialsFileAPIKey(t *testing.T) {
+	writeCredentials(t, `{"api_key":"tk_abc"}`)
+	api, err := NewAPI(WithServerURL("http://example.invalid"))
+	if err != nil {
+		t.Fatalf("NewAPI: %v", err)
+	}
+	if got := api.APIKey(); got != "tk_abc" {
+		t.Fatalf("APIKey = %q, want tk_abc", got)
+	}
+}
