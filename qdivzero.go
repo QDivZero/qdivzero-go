@@ -30,6 +30,7 @@ type options struct {
 	refreshToken string
 	apiKey       string
 	rawAuth      string
+	headers      map[string]string
 	email        string
 	password     string
 }
@@ -66,6 +67,17 @@ func WithAPIKey(key string) Option {
 // WithAuthorization sends the given value verbatim as the Authorization header.
 func WithAuthorization(value string) Option {
 	return func(o *options) { o.rawAuth = value }
+}
+
+// WithHeader sends the given header on every request, unless the request
+// already carries it. Useful for temporary API headers.
+func WithHeader(name, value string) Option {
+	return func(o *options) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[name] = value
+	}
 }
 
 // WithCredentials stores credentials for on-demand login when a request
@@ -113,6 +125,7 @@ func NewAPI(opts ...Option) (*API, error) {
 		rawAuth:      cfg.rawAuth,
 		email:        cfg.email,
 		password:     cfg.password,
+		headers:      cfg.headers,
 	}
 
 	base := cfg.httpClient.Transport

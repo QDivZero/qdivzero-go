@@ -18,26 +18,32 @@ type authManager struct {
 	rawAuth      string
 	email        string
 	password     string
+	headers      map[string]string
 	refreshing   bool
 	refreshDone  chan struct{}
 	refreshErr   error
 }
 
 // applyAuth sets the Authorization header unless one is already present.
-// Precedence: raw value, access token, API key.
+// Precedence: raw value, access token, API key. Extra headers configured via
+// WithHeader are applied unless already present on the request.
 func (m *authManager) applyAuth(req *http.Request) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if req.Header.Get("Authorization") != "" {
-		return
+	if req.Header.Get("Authorization") == "" {
+		switch {
+		case m.rawAuth != "":
+			req.Header.Set("Authorization", m.rawAuth)
+		case m.accessToken != "":
+			req.Header.Set("Authorization", "Bearer "+m.accessToken)
+		case m.apiKey != "":
+			req.Header.Set("Authorization", "Bearer "+m.apiKey)
+		}
 	}
-	switch {
-	case m.rawAuth != "":
-		req.Header.Set("Authorization", m.rawAuth)
-	case m.accessToken != "":
-		req.Header.Set("Authorization", "Bearer "+m.accessToken)
-	case m.apiKey != "":
-		req.Header.Set("Authorization", "Bearer "+m.apiKey)
+	for name, value := range m.headers {
+		if req.Header.Get(name) == "" {
+			req.Header.Set(name, value)
+		}
 	}
 }
 

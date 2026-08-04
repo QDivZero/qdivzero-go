@@ -215,3 +215,25 @@ func TestAPIKeyAndRawAuthorization(t *testing.T) {
 		t.Fatalf("Authorization = %q, want %q", got, "ApiKey k-999")
 	}
 }
+
+func TestWithHeaderSentOnEveryRequest(t *testing.T) {
+	var got string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/auth/me", func(w http.ResponseWriter, r *http.Request) {
+		got = r.Header.Get("X-Private-Beta-Token")
+		w.WriteHeader(http.StatusOK)
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+
+	api, err := NewAPI(WithServerURL(srv.URL), WithAccessToken("t"), WithHeader("X-Private-Beta-Token", "beta-1"))
+	if err != nil {
+		t.Fatalf("NewAPI: %v", err)
+	}
+	if _, err := api.GetAuthMeWithResponse(context.Background()); err != nil {
+		t.Fatalf("GetAuthMeWithResponse: %v", err)
+	}
+	if got != "beta-1" {
+		t.Fatalf("X-Private-Beta-Token = %q, want %q", got, "beta-1")
+	}
+}
