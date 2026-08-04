@@ -1,7 +1,7 @@
-// Package qdivzero is a client for the Tokenfactory API Gateway
-// (https://api.qdiv0.com). Typed operations and models are generated from the
-// OpenAPI specification snapshot in api/openapi.json; files named *.gen.go are
-// regenerated automatically and must not be edited by hand.
+// Package qdivzero is a client for the QDivZero API (https://api.qdiv0.com).
+// Typed operations and models are generated from the OpenAPI specification
+// snapshot in api/openapi.json; files named *.gen.go are regenerated
+// automatically and must not be edited by hand.
 package qdivzero
 
 import (
@@ -57,7 +57,7 @@ func WithRefreshToken(token string) Option {
 	return func(o *options) { o.refreshToken = token }
 }
 
-// WithAPIKey authenticates with a Tokenfactory API key, sent as
+// WithAPIKey authenticates with a QDivZero API key, sent as
 // "Authorization: Bearer <key>". Use WithAuthorization for other formats.
 func WithAPIKey(key string) Option {
 	return func(o *options) { o.apiKey = key }
@@ -74,7 +74,7 @@ func WithCredentials(email, password string) Option {
 	return func(o *options) { o.email = email; o.password = password }
 }
 
-// NewAPI creates a client for the Tokenfactory API.
+// NewAPI creates a client for the QDivZero API.
 func NewAPI(opts ...Option) (*API, error) {
 	cfg := options{baseURL: DefaultBaseURL, httpClient: &http.Client{}}
 	for _, o := range opts {
@@ -162,7 +162,7 @@ func (a *API) SetRefreshToken(token string) {
 	a.auth.refreshToken = token
 }
 
-// SetAPIKey authenticates with a Tokenfactory API key.
+// SetAPIKey authenticates with a QDivZero API key.
 func (a *API) SetAPIKey(key string) {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()

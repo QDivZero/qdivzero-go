@@ -4,7 +4,7 @@
 
 # qdivzero-go
 
-Go client for the [Tokenfactory API Gateway](https://api.qdiv0.com), generated
+Go client for the [QDivZero API](https://api.qdiv0.com), generated
 from its [OpenAPI specification](https://api.qdiv0.com/openapi).
 
 [![CI](https://github.com/QDivZero/qdivzero-go/actions/workflows/ci.yml/badge.svg)](https://github.com/QDivZero/qdivzero-go/actions/workflows/ci.yml)
@@ -31,7 +31,7 @@ import (
 func main() {
 	ctx := context.Background()
 
-	client, err := qdivzero.NewAPI(qdivzero.WithCredentials("you@example.com", "your-password"))
+	client, err := qdivzero.NewAPI(qdivzero.WithAPIKey("your-api-key"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,19 +59,19 @@ func deref(s *string) string {
 
 ## Authentication
 
-The client manages authentication for you:
+Token-based authentication is the primary way to use the client:
 
-- `client.Login(ctx, email, password)` authenticates and stores the access and
-  refresh tokens.
+- `WithAPIKey(key)` authenticates with a QDivZero API key
+  (`Authorization: Bearer <key>`); `WithAuthorization(value)` sends a raw
+  Authorization header for other formats.
+- `WithAccessToken(token)` / `WithRefreshToken(token)` pre-configure bearer
+  tokens without calling Login.
+- `client.Login(ctx, email, password)` authenticates with credentials and
+  stores the access and refresh tokens.
 - When a request fails with `401`, the client transparently refreshes the
   access token (using the refresh token, or re-logging in with stored
   credentials) and retries the request once. Concurrent 401s trigger a single
   refresh.
-- `WithAPIKey(key)` authenticates with a Tokenfactory API key
-  (`Authorization: Bearer <key>`); `WithAuthorization(value)` sends a raw
-  Authorization header for other formats.
-- `WithAccessToken(token)` / `WithRefreshToken(token)` pre-configure tokens
-  without calling Login.
 - `client.Refresh(ctx)` forces a token refresh.
 
 ## Credentials file
