@@ -1,0 +1,4 @@
+package: qdivzero
+output: client.gen.go
+generate:
+  client: true
