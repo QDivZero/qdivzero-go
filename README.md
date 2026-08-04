@@ -74,6 +74,24 @@ The client manages authentication for you:
   without calling Login.
 - `client.Refresh(ctx)` forces a token refresh.
 
+## Credentials file
+
+If `~/.qdivzero/credentials` exists, the client loads it automatically on
+`NewAPI`. All fields are optional:
+
+````json
+{
+  "email": "you@example.com",
+  "password": "your-password",
+  "access_token": "...",
+  "refresh_token": "..."
+}
+````
+
+`email`/`password` enable on-demand login; `access_token`/`refresh_token`
+authenticate directly. Explicit `With*` options override file values. Keep the
+file private (`chmod 600 ~/.qdivzero/credentials`) and never commit it.
+
 ## Error handling
 
 Generated operations return a typed response with a `StatusCode()` method; the

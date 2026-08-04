@@ -81,6 +81,23 @@ func NewAPI(opts ...Option) (*API, error) {
 		o(&cfg)
 	}
 
+	cf, err := loadCredentialsFile()
+	if err != nil {
+		return nil, err
+	}
+	if cfg.accessToken == "" {
+		cfg.accessToken = cf.AccessToken
+	}
+	if cfg.refreshToken == "" {
+		cfg.refreshToken = cf.RefreshToken
+	}
+	if cfg.email == "" {
+		cfg.email = cf.Email
+	}
+	if cfg.password == "" {
+		cfg.password = cf.Password
+	}
+
 	plain, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{
 		Transport: cfg.httpClient.Transport,
 	}))
