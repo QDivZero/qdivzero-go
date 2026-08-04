@@ -84,7 +84,8 @@ If `~/.qdivzero/credentials` exists, the client loads it automatically on
   "email": "you@example.com",
   "password": "your-password",
   "access_token": "...",
-  "refresh_token": "..."
+  "refresh_token": "...",
+  "api_key": "..."
 }
 ````
 
