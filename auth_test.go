@@ -3,8 +3,10 @@ package qdivzero
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -132,6 +134,54 @@ func TestLoginFailureDoesNotTriggerRefresh(t *testing.T) {
 	}
 	if got := atomic.LoadInt32(&refreshCalls); got != 0 {
 		t.Fatalf("refresh calls = %d, want 0", got)
+	}
+}
+
+func TestAutoRefreshRetriesWithBody(t *testing.T) {
+	var refreshCalls int32
+	validToken := "refreshed-token"
+	var receivedBody string
+	mux := http.NewServeMux()
+	mux.HandleFunc("/auth/refresh", func(w http.ResponseWriter, r *http.Request) {
+		atomic.AddInt32(&refreshCalls, 1)
+		w.Header().Set("Content-Type", "application/json")
+		_ = json.NewEncoder(w).Encode(RefreshResponse{AccessToken: strPtr(validToken)})
+	})
+	mux.HandleFunc("/accounts", func(w http.ResponseWriter, r *http.Request) {
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		receivedBody = string(body)
+		if r.Header.Get("Authorization") != "Bearer "+validToken {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+	})
+	srv := httptest.NewServer(mux)
+	defer srv.Close()
+
+	api, err := NewAPI(WithServerURL(srv.URL), WithAccessToken("stale-token"), WithRefreshToken("refresh-1"))
+	if err != nil {
+		t.Fatalf("NewAPI: %v", err)
+	}
+	payload := `{"name":"acme"}`
+	resp, err := api.PostAccountsWithBody(context.Background(), "application/json", strings.NewReader(payload))
+	if err != nil {
+		t.Fatalf("PostAccountsWithBody: %v", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusCreated {
+		t.Fatalf("status = %d, want 201", resp.StatusCode)
+	}
+	if receivedBody != payload {
+		t.Fatalf("server received body %q, want %q", receivedBody, payload)
+	}
+	if got := atomic.LoadInt32(&refreshCalls); got != 1 {
+		t.Fatalf("refresh calls = %d, want 1", got)
 	}
 }
 

@@ -151,6 +151,11 @@ func (t *authTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 			resp.Body.Close()
 			retried := req.Clone(req.Context())
 			retried.Header.Del("Authorization")
+			if retried.GetBody != nil {
+				if body, err := retried.GetBody(); err == nil {
+					retried.Body = body
+				}
+			}
 			t.auth.applyAuth(retried)
 			return t.base.RoundTrip(retried)
 		}

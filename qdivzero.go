@@ -81,7 +81,9 @@ func NewAPI(opts ...Option) (*API, error) {
 		o(&cfg)
 	}
 
-	plain, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{}))
+	plain, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{
+		Transport: cfg.httpClient.Transport,
+	}))
 	if err != nil {
 		return nil, fmt.Errorf("qdivzero: %w", err)
 	}
@@ -100,9 +102,13 @@ func NewAPI(opts ...Option) (*API, error) {
 	if base == nil {
 		base = http.DefaultTransport
 	}
-	gen, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{
-		Transport: &authTransport{base: base, auth: auth},
-	}))
+	client := &http.Client{
+		Transport:     &authTransport{base: base, auth: auth},
+		Timeout:       cfg.httpClient.Timeout,
+		Jar:           cfg.httpClient.Jar,
+		CheckRedirect: cfg.httpClient.CheckRedirect,
+	}
+	gen, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(client))
 	if err != nil {
 		return nil, fmt.Errorf("qdivzero: %w", err)
 	}
