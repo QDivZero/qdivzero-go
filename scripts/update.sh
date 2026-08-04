@@ -47,7 +47,7 @@ go test ./...
 go build ./...
 
 HASH="$(python3 -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1],"rb").read()).hexdigest()[:12])' "$RAW")"
-LATEST="$(git tag --sort=-v:refname | head -n1 || true)"
+LATEST="$(git tag --sort=-v:refname | grep '^v1\.0\.' | head -n1 || true)"
 if [ -z "$LATEST" ]; then
   NEXT="v1.0.1"
 else
