@@ -15,7 +15,14 @@ import (
 
 func strPtr(s string) *string { return &s }
 
+// noCredentialsFile isolates a test from the real ~/.qdivzero/credentials.
+func noCredentialsFile(t *testing.T) {
+	t.Helper()
+	t.Setenv("HOME", t.TempDir())
+}
+
 func TestLoginAndAutoRefresh(t *testing.T) {
+	noCredentialsFile(t)
 	var refreshCalls int32
 	validToken := "refreshed-token"
 	mux := http.NewServeMux()
@@ -65,6 +72,7 @@ func TestLoginAndAutoRefresh(t *testing.T) {
 }
 
 func TestConcurrent401RefreshesOnlyOnce(t *testing.T) {
+	noCredentialsFile(t)
 	var refreshCalls int32
 	mux := http.NewServeMux()
 	mux.HandleFunc("/auth/refresh", func(w http.ResponseWriter, r *http.Request) {
@@ -111,6 +119,7 @@ func TestConcurrent401RefreshesOnlyOnce(t *testing.T) {
 }
 
 func TestLoginFailureDoesNotTriggerRefresh(t *testing.T) {
+	noCredentialsFile(t)
 	var refreshCalls int32
 	mux := http.NewServeMux()
 	mux.HandleFunc("/auth/login", func(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +147,7 @@ func TestLoginFailureDoesNotTriggerRefresh(t *testing.T) {
 }
 
 func TestAutoRefreshRetriesWithBody(t *testing.T) {
+	noCredentialsFile(t)
 	var refreshCalls int32
 	validToken := "refreshed-token"
 	var receivedBody string
@@ -186,6 +196,7 @@ func TestAutoRefreshRetriesWithBody(t *testing.T) {
 }
 
 func TestAPIKeyAndRawAuthorization(t *testing.T) {
+	noCredentialsFile(t)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/auth/me", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("X-Auth-Echo", r.Header.Get("Authorization"))
@@ -217,6 +228,7 @@ func TestAPIKeyAndRawAuthorization(t *testing.T) {
 }
 
 func TestWithHeaderSentOnEveryRequest(t *testing.T) {
+	noCredentialsFile(t)
 	var got string
 	mux := http.NewServeMux()
 	mux.HandleFunc("/auth/me", func(w http.ResponseWriter, r *http.Request) {
