@@ -1328,6 +1328,27 @@ type ClientInterface interface {
 	// Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 	PatchTargetGroup(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetUserAPIKeys List API keys for the authenticated user
+	//
+	// Returns the API keys issued for the authenticated user identity.
+	//
+	// Corresponds with GET /users/me/api-keys (the `GetUserAPIKeys` operationId).
+	GetUserAPIKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostUserAPIKeys Create an API key for the authenticated user
+	//
+	// Issues a new API key for the authenticated user identity and returns the plaintext key once.
+	//
+	// Corresponds with POST /users/me/api-keys (the `PostUserAPIKeys` operationId).
+	PostUserAPIKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostUserAPIKeysKeyIDRevoke Revoke a user API key
+	//
+	// Revokes an API key issued for the authenticated user identity.
+	//
+	// Corresponds with POST /users/me/api-keys/{keyID}/revoke (the `PostUserAPIKeysKeyIDRevoke` operationId).
+	PostUserAPIKeysKeyIDRevoke(ctx context.Context, keyID string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PostV1AudioSpeechWithBody OpenAI-compatible audio speech (TTS)
 	//
 	// Generates audio from text. Accepts Bearer access tokens or API keys.
@@ -4332,6 +4353,57 @@ func (c *Client) PatchTargetGroupWithBody(ctx context.Context, targetGroupID str
 // Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 func (c *Client) PatchTargetGroup(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchTargetGroupRequest(c.Server, targetGroupID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetUserAPIKeys List API keys for the authenticated user
+//
+// Returns the API keys issued for the authenticated user identity.
+//
+// Corresponds with GET /users/me/api-keys (the `GetUserAPIKeys` operationId).
+func (c *Client) GetUserAPIKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetUserAPIKeysRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostUserAPIKeys Create an API key for the authenticated user
+//
+// Issues a new API key for the authenticated user identity and returns the plaintext key once.
+//
+// Corresponds with POST /users/me/api-keys (the `PostUserAPIKeys` operationId).
+func (c *Client) PostUserAPIKeys(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostUserAPIKeysRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostUserAPIKeysKeyIDRevoke Revoke a user API key
+//
+// Revokes an API key issued for the authenticated user identity.
+//
+// Corresponds with POST /users/me/api-keys/{keyID}/revoke (the `PostUserAPIKeysKeyIDRevoke` operationId).
+func (c *Client) PostUserAPIKeysKeyIDRevoke(ctx context.Context, keyID string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostUserAPIKeysKeyIDRevokeRequest(c.Server, keyID)
 	if err != nil {
 		return nil, err
 	}
@@ -9046,6 +9118,94 @@ func NewPatchTargetGroupRequestWithBody(server string, targetGroupID string, con
 	return req, nil
 }
 
+// NewGetUserAPIKeysRequest constructs an http.Request for the GetUserAPIKeys method
+func NewGetUserAPIKeysRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users/me/api-keys")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostUserAPIKeysRequest constructs an http.Request for the PostUserAPIKeys method
+func NewPostUserAPIKeysRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users/me/api-keys")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostUserAPIKeysKeyIDRevokeRequest constructs an http.Request for the PostUserAPIKeysKeyIDRevoke method
+func NewPostUserAPIKeysKeyIDRevokeRequest(server string, keyID string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "keyID", keyID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/users/me/api-keys/%s/revoke", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPostV1AudioSpeechRequest calls the generic PostV1AudioSpeech builder with application/json body
 func NewPostV1AudioSpeechRequest(server string, body PostV1AudioSpeechJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -11143,6 +11303,33 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 	PatchTargetGroupWithResponse(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchTargetGroupResponse, error)
+
+	// GetUserAPIKeysWithResponse List API keys for the authenticated user
+	//
+	// Returns the API keys issued for the authenticated user identity.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /users/me/api-keys (the `GetUserAPIKeys` operationId).
+	GetUserAPIKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetUserAPIKeysResponse, error)
+
+	// PostUserAPIKeysWithResponse Create an API key for the authenticated user
+	//
+	// Issues a new API key for the authenticated user identity and returns the plaintext key once.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /users/me/api-keys (the `PostUserAPIKeys` operationId).
+	PostUserAPIKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*PostUserAPIKeysResponse, error)
+
+	// PostUserAPIKeysKeyIDRevokeWithResponse Revoke a user API key
+	//
+	// Revokes an API key issued for the authenticated user identity.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /users/me/api-keys/{keyID}/revoke (the `PostUserAPIKeysKeyIDRevoke` operationId).
+	PostUserAPIKeysKeyIDRevokeWithResponse(ctx context.Context, keyID string, reqEditors ...RequestEditorFn) (*PostUserAPIKeysKeyIDRevokeResponse, error)
 
 	// PostV1AudioSpeechWithBodyWithResponse OpenAI-compatible audio speech (TTS)
 	//
@@ -18461,6 +18648,178 @@ func (r PatchTargetGroupResponse) ContentType() string {
 	return ""
 }
 
+type GetUserAPIKeysResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ApiKeyListResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *string
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetUserAPIKeysResponse) GetJSON200() *ApiKeyListResponse {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetUserAPIKeysResponse) GetJSON401() *string {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r GetUserAPIKeysResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetUserAPIKeysResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetUserAPIKeysResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetUserAPIKeysResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetUserAPIKeysResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PostUserAPIKeysResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ApiKeyResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *string
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r PostUserAPIKeysResponse) GetJSON201() *ApiKeyResponse {
+	return r.JSON201
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostUserAPIKeysResponse) GetJSON401() *string {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r PostUserAPIKeysResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PostUserAPIKeysResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostUserAPIKeysResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostUserAPIKeysResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostUserAPIKeysResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PostUserAPIKeysKeyIDRevokeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *string
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PostUserAPIKeysKeyIDRevokeResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostUserAPIKeysKeyIDRevokeResponse) GetJSON401() *string {
+	return r.JSON401
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r PostUserAPIKeysKeyIDRevokeResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r PostUserAPIKeysKeyIDRevokeResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PostUserAPIKeysKeyIDRevokeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostUserAPIKeysKeyIDRevokeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostUserAPIKeysKeyIDRevokeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostUserAPIKeysKeyIDRevokeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type PostV1AudioSpeechResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -21648,6 +22007,51 @@ func (c *ClientWithResponses) PatchTargetGroupWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParsePatchTargetGroupResponse(rsp)
+}
+
+// GetUserAPIKeysWithResponse List API keys for the authenticated user
+//
+// Returns the API keys issued for the authenticated user identity.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /users/me/api-keys (the `GetUserAPIKeys` operationId).
+func (c *ClientWithResponses) GetUserAPIKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetUserAPIKeysResponse, error) {
+	rsp, err := c.GetUserAPIKeys(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetUserAPIKeysResponse(rsp)
+}
+
+// PostUserAPIKeysWithResponse Create an API key for the authenticated user
+//
+// Issues a new API key for the authenticated user identity and returns the plaintext key once.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /users/me/api-keys (the `PostUserAPIKeys` operationId).
+func (c *ClientWithResponses) PostUserAPIKeysWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*PostUserAPIKeysResponse, error) {
+	rsp, err := c.PostUserAPIKeys(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostUserAPIKeysResponse(rsp)
+}
+
+// PostUserAPIKeysKeyIDRevokeWithResponse Revoke a user API key
+//
+// Revokes an API key issued for the authenticated user identity.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /users/me/api-keys/{keyID}/revoke (the `PostUserAPIKeysKeyIDRevoke` operationId).
+func (c *ClientWithResponses) PostUserAPIKeysKeyIDRevokeWithResponse(ctx context.Context, keyID string, reqEditors ...RequestEditorFn) (*PostUserAPIKeysKeyIDRevokeResponse, error) {
+	rsp, err := c.PostUserAPIKeysKeyIDRevoke(ctx, keyID, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostUserAPIKeysKeyIDRevokeResponse(rsp)
 }
 
 // PostV1AudioSpeechWithBodyWithResponse OpenAI-compatible audio speech (TTS)
@@ -27437,6 +27841,136 @@ func ParsePatchTargetGroupResponse(rsp *http.Response) (*PatchTargetGroupRespons
 			return nil, err
 		}
 		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetUserAPIKeysResponse parses an HTTP response from a GetUserAPIKeysWithResponse call
+func ParseGetUserAPIKeysResponse(rsp *http.Response) (*GetUserAPIKeysResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetUserAPIKeysResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ApiKeyListResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostUserAPIKeysResponse parses an HTTP response from a PostUserAPIKeysWithResponse call
+func ParsePostUserAPIKeysResponse(rsp *http.Response) (*PostUserAPIKeysResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostUserAPIKeysResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ApiKeyResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostUserAPIKeysKeyIDRevokeResponse parses an HTTP response from a PostUserAPIKeysKeyIDRevokeWithResponse call
+func ParsePostUserAPIKeysKeyIDRevokeResponse(rsp *http.Response) (*PostUserAPIKeysKeyIDRevokeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostUserAPIKeysKeyIDRevokeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
 		var dest ErrorResponse
