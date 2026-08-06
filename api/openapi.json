@@ -2687,83 +2687,6 @@
         ]
       }
     },
-    "/billing/quote": {
-      "post": {
-        "operationId": "postBillingQuote",
-        "summary": "Quote a checkout total",
-        "description": "Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.",
-        "tags": [
-          "billing"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckoutQuoteResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "missing credentials or invalid access token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckoutQuoteRequest"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
     "/firewall-rules": {
       "get": {
         "operationId": "getFirewallRules",
@@ -9203,43 +9126,7 @@
           "description": {
             "type": "string"
           },
-          "fiscal_address": {
-            "type": "string"
-          },
-          "fiscal_city": {
-            "type": "string"
-          },
-          "fiscal_company_name": {
-            "type": "string"
-          },
-          "fiscal_country": {
-            "type": "string"
-          },
           "fiscal_customer_type": {
-            "type": "string"
-          },
-          "fiscal_invoice_email": {
-            "type": "string"
-          },
-          "fiscal_legal_name": {
-            "type": "string"
-          },
-          "fiscal_postcode": {
-            "type": "string"
-          },
-          "fiscal_profile_completed": {
-            "type": "boolean"
-          },
-          "fiscal_region": {
-            "type": "string"
-          },
-          "fiscal_tax_id": {
-            "type": "string"
-          },
-          "fiscal_vat_validated": {
-            "type": "boolean"
-          },
-          "holded_contact_id": {
             "type": "string"
           },
           "id": {
@@ -9561,66 +9448,6 @@
           }
         },
         "x-go-name": "ChatToolCallFunctionEnvelope"
-      },
-      "CheckoutQuoteRequest": {
-        "type": "object",
-        "properties": {
-          "amount_cents": {
-            "type": "number"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "discount_code": {
-            "type": "string"
-          }
-        },
-        "x-go-name": "CheckoutQuoteRequest"
-      },
-      "CheckoutQuoteResponse": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string"
-          },
-          "discount_amount_minor": {
-            "type": "integer"
-          },
-          "gross_total_minor": {
-            "type": "integer"
-          },
-          "original_amount_minor": {
-            "type": "integer"
-          },
-          "policy_version": {
-            "type": "string"
-          },
-          "quote_hash": {
-            "type": "string"
-          },
-          "quote_id": {
-            "type": "string"
-          },
-          "reason": {
-            "type": "string"
-          },
-          "reverse_charge": {
-            "type": "boolean"
-          },
-          "tax_included": {
-            "type": "boolean"
-          },
-          "tax_minor": {
-            "type": "integer"
-          },
-          "tax_rate_basis_points": {
-            "type": "integer"
-          },
-          "taxable_base_minor": {
-            "type": "integer"
-          }
-        },
-        "x-go-name": "CheckoutQuoteResponse"
       },
       "CheckoutSessionResponse": {
         "type": "object",
@@ -10846,25 +10673,10 @@
           "discount_ticket_id": {
             "type": "string"
           },
-          "holded_contact_id": {
-            "type": "string"
-          },
-          "holded_invoice_id": {
-            "type": "string"
-          },
-          "holded_invoice_number": {
-            "type": "string"
-          },
-          "holded_invoice_status": {
-            "type": "string"
-          },
-          "holded_invoice_url": {
+          "document_status": {
             "type": "string"
           },
           "id": {
-            "type": "string"
-          },
-          "invoice_state": {
             "type": "string"
           },
           "ledger_entry_id": {
@@ -10886,6 +10698,9 @@
             "type": "string"
           },
           "stripe_event_id": {
+            "type": "string"
+          },
+          "stripe_invoice_id": {
             "type": "string"
           },
           "stripe_payment_intent_id": {
@@ -11407,6 +11222,9 @@
           "disk_utilization_percent": {
             "type": "number"
           },
+          "generation_tokens_total": {
+            "type": "number"
+          },
           "gpu_memory_utilization_percent": {
             "type": "number"
           },
@@ -11419,7 +11237,19 @@
           "gpu_utilization_percent": {
             "type": "number"
           },
+          "kv_cache_usage_percent": {
+            "type": "number"
+          },
           "memory_utilization_percent": {
+            "type": "number"
+          },
+          "prompt_tokens_total": {
+            "type": "number"
+          },
+          "requests_running": {
+            "type": "number"
+          },
+          "requests_waiting": {
             "type": "number"
           },
           "sampled_at": {
@@ -12190,41 +12020,8 @@
           "description": {
             "type": "string"
           },
-          "fiscal_address": {
-            "type": "string"
-          },
-          "fiscal_city": {
-            "type": "string"
-          },
-          "fiscal_company_name": {
-            "type": "string"
-          },
-          "fiscal_country": {
-            "type": "string"
-          },
           "fiscal_customer_type": {
             "type": "string"
-          },
-          "fiscal_invoice_email": {
-            "type": "string"
-          },
-          "fiscal_legal_name": {
-            "type": "string"
-          },
-          "fiscal_postcode": {
-            "type": "string"
-          },
-          "fiscal_profile_completed": {
-            "type": "boolean"
-          },
-          "fiscal_region": {
-            "type": "string"
-          },
-          "fiscal_tax_id": {
-            "type": "string"
-          },
-          "fiscal_vat_validated": {
-            "type": "boolean"
           },
           "name": {
             "type": "string"
@@ -12286,41 +12083,8 @@
       "UpdateFiscalProfileRequest": {
         "type": "object",
         "properties": {
-          "fiscal_address": {
-            "type": "string"
-          },
-          "fiscal_city": {
-            "type": "string"
-          },
-          "fiscal_company_name": {
-            "type": "string"
-          },
-          "fiscal_country": {
-            "type": "string"
-          },
           "fiscal_customer_type": {
             "type": "string"
-          },
-          "fiscal_invoice_email": {
-            "type": "string"
-          },
-          "fiscal_legal_name": {
-            "type": "string"
-          },
-          "fiscal_postcode": {
-            "type": "string"
-          },
-          "fiscal_profile_completed": {
-            "type": "boolean"
-          },
-          "fiscal_region": {
-            "type": "string"
-          },
-          "fiscal_tax_id": {
-            "type": "string"
-          },
-          "fiscal_vat_validated": {
-            "type": "boolean"
           }
         },
         "x-go-name": "UpdateFiscalProfileRequest"

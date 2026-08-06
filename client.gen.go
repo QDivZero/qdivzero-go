@@ -590,24 +590,6 @@ type ClientInterface interface {
 	// Corresponds with GET /billing/payments/{paymentID}/invoice.pdf (the `GetBillingPaymentsPaymentIDInvoicePDF` operationId).
 	GetBillingPaymentsPaymentIDInvoicePDF(ctx context.Context, paymentID string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// PostBillingQuoteWithBody Quote a checkout total
-	//
-	// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-	//
-	// Takes any type of body and a specified content type.
-	//
-	// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-	PostBillingQuoteWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
-
-	// PostBillingQuote Quote a checkout total
-	//
-	// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-	//
-	// Takes a body of the `application/json` content type.
-	//
-	// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-	PostBillingQuote(ctx context.Context, body PostBillingQuoteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetFirewallRules List firewall rules
 	//
 	// Returns all firewall rules for the authenticated account.
@@ -2615,44 +2597,6 @@ func (c *Client) GetBillingPayments(ctx context.Context, reqEditors ...RequestEd
 // Corresponds with GET /billing/payments/{paymentID}/invoice.pdf (the `GetBillingPaymentsPaymentIDInvoicePDF` operationId).
 func (c *Client) GetBillingPaymentsPaymentIDInvoicePDF(ctx context.Context, paymentID string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetBillingPaymentsPaymentIDInvoicePDFRequest(c.Server, paymentID)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-// PostBillingQuoteWithBody Quote a checkout total
-//
-// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-//
-// Takes any type of body and a specified content type.
-//
-// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-func (c *Client) PostBillingQuoteWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostBillingQuoteRequestWithBody(c.Server, contentType, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
-// PostBillingQuote Quote a checkout total
-//
-// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-//
-// Takes a body of the `application/json` content type.
-//
-// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-func (c *Client) PostBillingQuote(ctx context.Context, body PostBillingQuoteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewPostBillingQuoteRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -6245,46 +6189,6 @@ func NewGetBillingPaymentsPaymentIDInvoicePDFRequest(server string, paymentID st
 	if err != nil {
 		return nil, err
 	}
-
-	return req, nil
-}
-
-// NewPostBillingQuoteRequest calls the generic PostBillingQuote builder with application/json body
-func NewPostBillingQuoteRequest(server string, body PostBillingQuoteJSONRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-	return NewPostBillingQuoteRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewPostBillingQuoteRequestWithBody constructs an http.Request for the PostBillingQuote method, with any body, and a specified content type
-func NewPostBillingQuoteRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/billing/quote")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -10482,24 +10386,6 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /billing/payments/{paymentID}/invoice.pdf (the `GetBillingPaymentsPaymentIDInvoicePDF` operationId).
 	GetBillingPaymentsPaymentIDInvoicePDFWithResponse(ctx context.Context, paymentID string, reqEditors ...RequestEditorFn) (*GetBillingPaymentsPaymentIDInvoicePDFResponse, error)
 
-	// PostBillingQuoteWithBodyWithResponse Quote a checkout total
-	//
-	// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-	//
-	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-	PostBillingQuoteWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBillingQuoteResponse, error)
-
-	// PostBillingQuoteWithResponse Quote a checkout total
-	//
-	// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-	//
-	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-	PostBillingQuoteWithResponse(ctx context.Context, body PostBillingQuoteJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBillingQuoteResponse, error)
-
 	// GetFirewallRulesWithResponse List firewall rules
 	//
 	// Returns all firewall rules for the authenticated account.
@@ -14086,75 +13972,6 @@ func (r GetBillingPaymentsPaymentIDInvoicePDFResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r GetBillingPaymentsPaymentIDInvoicePDFResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
-type PostBillingQuoteResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	// JSON200 the response for an HTTP 200 `application/json` response
-	JSON200 *CheckoutQuoteResponse
-	// JSON400 the response for an HTTP 400 `application/json` response
-	JSON400 *ErrorResponse
-	// JSON401 the response for an HTTP 401 `application/json` response
-	JSON401 *string
-	// JSON409 the response for an HTTP 409 `application/json` response
-	JSON409 *ErrorResponse
-	// JSON503 the response for an HTTP 503 `application/json` response
-	JSON503 *ErrorResponse
-}
-
-// GetJSON200 returns the response for an HTTP 200 `application/json` response
-func (r PostBillingQuoteResponse) GetJSON200() *CheckoutQuoteResponse {
-	return r.JSON200
-}
-
-// GetJSON400 returns the response for an HTTP 400 `application/json` response
-func (r PostBillingQuoteResponse) GetJSON400() *ErrorResponse {
-	return r.JSON400
-}
-
-// GetJSON401 returns the response for an HTTP 401 `application/json` response
-func (r PostBillingQuoteResponse) GetJSON401() *string {
-	return r.JSON401
-}
-
-// GetJSON409 returns the response for an HTTP 409 `application/json` response
-func (r PostBillingQuoteResponse) GetJSON409() *ErrorResponse {
-	return r.JSON409
-}
-
-// GetJSON503 returns the response for an HTTP 503 `application/json` response
-func (r PostBillingQuoteResponse) GetJSON503() *ErrorResponse {
-	return r.JSON503
-}
-
-// GetBody returns the raw response body bytes
-func (r PostBillingQuoteResponse) GetBody() []byte {
-	return r.Body
-}
-
-// Status returns HTTPResponse.Status
-func (r PostBillingQuoteResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r PostBillingQuoteResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r PostBillingQuoteResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -20587,36 +20404,6 @@ func (c *ClientWithResponses) GetBillingPaymentsPaymentIDInvoicePDFWithResponse(
 	return ParseGetBillingPaymentsPaymentIDInvoicePDFResponse(rsp)
 }
 
-// PostBillingQuoteWithBodyWithResponse Quote a checkout total
-//
-// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-//
-// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
-//
-// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-func (c *ClientWithResponses) PostBillingQuoteWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostBillingQuoteResponse, error) {
-	rsp, err := c.PostBillingQuoteWithBody(ctx, contentType, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostBillingQuoteResponse(rsp)
-}
-
-// PostBillingQuoteWithResponse Quote a checkout total
-//
-// Resolves the authenticated account's application-side tax quote without creating Stripe or checkout state.
-//
-// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
-//
-// Corresponds with POST /billing/quote (the `PostBillingQuote` operationId).
-func (c *ClientWithResponses) PostBillingQuoteWithResponse(ctx context.Context, body PostBillingQuoteJSONRequestBody, reqEditors ...RequestEditorFn) (*PostBillingQuoteResponse, error) {
-	rsp, err := c.PostBillingQuote(ctx, body, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParsePostBillingQuoteResponse(rsp)
-}
-
 // GetFirewallRulesWithResponse List firewall rules
 //
 // Returns all firewall rules for the authenticated account.
@@ -24343,60 +24130,6 @@ func ParseGetBillingPaymentsPaymentIDInvoicePDFResponse(rsp *http.Response) (*Ge
 			return nil, err
 		}
 		response.JSON500 = &dest
-
-	}
-
-	return response, nil
-}
-
-// ParsePostBillingQuoteResponse parses an HTTP response from a PostBillingQuoteWithResponse call
-func ParsePostBillingQuoteResponse(rsp *http.Response) (*PostBillingQuoteResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &PostBillingQuoteResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest CheckoutQuoteResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON400 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest string
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON401 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON409 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON503 = &dest
 
 	}
 

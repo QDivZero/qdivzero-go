@@ -88,23 +88,11 @@ type AccountMembershipResponse struct {
 
 // AccountResponse defines model for AccountResponse.
 type AccountResponse struct {
-	CreatedAtUnix          *int    `json:"created_at_unix,omitempty"`
-	Description            *string `json:"description,omitempty"`
-	FiscalAddress          *string `json:"fiscal_address,omitempty"`
-	FiscalCity             *string `json:"fiscal_city,omitempty"`
-	FiscalCompanyName      *string `json:"fiscal_company_name,omitempty"`
-	FiscalCountry          *string `json:"fiscal_country,omitempty"`
-	FiscalCustomerType     *string `json:"fiscal_customer_type,omitempty"`
-	FiscalInvoiceEmail     *string `json:"fiscal_invoice_email,omitempty"`
-	FiscalLegalName        *string `json:"fiscal_legal_name,omitempty"`
-	FiscalPostcode         *string `json:"fiscal_postcode,omitempty"`
-	FiscalProfileCompleted *bool   `json:"fiscal_profile_completed,omitempty"`
-	FiscalRegion           *string `json:"fiscal_region,omitempty"`
-	FiscalTaxId            *string `json:"fiscal_tax_id,omitempty"`
-	FiscalVatValidated     *bool   `json:"fiscal_vat_validated,omitempty"`
-	HoldedContactId        *string `json:"holded_contact_id,omitempty"`
-	Id                     *string `json:"id,omitempty"`
-	Name                   *string `json:"name,omitempty"`
+	CreatedAtUnix      *int    `json:"created_at_unix,omitempty"`
+	Description        *string `json:"description,omitempty"`
+	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
+	Id                 *string `json:"id,omitempty"`
+	Name               *string `json:"name,omitempty"`
 }
 
 // AddAccountMemberRequest defines model for AddAccountMemberRequest.
@@ -228,30 +216,6 @@ type ChatToolCallEnvelope struct {
 type ChatToolCallFunctionEnvelope struct {
 	Arguments *string `json:"arguments,omitempty"`
 	Name      *string `json:"name,omitempty"`
-}
-
-// CheckoutQuoteRequest defines model for CheckoutQuoteRequest.
-type CheckoutQuoteRequest struct {
-	AmountCents  *float32 `json:"amount_cents,omitempty"`
-	Currency     *string  `json:"currency,omitempty"`
-	DiscountCode *string  `json:"discount_code,omitempty"`
-}
-
-// CheckoutQuoteResponse defines model for CheckoutQuoteResponse.
-type CheckoutQuoteResponse struct {
-	Currency            *string `json:"currency,omitempty"`
-	DiscountAmountMinor *int    `json:"discount_amount_minor,omitempty"`
-	GrossTotalMinor     *int    `json:"gross_total_minor,omitempty"`
-	OriginalAmountMinor *int    `json:"original_amount_minor,omitempty"`
-	PolicyVersion       *string `json:"policy_version,omitempty"`
-	QuoteHash           *string `json:"quote_hash,omitempty"`
-	QuoteId             *string `json:"quote_id,omitempty"`
-	Reason              *string `json:"reason,omitempty"`
-	ReverseCharge       *bool   `json:"reverse_charge,omitempty"`
-	TaxIncluded         *bool   `json:"tax_included,omitempty"`
-	TaxMinor            *int    `json:"tax_minor,omitempty"`
-	TaxRateBasisPoints  *int    `json:"tax_rate_basis_points,omitempty"`
-	TaxableBaseMinor    *int    `json:"taxable_base_minor,omitempty"`
 }
 
 // CheckoutSessionResponse defines model for CheckoutSessionResponse.
@@ -781,13 +745,8 @@ type PaymentResponse struct {
 	Currency              *string `json:"currency,omitempty"`
 	DiscountCodeSnapshot  *string `json:"discount_code_snapshot,omitempty"`
 	DiscountTicketId      *string `json:"discount_ticket_id,omitempty"`
-	HoldedContactId       *string `json:"holded_contact_id,omitempty"`
-	HoldedInvoiceId       *string `json:"holded_invoice_id,omitempty"`
-	HoldedInvoiceNumber   *string `json:"holded_invoice_number,omitempty"`
-	HoldedInvoiceStatus   *string `json:"holded_invoice_status,omitempty"`
-	HoldedInvoiceUrl      *string `json:"holded_invoice_url,omitempty"`
+	DocumentStatus        *string `json:"document_status,omitempty"`
 	Id                    *string `json:"id,omitempty"`
-	InvoiceState          *string `json:"invoice_state,omitempty"`
 	LedgerEntryId         *string `json:"ledger_entry_id,omitempty"`
 	PaidAt                *string `json:"paid_at,omitempty"`
 	Provider              *string `json:"provider,omitempty"`
@@ -795,6 +754,7 @@ type PaymentResponse struct {
 	Status                *string `json:"status,omitempty"`
 	StripeCustomerId      *string `json:"stripe_customer_id,omitempty"`
 	StripeEventId         *string `json:"stripe_event_id,omitempty"`
+	StripeInvoiceId       *string `json:"stripe_invoice_id,omitempty"`
 	StripePaymentIntentId *string `json:"stripe_payment_intent_id,omitempty"`
 	StripeSessionId       *string `json:"stripe_session_id,omitempty"`
 	UpdatedAt             *string `json:"updated_at,omitempty"`
@@ -1011,11 +971,16 @@ type ResetPasswordResponse struct {
 type ResourceMetricSnapshot struct {
 	CpuUtilizationPercent       *float32 `json:"cpu_utilization_percent,omitempty"`
 	DiskUtilizationPercent      *float32 `json:"disk_utilization_percent,omitempty"`
+	GenerationTokensTotal       *float32 `json:"generation_tokens_total,omitempty"`
 	GpuMemoryUtilizationPercent *float32 `json:"gpu_memory_utilization_percent,omitempty"`
 	GpuPowerWatts               *float32 `json:"gpu_power_watts,omitempty"`
 	GpuTemperatureCelsius       *float32 `json:"gpu_temperature_celsius,omitempty"`
 	GpuUtilizationPercent       *float32 `json:"gpu_utilization_percent,omitempty"`
+	KvCacheUsagePercent         *float32 `json:"kv_cache_usage_percent,omitempty"`
 	MemoryUtilizationPercent    *float32 `json:"memory_utilization_percent,omitempty"`
+	PromptTokensTotal           *float32 `json:"prompt_tokens_total,omitempty"`
+	RequestsRunning             *float32 `json:"requests_running,omitempty"`
+	RequestsWaiting             *float32 `json:"requests_waiting,omitempty"`
 	SampledAt                   *string  `json:"sampled_at,omitempty"`
 }
 
@@ -1380,20 +1345,9 @@ type UpdateAccountMemberRequest struct {
 
 // UpdateAccountRequest defines model for UpdateAccountRequest.
 type UpdateAccountRequest struct {
-	Description            *string `json:"description,omitempty"`
-	FiscalAddress          *string `json:"fiscal_address,omitempty"`
-	FiscalCity             *string `json:"fiscal_city,omitempty"`
-	FiscalCompanyName      *string `json:"fiscal_company_name,omitempty"`
-	FiscalCountry          *string `json:"fiscal_country,omitempty"`
-	FiscalCustomerType     *string `json:"fiscal_customer_type,omitempty"`
-	FiscalInvoiceEmail     *string `json:"fiscal_invoice_email,omitempty"`
-	FiscalLegalName        *string `json:"fiscal_legal_name,omitempty"`
-	FiscalPostcode         *string `json:"fiscal_postcode,omitempty"`
-	FiscalProfileCompleted *bool   `json:"fiscal_profile_completed,omitempty"`
-	FiscalRegion           *string `json:"fiscal_region,omitempty"`
-	FiscalTaxId            *string `json:"fiscal_tax_id,omitempty"`
-	FiscalVatValidated     *bool   `json:"fiscal_vat_validated,omitempty"`
-	Name                   *string `json:"name,omitempty"`
+	Description        *string `json:"description,omitempty"`
+	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
+	Name               *string `json:"name,omitempty"`
 }
 
 // UpdateFirewallRequest defines model for UpdateFirewallRequest.
@@ -1418,18 +1372,7 @@ type UpdateFirewallRuleRequest struct {
 
 // UpdateFiscalProfileRequest defines model for UpdateFiscalProfileRequest.
 type UpdateFiscalProfileRequest struct {
-	FiscalAddress          *string `json:"fiscal_address,omitempty"`
-	FiscalCity             *string `json:"fiscal_city,omitempty"`
-	FiscalCompanyName      *string `json:"fiscal_company_name,omitempty"`
-	FiscalCountry          *string `json:"fiscal_country,omitempty"`
-	FiscalCustomerType     *string `json:"fiscal_customer_type,omitempty"`
-	FiscalInvoiceEmail     *string `json:"fiscal_invoice_email,omitempty"`
-	FiscalLegalName        *string `json:"fiscal_legal_name,omitempty"`
-	FiscalPostcode         *string `json:"fiscal_postcode,omitempty"`
-	FiscalProfileCompleted *bool   `json:"fiscal_profile_completed,omitempty"`
-	FiscalRegion           *string `json:"fiscal_region,omitempty"`
-	FiscalTaxId            *string `json:"fiscal_tax_id,omitempty"`
-	FiscalVatValidated     *bool   `json:"fiscal_vat_validated,omitempty"`
+	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
 }
 
 // UpdateInstanceRequest defines model for UpdateInstanceRequest.
@@ -1808,9 +1751,6 @@ type PostBillingCheckoutJSONRequestBody = CreateCheckoutSessionRequest
 
 // PostBillingDebitJSONRequestBody defines body for PostBillingDebit for application/json ContentType.
 type PostBillingDebitJSONRequestBody = DebitBalanceRequest
-
-// PostBillingQuoteJSONRequestBody defines body for PostBillingQuote for application/json ContentType.
-type PostBillingQuoteJSONRequestBody = CheckoutQuoteRequest
 
 // PostFirewallRuleJSONRequestBody defines body for PostFirewallRule for application/json ContentType.
 type PostFirewallRuleJSONRequestBody = CreateFirewallRuleRequest
