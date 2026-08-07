@@ -11216,31 +11216,13 @@
       "ResourceMetricSnapshot": {
         "type": "object",
         "properties": {
-          "cpu_utilization_percent": {
-            "type": "number"
-          },
-          "disk_utilization_percent": {
+          "e2e_request_latency_p95_seconds": {
             "type": "number"
           },
           "generation_tokens_total": {
             "type": "number"
           },
-          "gpu_memory_utilization_percent": {
-            "type": "number"
-          },
-          "gpu_power_watts": {
-            "type": "number"
-          },
-          "gpu_temperature_celsius": {
-            "type": "number"
-          },
-          "gpu_utilization_percent": {
-            "type": "number"
-          },
           "kv_cache_usage_percent": {
-            "type": "number"
-          },
-          "memory_utilization_percent": {
             "type": "number"
           },
           "prompt_tokens_total": {
@@ -11252,8 +11234,17 @@
           "requests_waiting": {
             "type": "number"
           },
+          "runtime_cpu_seconds_per_second": {
+            "type": "number"
+          },
+          "runtime_memory_bytes": {
+            "type": "number"
+          },
           "sampled_at": {
             "type": "string"
+          },
+          "time_to_first_token_p95_seconds": {
+            "type": "number"
           }
         },
         "x-go-name": "ResourceMetricSnapshot"
@@ -12808,17 +12799,17 @@
         "name": "Authorization",
         "in": "header"
       },
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "TokenFactory API key in the Authorization header."
-      },
       "RuntimeJWTAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Runtime JWT in the Authorization header."
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "TokenFactory API key in the Authorization header."
       }
     }
   }

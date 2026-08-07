@@ -969,19 +969,16 @@ type ResetPasswordResponse struct {
 
 // ResourceMetricSnapshot defines model for ResourceMetricSnapshot.
 type ResourceMetricSnapshot struct {
-	CpuUtilizationPercent       *float32 `json:"cpu_utilization_percent,omitempty"`
-	DiskUtilizationPercent      *float32 `json:"disk_utilization_percent,omitempty"`
+	E2eRequestLatencyP95Seconds *float32 `json:"e2e_request_latency_p95_seconds,omitempty"`
 	GenerationTokensTotal       *float32 `json:"generation_tokens_total,omitempty"`
-	GpuMemoryUtilizationPercent *float32 `json:"gpu_memory_utilization_percent,omitempty"`
-	GpuPowerWatts               *float32 `json:"gpu_power_watts,omitempty"`
-	GpuTemperatureCelsius       *float32 `json:"gpu_temperature_celsius,omitempty"`
-	GpuUtilizationPercent       *float32 `json:"gpu_utilization_percent,omitempty"`
 	KvCacheUsagePercent         *float32 `json:"kv_cache_usage_percent,omitempty"`
-	MemoryUtilizationPercent    *float32 `json:"memory_utilization_percent,omitempty"`
 	PromptTokensTotal           *float32 `json:"prompt_tokens_total,omitempty"`
 	RequestsRunning             *float32 `json:"requests_running,omitempty"`
 	RequestsWaiting             *float32 `json:"requests_waiting,omitempty"`
+	RuntimeCpuSecondsPerSecond  *float32 `json:"runtime_cpu_seconds_per_second,omitempty"`
+	RuntimeMemoryBytes          *float32 `json:"runtime_memory_bytes,omitempty"`
 	SampledAt                   *string  `json:"sampled_at,omitempty"`
+	TimeToFirstTokenP95Seconds  *float32 `json:"time_to_first_token_p95_seconds,omitempty"`
 }
 
 // ResourceMetricsResponse defines model for ResourceMetricsResponse.
