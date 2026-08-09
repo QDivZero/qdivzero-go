@@ -9636,6 +9636,12 @@
           "smart_selection_label": {
             "type": "string"
           },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "workload_kind": {
             "type": "string"
           }
@@ -10365,6 +10371,12 @@
           },
           "stopped_at": {
             "type": "string"
+          },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "workload_kind": {
             "type": "string"
@@ -11160,6 +11172,12 @@
           "status": {
             "type": "string"
           },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "target_group_id": {
             "type": "string"
           },
@@ -11277,6 +11295,15 @@
             "type": "array",
             "items": {
               "type": "integer"
+            }
+          },
+          "instructions": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             }
           },
           "model": {
@@ -11668,6 +11695,15 @@
           },
           "region": {
             "type": "string"
+          },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supports_tools": {
+            "type": "boolean"
           }
         },
         "x-go-name": "ServingProviderResponse"
@@ -12145,6 +12181,12 @@
           },
           "smart_selection_label": {
             "type": "string"
+          },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "x-go-name": "UpdateInstanceRequest"

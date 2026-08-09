@@ -289,6 +289,7 @@ type CreateInstanceRequest struct {
 	SmartRegion             *string                    `json:"smart_region,omitempty"`
 	SmartRegions            *[]string                  `json:"smart_regions,omitempty"`
 	SmartSelectionLabel     *string                    `json:"smart_selection_label,omitempty"`
+	SupportedProtocols      *[]string                  `json:"supported_protocols,omitempty"`
 	WorkloadKind            *string                    `json:"workload_kind,omitempty"`
 }
 
@@ -589,6 +590,7 @@ type InstanceResponse struct {
 	StartedAt               *string                  `json:"started_at,omitempty"`
 	State                   *string                  `json:"state,omitempty"`
 	StoppedAt               *string                  `json:"stopped_at,omitempty"`
+	SupportedProtocols      *[]string                `json:"supported_protocols,omitempty"`
 	WorkloadKind            *string                  `json:"workload_kind,omitempty"`
 }
 
@@ -946,6 +948,7 @@ type ReplicaSetResponse struct {
 	SmartRegions            *[]string `json:"smart_regions,omitempty"`
 	SmartSelectionLabel     *string   `json:"smart_selection_label,omitempty"`
 	Status                  *string   `json:"status,omitempty"`
+	SupportedProtocols      *[]string `json:"supported_protocols,omitempty"`
 	TargetGroupId           *string   `json:"target_group_id,omitempty"`
 	UpdatedAt               *string   `json:"updated_at,omitempty"`
 	WorkloadKind            *string   `json:"workload_kind,omitempty"`
@@ -991,9 +994,11 @@ type ResourceMetricsResponse struct {
 
 // ResponsesRequestEnvelope defines model for ResponsesRequestEnvelope.
 type ResponsesRequestEnvelope struct {
-	Input              *[]int  `json:"input,omitempty"`
-	Model              *string `json:"model,omitempty"`
-	PreviousResponseId *string `json:"previous_response_id,omitempty"`
+	Input              *[]int             `json:"input,omitempty"`
+	Instructions       *string            `json:"instructions,omitempty"`
+	Metadata           *map[string]string `json:"metadata,omitempty"`
+	Model              *string            `json:"model,omitempty"`
+	PreviousResponseId *string            `json:"previous_response_id,omitempty"`
 	Reasoning          *struct {
 		Effort *string `json:"effort,omitempty"`
 	} `json:"reasoning,omitempty"`
@@ -1140,9 +1145,11 @@ type ServingEndpointResponse struct {
 
 // ServingProviderResponse defines model for ServingProviderResponse.
 type ServingProviderResponse struct {
-	ModelId *string `json:"model_id,omitempty"`
-	Name    *string `json:"name,omitempty"`
-	Region  *string `json:"region,omitempty"`
+	ModelId            *string   `json:"model_id,omitempty"`
+	Name               *string   `json:"name,omitempty"`
+	Region             *string   `json:"region,omitempty"`
+	SupportedProtocols *[]string `json:"supported_protocols,omitempty"`
+	SupportsTools      *bool     `json:"supports_tools,omitempty"`
 }
 
 // ServingTargetRequest defines model for ServingTargetRequest.
@@ -1393,6 +1400,7 @@ type UpdateInstanceRequest struct {
 	SmartRegion             *string                    `json:"smart_region,omitempty"`
 	SmartRegions            *[]string                  `json:"smart_regions,omitempty"`
 	SmartSelectionLabel     *string                    `json:"smart_selection_label,omitempty"`
+	SupportedProtocols      *[]string                  `json:"supported_protocols,omitempty"`
 }
 
 // UpdatePreferencesRequest defines model for UpdatePreferencesRequest.
