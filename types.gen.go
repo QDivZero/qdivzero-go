@@ -1664,6 +1664,30 @@ type GetV1PublicModelPricesParams struct {
 	Query *string `form:"query,omitempty" json:"query,omitempty"`
 }
 
+// GetV1ResponsesSessionsListParams defines parameters for GetV1ResponsesSessionsList.
+type GetV1ResponsesSessionsListParams struct {
+	// Model Filter by model
+	Model *string `form:"model,omitempty" json:"model,omitempty"`
+
+	// Tag Filter by metadata tag (key:value, repeatable)
+	Tag *string `form:"tag,omitempty" json:"tag,omitempty"`
+
+	// Limit Max rows (default 50, max 200)
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Cursor Opaque pagination cursor
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
+}
+
+// PutV1ResponsesSessionsStatusJSONBody defines parameters for PutV1ResponsesSessionsStatus.
+type PutV1ResponsesSessionsStatusJSONBody map[string]interface{}
+
+// DeleteV1ResponsesSessionParams defines parameters for DeleteV1ResponsesSession.
+type DeleteV1ResponsesSessionParams struct {
+	// Conversation Delete the full conversation chain
+	Conversation *string `form:"conversation,omitempty" json:"conversation,omitempty"`
+}
+
 // GetV1TemplatesParams defines parameters for GetV1Templates.
 type GetV1TemplatesParams struct {
 	// Limit Page size (default 50, max 100)
@@ -1864,3 +1888,6 @@ type PostV1ResponsesJSONRequestBody = ResponsesRequestEnvelope
 
 // PostV1ResponsesCompactJSONRequestBody defines body for PostV1ResponsesCompact for application/json ContentType.
 type PostV1ResponsesCompactJSONRequestBody = ResponsesRequestEnvelope
+
+// PutV1ResponsesSessionsStatusJSONRequestBody defines body for PutV1ResponsesSessionsStatus for application/json ContentType.
+type PutV1ResponsesSessionsStatusJSONRequestBody PutV1ResponsesSessionsStatusJSONBody

@@ -1485,6 +1485,49 @@ type ClientInterface interface {
 	// Corresponds with POST /v1/responses/compact (the `PostV1ResponsesCompact` operationId).
 	PostV1ResponsesCompact(ctx context.Context, body PostV1ResponsesCompactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteV1ResponsesSessions Delete all saved Responses conversations
+	//
+	// Corresponds with DELETE /v1/responses/sessions (the `DeleteV1ResponsesSessions` operationId).
+	DeleteV1ResponsesSessions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetV1ResponsesSessionsList List saved Responses conversations
+	//
+	// Lists the account's stored response snapshots (chat logs) with optional model, tag, limit and cursor filters.
+	//
+	// Corresponds with GET /v1/responses/sessions (the `GetV1ResponsesSessionsList` operationId).
+	GetV1ResponsesSessionsList(ctx context.Context, params *GetV1ResponsesSessionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetV1ResponsesSessionsStatus Read the account persistence switch
+	//
+	// Corresponds with GET /v1/responses/sessions/status (the `GetV1ResponsesSessionsStatus` operationId).
+	GetV1ResponsesSessionsStatus(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutV1ResponsesSessionsStatusWithBody Flip the account persistence switch
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+	PutV1ResponsesSessionsStatusWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PutV1ResponsesSessionsStatus Flip the account persistence switch
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+	PutV1ResponsesSessionsStatus(ctx context.Context, body PutV1ResponsesSessionsStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteV1ResponsesSession Delete a saved response or whole conversation
+	//
+	// Deletes one snapshot, or the full conversation chain when "conversation": true.
+	//
+	// Corresponds with DELETE /v1/responses/sessions/{response_id} (the `DeleteV1ResponsesSession` operationId).
+	DeleteV1ResponsesSession(ctx context.Context, responseId string, params *DeleteV1ResponsesSessionParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetV1ResponsesSessionDetail Get a saved Responses conversation
+	//
+	// Corresponds with GET /v1/responses/sessions/{response_id} (the `GetV1ResponsesSessionDetail` operationId).
+	GetV1ResponsesSessionDetail(ctx context.Context, responseId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetV1Templates List template variants
 	//
 	// Lists pre-configured deployment template variants visible to the authenticated user.
@@ -4682,6 +4725,119 @@ func (c *Client) PostV1ResponsesCompactWithBody(ctx context.Context, contentType
 // Corresponds with POST /v1/responses/compact (the `PostV1ResponsesCompact` operationId).
 func (c *Client) PostV1ResponsesCompact(ctx context.Context, body PostV1ResponsesCompactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostV1ResponsesCompactRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteV1ResponsesSessions Delete all saved Responses conversations
+//
+// Corresponds with DELETE /v1/responses/sessions (the `DeleteV1ResponsesSessions` operationId).
+func (c *Client) DeleteV1ResponsesSessions(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteV1ResponsesSessionsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetV1ResponsesSessionsList List saved Responses conversations
+//
+// Lists the account's stored response snapshots (chat logs) with optional model, tag, limit and cursor filters.
+//
+// Corresponds with GET /v1/responses/sessions (the `GetV1ResponsesSessionsList` operationId).
+func (c *Client) GetV1ResponsesSessionsList(ctx context.Context, params *GetV1ResponsesSessionsListParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1ResponsesSessionsListRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetV1ResponsesSessionsStatus Read the account persistence switch
+//
+// Corresponds with GET /v1/responses/sessions/status (the `GetV1ResponsesSessionsStatus` operationId).
+func (c *Client) GetV1ResponsesSessionsStatus(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1ResponsesSessionsStatusRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutV1ResponsesSessionsStatusWithBody Flip the account persistence switch
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+func (c *Client) PutV1ResponsesSessionsStatusWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ResponsesSessionsStatusRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PutV1ResponsesSessionsStatus Flip the account persistence switch
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+func (c *Client) PutV1ResponsesSessionsStatus(ctx context.Context, body PutV1ResponsesSessionsStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPutV1ResponsesSessionsStatusRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteV1ResponsesSession Delete a saved response or whole conversation
+//
+// Deletes one snapshot, or the full conversation chain when "conversation": true.
+//
+// Corresponds with DELETE /v1/responses/sessions/{response_id} (the `DeleteV1ResponsesSession` operationId).
+func (c *Client) DeleteV1ResponsesSession(ctx context.Context, responseId string, params *DeleteV1ResponsesSessionParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteV1ResponsesSessionRequest(c.Server, responseId, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetV1ResponsesSessionDetail Get a saved Responses conversation
+//
+// Corresponds with GET /v1/responses/sessions/{response_id} (the `GetV1ResponsesSessionDetail` operationId).
+func (c *Client) GetV1ResponsesSessionDetail(ctx context.Context, responseId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1ResponsesSessionDetailRequest(c.Server, responseId)
 	if err != nil {
 		return nil, err
 	}
@@ -9566,6 +9722,285 @@ func NewPostV1ResponsesCompactRequestWithBody(server string, contentType string,
 	return req, nil
 }
 
+// NewDeleteV1ResponsesSessionsRequest constructs an http.Request for the DeleteV1ResponsesSessions method
+func NewDeleteV1ResponsesSessionsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetV1ResponsesSessionsListRequest constructs an http.Request for the GetV1ResponsesSessionsList method
+func NewGetV1ResponsesSessionsListRequest(server string, params *GetV1ResponsesSessionsListParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Model != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "model", *params.Model, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Tag != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "tag", *params.Tag, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Cursor != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "cursor", *params.Cursor, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetV1ResponsesSessionsStatusRequest constructs an http.Request for the GetV1ResponsesSessionsStatus method
+func NewGetV1ResponsesSessionsStatusRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions/status")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPutV1ResponsesSessionsStatusRequest calls the generic PutV1ResponsesSessionsStatus builder with application/json body
+func NewPutV1ResponsesSessionsStatusRequest(server string, body PutV1ResponsesSessionsStatusJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPutV1ResponsesSessionsStatusRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPutV1ResponsesSessionsStatusRequestWithBody constructs an http.Request for the PutV1ResponsesSessionsStatus method, with any body, and a specified content type
+func NewPutV1ResponsesSessionsStatusRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions/status")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteV1ResponsesSessionRequest constructs an http.Request for the DeleteV1ResponsesSession method
+func NewDeleteV1ResponsesSessionRequest(server string, responseId string, params *DeleteV1ResponsesSessionParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "response_id", responseId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Conversation != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "conversation", *params.Conversation, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetV1ResponsesSessionDetailRequest constructs an http.Request for the GetV1ResponsesSessionDetail method
+func NewGetV1ResponsesSessionDetailRequest(server string, responseId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "response_id", responseId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/responses/sessions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetV1TemplatesRequest constructs an http.Request for the GetV1Templates method
 func NewGetV1TemplatesRequest(server string, params *GetV1TemplatesParams) (*http.Request, error) {
 	var err error
@@ -11378,6 +11813,59 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /v1/responses/compact (the `PostV1ResponsesCompact` operationId).
 	PostV1ResponsesCompactWithResponse(ctx context.Context, body PostV1ResponsesCompactJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV1ResponsesCompactResponse, error)
+
+	// DeleteV1ResponsesSessionsWithResponse Delete all saved Responses conversations
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /v1/responses/sessions (the `DeleteV1ResponsesSessions` operationId).
+	DeleteV1ResponsesSessionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteV1ResponsesSessionsResponse, error)
+
+	// GetV1ResponsesSessionsListWithResponse List saved Responses conversations
+	//
+	// Lists the account's stored response snapshots (chat logs) with optional model, tag, limit and cursor filters.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/responses/sessions (the `GetV1ResponsesSessionsList` operationId).
+	GetV1ResponsesSessionsListWithResponse(ctx context.Context, params *GetV1ResponsesSessionsListParams, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionsListResponse, error)
+
+	// GetV1ResponsesSessionsStatusWithResponse Read the account persistence switch
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/responses/sessions/status (the `GetV1ResponsesSessionsStatus` operationId).
+	GetV1ResponsesSessionsStatusWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionsStatusResponse, error)
+
+	// PutV1ResponsesSessionsStatusWithBodyWithResponse Flip the account persistence switch
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+	PutV1ResponsesSessionsStatusWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ResponsesSessionsStatusResponse, error)
+
+	// PutV1ResponsesSessionsStatusWithResponse Flip the account persistence switch
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+	PutV1ResponsesSessionsStatusWithResponse(ctx context.Context, body PutV1ResponsesSessionsStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ResponsesSessionsStatusResponse, error)
+
+	// DeleteV1ResponsesSessionWithResponse Delete a saved response or whole conversation
+	//
+	// Deletes one snapshot, or the full conversation chain when "conversation": true.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /v1/responses/sessions/{response_id} (the `DeleteV1ResponsesSession` operationId).
+	DeleteV1ResponsesSessionWithResponse(ctx context.Context, responseId string, params *DeleteV1ResponsesSessionParams, reqEditors ...RequestEditorFn) (*DeleteV1ResponsesSessionResponse, error)
+
+	// GetV1ResponsesSessionDetailWithResponse Get a saved Responses conversation
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/responses/sessions/{response_id} (the `GetV1ResponsesSessionDetail` operationId).
+	GetV1ResponsesSessionDetailWithResponse(ctx context.Context, responseId string, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionDetailResponse, error)
 
 	// GetV1TemplatesWithResponse List template variants
 	//
@@ -19346,6 +19834,385 @@ func (r PostV1ResponsesCompactResponse) ContentType() string {
 	return ""
 }
 
+type DeleteV1ResponsesSessionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON403 the response for an HTTP 403 `application/json` response
+	JSON403 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DeleteV1ResponsesSessionsResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r DeleteV1ResponsesSessionsResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON403 returns the response for an HTTP 403 `application/json` response
+func (r DeleteV1ResponsesSessionsResponse) GetJSON403() *ErrorResponse {
+	return r.JSON403
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r DeleteV1ResponsesSessionsResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteV1ResponsesSessionsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteV1ResponsesSessionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteV1ResponsesSessionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteV1ResponsesSessionsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetV1ResponsesSessionsListResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON403 the response for an HTTP 403 `application/json` response
+	JSON403 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetV1ResponsesSessionsListResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r GetV1ResponsesSessionsListResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetV1ResponsesSessionsListResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON403 returns the response for an HTTP 403 `application/json` response
+func (r GetV1ResponsesSessionsListResponse) GetJSON403() *ErrorResponse {
+	return r.JSON403
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r GetV1ResponsesSessionsListResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r GetV1ResponsesSessionsListResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1ResponsesSessionsListResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1ResponsesSessionsListResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetV1ResponsesSessionsListResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetV1ResponsesSessionsStatusResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetV1ResponsesSessionsStatusResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetV1ResponsesSessionsStatusResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetBody returns the raw response body bytes
+func (r GetV1ResponsesSessionsStatusResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1ResponsesSessionsStatusResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1ResponsesSessionsStatusResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetV1ResponsesSessionsStatusResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PutV1ResponsesSessionsStatusResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PutV1ResponsesSessionsStatusResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PutV1ResponsesSessionsStatusResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PutV1ResponsesSessionsStatusResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r PutV1ResponsesSessionsStatusResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r PutV1ResponsesSessionsStatusResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PutV1ResponsesSessionsStatusResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PutV1ResponsesSessionsStatusResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PutV1ResponsesSessionsStatusResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteV1ResponsesSessionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON403 the response for an HTTP 403 `application/json` response
+	JSON403 *ErrorResponse
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DeleteV1ResponsesSessionResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r DeleteV1ResponsesSessionResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON403 returns the response for an HTTP 403 `application/json` response
+func (r DeleteV1ResponsesSessionResponse) GetJSON403() *ErrorResponse {
+	return r.JSON403
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r DeleteV1ResponsesSessionResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r DeleteV1ResponsesSessionResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteV1ResponsesSessionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteV1ResponsesSessionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteV1ResponsesSessionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteV1ResponsesSessionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetV1ResponsesSessionDetailResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON403 the response for an HTTP 403 `application/json` response
+	JSON403 *ErrorResponse
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetV1ResponsesSessionDetailResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetV1ResponsesSessionDetailResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON403 returns the response for an HTTP 403 `application/json` response
+func (r GetV1ResponsesSessionDetailResponse) GetJSON403() *ErrorResponse {
+	return r.JSON403
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r GetV1ResponsesSessionDetailResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r GetV1ResponsesSessionDetailResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r GetV1ResponsesSessionDetailResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1ResponsesSessionDetailResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1ResponsesSessionDetailResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetV1ResponsesSessionDetailResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetV1TemplatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -22109,6 +22976,101 @@ func (c *ClientWithResponses) PostV1ResponsesCompactWithResponse(ctx context.Con
 		return nil, err
 	}
 	return ParsePostV1ResponsesCompactResponse(rsp)
+}
+
+// DeleteV1ResponsesSessionsWithResponse Delete all saved Responses conversations
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /v1/responses/sessions (the `DeleteV1ResponsesSessions` operationId).
+func (c *ClientWithResponses) DeleteV1ResponsesSessionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*DeleteV1ResponsesSessionsResponse, error) {
+	rsp, err := c.DeleteV1ResponsesSessions(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteV1ResponsesSessionsResponse(rsp)
+}
+
+// GetV1ResponsesSessionsListWithResponse List saved Responses conversations
+//
+// Lists the account's stored response snapshots (chat logs) with optional model, tag, limit and cursor filters.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/responses/sessions (the `GetV1ResponsesSessionsList` operationId).
+func (c *ClientWithResponses) GetV1ResponsesSessionsListWithResponse(ctx context.Context, params *GetV1ResponsesSessionsListParams, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionsListResponse, error) {
+	rsp, err := c.GetV1ResponsesSessionsList(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1ResponsesSessionsListResponse(rsp)
+}
+
+// GetV1ResponsesSessionsStatusWithResponse Read the account persistence switch
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/responses/sessions/status (the `GetV1ResponsesSessionsStatus` operationId).
+func (c *ClientWithResponses) GetV1ResponsesSessionsStatusWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionsStatusResponse, error) {
+	rsp, err := c.GetV1ResponsesSessionsStatus(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1ResponsesSessionsStatusResponse(rsp)
+}
+
+// PutV1ResponsesSessionsStatusWithBodyWithResponse Flip the account persistence switch
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+func (c *ClientWithResponses) PutV1ResponsesSessionsStatusWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PutV1ResponsesSessionsStatusResponse, error) {
+	rsp, err := c.PutV1ResponsesSessionsStatusWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ResponsesSessionsStatusResponse(rsp)
+}
+
+// PutV1ResponsesSessionsStatusWithResponse Flip the account persistence switch
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PUT /v1/responses/sessions/status (the `PutV1ResponsesSessionsStatus` operationId).
+func (c *ClientWithResponses) PutV1ResponsesSessionsStatusWithResponse(ctx context.Context, body PutV1ResponsesSessionsStatusJSONRequestBody, reqEditors ...RequestEditorFn) (*PutV1ResponsesSessionsStatusResponse, error) {
+	rsp, err := c.PutV1ResponsesSessionsStatus(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePutV1ResponsesSessionsStatusResponse(rsp)
+}
+
+// DeleteV1ResponsesSessionWithResponse Delete a saved response or whole conversation
+//
+// Deletes one snapshot, or the full conversation chain when "conversation": true.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /v1/responses/sessions/{response_id} (the `DeleteV1ResponsesSession` operationId).
+func (c *ClientWithResponses) DeleteV1ResponsesSessionWithResponse(ctx context.Context, responseId string, params *DeleteV1ResponsesSessionParams, reqEditors ...RequestEditorFn) (*DeleteV1ResponsesSessionResponse, error) {
+	rsp, err := c.DeleteV1ResponsesSession(ctx, responseId, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteV1ResponsesSessionResponse(rsp)
+}
+
+// GetV1ResponsesSessionDetailWithResponse Get a saved Responses conversation
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/responses/sessions/{response_id} (the `GetV1ResponsesSessionDetail` operationId).
+func (c *ClientWithResponses) GetV1ResponsesSessionDetailWithResponse(ctx context.Context, responseId string, reqEditors ...RequestEditorFn) (*GetV1ResponsesSessionDetailResponse, error) {
+	rsp, err := c.GetV1ResponsesSessionDetail(ctx, responseId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1ResponsesSessionDetailResponse(rsp)
 }
 
 // GetV1TemplatesWithResponse List template variants
@@ -28240,6 +29202,295 @@ func ParsePostV1ResponsesCompactResponse(rsp *http.Response) (*PostV1ResponsesCo
 			return nil, err
 		}
 		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteV1ResponsesSessionsResponse parses an HTTP response from a DeleteV1ResponsesSessionsWithResponse call
+func ParseDeleteV1ResponsesSessionsResponse(rsp *http.Response) (*DeleteV1ResponsesSessionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteV1ResponsesSessionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetV1ResponsesSessionsListResponse parses an HTTP response from a GetV1ResponsesSessionsListWithResponse call
+func ParseGetV1ResponsesSessionsListResponse(rsp *http.Response) (*GetV1ResponsesSessionsListResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1ResponsesSessionsListResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetV1ResponsesSessionsStatusResponse parses an HTTP response from a GetV1ResponsesSessionsStatusWithResponse call
+func ParseGetV1ResponsesSessionsStatusResponse(rsp *http.Response) (*GetV1ResponsesSessionsStatusResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1ResponsesSessionsStatusResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePutV1ResponsesSessionsStatusResponse parses an HTTP response from a PutV1ResponsesSessionsStatusWithResponse call
+func ParsePutV1ResponsesSessionsStatusResponse(rsp *http.Response) (*PutV1ResponsesSessionsStatusResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PutV1ResponsesSessionsStatusResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteV1ResponsesSessionResponse parses an HTTP response from a DeleteV1ResponsesSessionWithResponse call
+func ParseDeleteV1ResponsesSessionResponse(rsp *http.Response) (*DeleteV1ResponsesSessionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteV1ResponsesSessionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetV1ResponsesSessionDetailResponse parses an HTTP response from a GetV1ResponsesSessionDetailWithResponse call
+func ParseGetV1ResponsesSessionDetailResponse(rsp *http.Response) (*GetV1ResponsesSessionDetailResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1ResponsesSessionDetailResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
 		var dest ErrorResponse
