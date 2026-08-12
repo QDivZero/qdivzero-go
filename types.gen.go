@@ -46,6 +46,75 @@ func (e GetInstanceUsageParamsRange) Valid() bool {
 	}
 }
 
+// Defines values for PostV1VideoGenerationsMultipartBodyAspectRatio.
+const (
+	Adaptive PostV1VideoGenerationsMultipartBodyAspectRatio = "adaptive"
+	N11      PostV1VideoGenerationsMultipartBodyAspectRatio = "1:1"
+	N169     PostV1VideoGenerationsMultipartBodyAspectRatio = "16:9"
+	N219     PostV1VideoGenerationsMultipartBodyAspectRatio = "21:9"
+	N34      PostV1VideoGenerationsMultipartBodyAspectRatio = "3:4"
+	N43      PostV1VideoGenerationsMultipartBodyAspectRatio = "4:3"
+	N916     PostV1VideoGenerationsMultipartBodyAspectRatio = "9:16"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyAspectRatio enum.
+func (e PostV1VideoGenerationsMultipartBodyAspectRatio) Valid() bool {
+	switch e {
+	case Adaptive:
+		return true
+	case N11:
+		return true
+	case N169:
+		return true
+	case N219:
+		return true
+	case N34:
+		return true
+	case N43:
+		return true
+	case N916:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoGenerationsMultipartBodyFps.
+const (
+	N24 PostV1VideoGenerationsMultipartBodyFps = 24
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyFps enum.
+func (e PostV1VideoGenerationsMultipartBodyFps) Valid() bool {
+	switch e {
+	case N24:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoGenerationsMultipartBodyTask.
+const (
+	Fl2va  PostV1VideoGenerationsMultipartBodyTask = "fl2va"
+	Ref2va PostV1VideoGenerationsMultipartBodyTask = "ref2va"
+	T2va   PostV1VideoGenerationsMultipartBodyTask = "t2va"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyTask enum.
+func (e PostV1VideoGenerationsMultipartBodyTask) Valid() bool {
+	switch e {
+	case Fl2va:
+		return true
+	case Ref2va:
+		return true
+	case T2va:
+		return true
+	default:
+		return false
+	}
+}
+
 // AcceptInvitationRequest defines model for AcceptInvitationRequest.
 type AcceptInvitationRequest struct {
 	InvitationId *string `json:"invitation_id,omitempty"`
@@ -290,7 +359,6 @@ type CreateInstanceRequest struct {
 	SmartRegions            *[]string                  `json:"smart_regions,omitempty"`
 	SmartSelectionLabel     *string                    `json:"smart_selection_label,omitempty"`
 	SupportedProtocols      *[]string                  `json:"supported_protocols,omitempty"`
-	WorkloadKind            *string                    `json:"workload_kind,omitempty"`
 }
 
 // CreateInvitationRequest defines model for CreateInvitationRequest.
@@ -477,15 +545,18 @@ type HuggingFaceGGUFFileResponse struct {
 
 // HuggingFaceModelResponse defines model for HuggingFaceModelResponse.
 type HuggingFaceModelResponse struct {
-	Downloads      *int                           `json:"downloads,omitempty"`
-	GgufFiles      *[]HuggingFaceGGUFFileResponse `json:"gguf_files,omitempty"`
-	HasGguf        *bool                          `json:"has_gguf,omitempty"`
-	HasSafetensors *bool                          `json:"has_safetensors,omitempty"`
-	Likes          *int                           `json:"likes,omitempty"`
-	PipelineTag    *string                        `json:"pipeline_tag,omitempty"`
-	RepoId         *string                        `json:"repo_id,omitempty"`
-	Tags           *[]string                      `json:"tags,omitempty"`
-	Warnings       *[]string                      `json:"warnings,omitempty"`
+	CompatibilityReason *string                        `json:"compatibility_reason,omitempty"`
+	Compatible          *bool                          `json:"compatible,omitempty"`
+	Downloads           *int                           `json:"downloads,omitempty"`
+	GgufFiles           *[]HuggingFaceGGUFFileResponse `json:"gguf_files,omitempty"`
+	HasGguf             *bool                          `json:"has_gguf,omitempty"`
+	HasSafetensors      *bool                          `json:"has_safetensors,omitempty"`
+	Likes               *int                           `json:"likes,omitempty"`
+	PipelineTag         *string                        `json:"pipeline_tag,omitempty"`
+	RepoId              *string                        `json:"repo_id,omitempty"`
+	Tags                *[]string                      `json:"tags,omitempty"`
+	Warnings            *[]string                      `json:"warnings,omitempty"`
+	WorkloadKind        *string                        `json:"workload_kind,omitempty"`
 }
 
 // HuggingFaceModelsResponse defines model for HuggingFaceModelsResponse.
@@ -1633,10 +1704,17 @@ type PostRuntimeNotifyCrashJSONBody = map[string]interface{}
 
 // PostV1AudioTranscriptionsMultipartBody defines parameters for PostV1AudioTranscriptions.
 type PostV1AudioTranscriptionsMultipartBody struct {
-	File           openapi_types.File `json:"file"`
-	Language       *string            `json:"language,omitempty"`
-	Model          string             `json:"model"`
-	ResponseFormat *string            `json:"response_format,omitempty"`
+	// File Audio file
+	File openapi_types.File `json:"file"`
+
+	// Language Source language
+	Language *string `json:"language,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// ResponseFormat Response format
+	ResponseFormat *string `json:"response_format,omitempty"`
 }
 
 // GetV1AudioVoicesParams defines parameters for GetV1AudioVoices.
@@ -1647,15 +1725,32 @@ type GetV1AudioVoicesParams struct {
 
 // PostV1ImageEditsMultipartBody defines parameters for PostV1ImageEdits.
 type PostV1ImageEditsMultipartBody struct {
-	GuidanceScale     *float32            `json:"guidance_scale,omitempty"`
-	Image             openapi_types.File  `json:"image"`
-	Mask              *openapi_types.File `json:"mask,omitempty"`
-	Model             string              `json:"model"`
-	NumInferenceSteps *int                `json:"num_inference_steps,omitempty"`
-	Prompt            string              `json:"prompt"`
-	Seed              *int                `json:"seed,omitempty"`
-	Size              *string             `json:"size,omitempty"`
-	Strength          *float32            `json:"strength,omitempty"`
+	// GuidanceScale Guidance scale (0-20)
+	GuidanceScale *float32 `json:"guidance_scale,omitempty"`
+
+	// Image Source image file
+	Image openapi_types.File `json:"image"`
+
+	// Mask Mask image file
+	Mask *openapi_types.File `json:"mask,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// NumInferenceSteps Inference steps (1-200)
+	NumInferenceSteps *int `json:"num_inference_steps,omitempty"`
+
+	// Prompt Edit prompt
+	Prompt string `json:"prompt"`
+
+	// Seed Random seed
+	Seed *int `json:"seed,omitempty"`
+
+	// Size Output size (WIDTHxHEIGHT)
+	Size *string `json:"size,omitempty"`
+
+	// Strength Denoising strength (0-1, lower preserves original)
+	Strength *float32 `json:"strength,omitempty"`
 }
 
 // GetV1PublicModelPricesParams defines parameters for GetV1PublicModelPrices.
@@ -1720,6 +1815,69 @@ type GetV1TemplateParams struct {
 	// Locale Locale (default en)
 	Locale *string `form:"locale,omitempty" json:"locale,omitempty"`
 }
+
+// PostV1VideoGenerationsMultipartBody defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsMultipartBody struct {
+	// AspectRatio Output aspect ratio: a standard ratio may accompany matching dimensions; adaptive requires short_edge
+	AspectRatio *PostV1VideoGenerationsMultipartBodyAspectRatio `json:"aspect_ratio,omitempty"`
+
+	// AudioFlowShift Non-negative audio flow shift
+	AudioFlowShift *float32 `json:"audio_flow_shift,omitempty"`
+
+	// AudioReference Audio reference up to 15 MiB
+	AudioReference *openapi_types.File `json:"audio_reference,omitempty"`
+
+	// AudioReferenceUrl Hosted audio reference URL; HTTP(S) URLs are limited to 16 KiB and data URLs to the bounded decoded-audio ceiling
+	AudioReferenceUrl *string `json:"audio_reference_url,omitempty"`
+
+	// Duration Duration in seconds
+	Duration *float32 `json:"duration,omitempty"`
+
+	// FlowShift Non-negative flow shift
+	FlowShift *float32 `json:"flow_shift,omitempty"`
+
+	// Fps Frames per second; only 24 is supported
+	Fps *PostV1VideoGenerationsMultipartBodyFps `json:"fps,omitempty"`
+
+	// Height Output height; provide with width; may accompany a matching standard aspect_ratio
+	Height *int `json:"height,omitempty"`
+
+	// InputReference Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB
+	InputReference *openapi_types.File `json:"input_reference,omitempty"`
+
+	// InputReferences Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB
+	InputReferences *openapi_types.File `json:"input_references,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// NumInferenceSteps Inference steps
+	NumInferenceSteps *int `json:"num_inference_steps,omitempty"`
+
+	// Prompt Video prompt (maximum 7,000 Unicode characters)
+	Prompt string `json:"prompt"`
+
+	// Seed Random seed
+	Seed *int64 `json:"seed,omitempty"`
+
+	// ShortEdge Output short edge; only valid with aspect_ratio=adaptive
+	ShortEdge *int `json:"short_edge,omitempty"`
+
+	// Task Generation task: t2va, fl2va, or ref2va
+	Task *PostV1VideoGenerationsMultipartBodyTask `json:"task,omitempty"`
+
+	// Width Output width; provide with height; may accompany a matching standard aspect_ratio
+	Width *int `json:"width,omitempty"`
+}
+
+// PostV1VideoGenerationsMultipartBodyAspectRatio defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsMultipartBodyAspectRatio string
+
+// PostV1VideoGenerationsMultipartBodyFps defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsMultipartBodyFps int
+
+// PostV1VideoGenerationsMultipartBodyTask defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsMultipartBodyTask string
 
 // PostAccountsJSONRequestBody defines body for PostAccounts for application/json ContentType.
 type PostAccountsJSONRequestBody = CreateAccountRequest
@@ -1891,3 +2049,6 @@ type PostV1ResponsesCompactJSONRequestBody = ResponsesRequestEnvelope
 
 // PutV1ResponsesSessionsStatusJSONRequestBody defines body for PutV1ResponsesSessionsStatus for application/json ContentType.
 type PutV1ResponsesSessionsStatusJSONRequestBody PutV1ResponsesSessionsStatusJSONBody
+
+// PostV1VideoGenerationsMultipartRequestBody defines body for PostV1VideoGenerations for multipart/form-data ContentType.
+type PostV1VideoGenerationsMultipartRequestBody PostV1VideoGenerationsMultipartBody

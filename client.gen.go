@@ -1548,6 +1548,15 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /v1/templates/{id} (the `GetV1Template` operationId).
 	GetV1Template(ctx context.Context, id string, params *GetV1TemplateParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostV1VideoGenerationsWithBody Synchronous video generation
+	//
+	// Generates a video from a prompt and optional image, video, and audio references. Accepts Bearer access tokens or API keys. MiniMax-H3 prompts are limited to 7,000 Unicode characters; image references are limited to 30 MiB, video references to 50 MiB, audio references to 15 MiB, and the aggregate input-reference plus audio bytes to 64 MiB. HTTP(S) audio_reference_url values are limited to 16 KiB; data URLs are limited by the 15 MiB decoded audio payload.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /v1/videos (the `PostV1VideoGenerations` operationId).
+	PostV1VideoGenerationsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // GetAccounts List user accounts
@@ -4889,6 +4898,25 @@ func (c *Client) GetV1TemplateBySlug(ctx context.Context, slug string, params *G
 // Corresponds with GET /v1/templates/{id} (the `GetV1Template` operationId).
 func (c *Client) GetV1Template(ctx context.Context, id string, params *GetV1TemplateParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetV1TemplateRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostV1VideoGenerationsWithBody Synchronous video generation
+//
+// Generates a video from a prompt and optional image, video, and audio references. Accepts Bearer access tokens or API keys. MiniMax-H3 prompts are limited to 7,000 Unicode characters; image references are limited to 30 MiB, video references to 50 MiB, audio references to 15 MiB, and the aggregate input-reference plus audio bytes to 64 MiB. HTTP(S) audio_reference_url values are limited to 16 KiB; data URLs are limited by the 15 MiB decoded audio payload.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /v1/videos (the `PostV1VideoGenerations` operationId).
+func (c *Client) PostV1VideoGenerationsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostV1VideoGenerationsRequestWithBody(c.Server, contentType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10237,6 +10265,35 @@ func NewGetV1TemplateRequest(server string, id string, params *GetV1TemplatePara
 	return req, nil
 }
 
+// NewPostV1VideoGenerationsRequestWithBody constructs an http.Request for the PostV1VideoGenerations method, with any body, and a specified content type
+func NewPostV1VideoGenerationsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/videos")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -11893,6 +11950,15 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /v1/templates/{id} (the `GetV1Template` operationId).
 	GetV1TemplateWithResponse(ctx context.Context, id string, params *GetV1TemplateParams, reqEditors ...RequestEditorFn) (*GetV1TemplateResponse, error)
+
+	// PostV1VideoGenerationsWithBodyWithResponse Synchronous video generation
+	//
+	// Generates a video from a prompt and optional image, video, and audio references. Accepts Bearer access tokens or API keys. MiniMax-H3 prompts are limited to 7,000 Unicode characters; image references are limited to 30 MiB, video references to 50 MiB, audio references to 15 MiB, and the aggregate input-reference plus audio bytes to 64 MiB. HTTP(S) audio_reference_url values are limited to 16 KiB; data URLs are limited by the 15 MiB decoded audio payload.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /v1/videos (the `PostV1VideoGenerations` operationId).
+	PostV1VideoGenerationsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1VideoGenerationsResponse, error)
 }
 
 type GetAccountsResponse struct {
@@ -20371,6 +20437,96 @@ func (r GetV1TemplateResponse) ContentType() string {
 	return ""
 }
 
+type PostV1VideoGenerationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON402 the response for an HTTP 402 `application/json` response
+	JSON402 *ErrorResponse
+	// JSON413 the response for an HTTP 413 `application/json` response
+	JSON413 *ErrorResponse
+	// JSON429 the response for an HTTP 429 `application/json` response
+	JSON429 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+	// JSON503 the response for an HTTP 503 `application/json` response
+	JSON503 *ErrorResponse
+	// JSON504 the response for an HTTP 504 `application/json` response
+	JSON504 *ErrorResponse
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON402 returns the response for an HTTP 402 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON402() *ErrorResponse {
+	return r.JSON402
+}
+
+// GetJSON413 returns the response for an HTTP 413 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON413() *ErrorResponse {
+	return r.JSON413
+}
+
+// GetJSON429 returns the response for an HTTP 429 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON429() *ErrorResponse {
+	return r.JSON429
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetJSON503 returns the response for an HTTP 503 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON503() *ErrorResponse {
+	return r.JSON503
+}
+
+// GetJSON504 returns the response for an HTTP 504 `application/json` response
+func (r PostV1VideoGenerationsResponse) GetJSON504() *ErrorResponse {
+	return r.JSON504
+}
+
+// GetBody returns the raw response body bytes
+func (r PostV1VideoGenerationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostV1VideoGenerationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostV1VideoGenerationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostV1VideoGenerationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // GetAccountsWithResponse List user accounts
 //
 // Returns the accounts and memberships visible to the authenticated user.
@@ -23116,6 +23272,21 @@ func (c *ClientWithResponses) GetV1TemplateWithResponse(ctx context.Context, id 
 		return nil, err
 	}
 	return ParseGetV1TemplateResponse(rsp)
+}
+
+// PostV1VideoGenerationsWithBodyWithResponse Synchronous video generation
+//
+// Generates a video from a prompt and optional image, video, and audio references. Accepts Bearer access tokens or API keys. MiniMax-H3 prompts are limited to 7,000 Unicode characters; image references are limited to 30 MiB, video references to 50 MiB, audio references to 15 MiB, and the aggregate input-reference plus audio bytes to 64 MiB. HTTP(S) audio_reference_url values are limited to 16 KiB; data URLs are limited by the 15 MiB decoded audio payload.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /v1/videos (the `PostV1VideoGenerations` operationId).
+func (c *ClientWithResponses) PostV1VideoGenerationsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1VideoGenerationsResponse, error) {
+	rsp, err := c.PostV1VideoGenerationsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostV1VideoGenerationsResponse(rsp)
 }
 
 // ParseGetAccountsResponse parses an HTTP response from a GetAccountsWithResponse call
@@ -29611,6 +29782,81 @@ func ParseGetV1TemplateResponse(rsp *http.Response) (*GetV1TemplateResponse, err
 			return nil, err
 		}
 		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostV1VideoGenerationsResponse parses an HTTP response from a PostV1VideoGenerationsWithResponse call
+func ParsePostV1VideoGenerationsResponse(rsp *http.Response) (*PostV1VideoGenerationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostV1VideoGenerationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 402:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON402 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 413:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON413 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 504:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON504 = &dest
 
 	}
 

@@ -4564,6 +4564,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HuggingFaceModelsResponse"
+                },
+                "example": {
+                  "models": [
+                    {
+                      "compatibility_reason": "",
+                      "compatible": true,
+                      "downloads": 800000,
+                      "gguf_files": [],
+                      "has_gguf": false,
+                      "has_safetensors": true,
+                      "likes": 900,
+                      "pipeline_tag": "feature-extraction",
+                      "repo_id": "intfloat/multilingual-e5-large",
+                      "tags": [
+                        "sentence-transformers"
+                      ],
+                      "warnings": [],
+                      "workload_kind": "embeddings"
+                    },
+                    {
+                      "compatibility_reason": "conflicting-specialized-tags",
+                      "compatible": false,
+                      "downloads": 600,
+                      "gguf_files": [],
+                      "has_gguf": false,
+                      "has_safetensors": true,
+                      "likes": 4,
+                      "pipeline_tag": "sentence-similarity",
+                      "repo_id": "org/conflicting-embedding",
+                      "tags": [
+                        "sentence-similarity",
+                        "text-to-image"
+                      ],
+                      "warnings": [],
+                      "workload_kind": ""
+                    }
+                  ]
                 }
               }
             }
@@ -4679,6 +4716,50 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HuggingFaceModelsResponse"
+                },
+                "example": {
+                  "models": [
+                    {
+                      "compatibility_reason": "",
+                      "compatible": true,
+                      "downloads": 500000,
+                      "gguf_files": [
+                        {
+                          "filename": "Qwen3-32B-Q4_K_M.gguf",
+                          "quantization": "Q4_K_M",
+                          "size_bytes": 21474836480
+                        }
+                      ],
+                      "has_gguf": true,
+                      "has_safetensors": true,
+                      "likes": 1200,
+                      "pipeline_tag": "text-generation",
+                      "repo_id": "Qwen/Qwen3-32B",
+                      "tags": [
+                        "transformers"
+                      ],
+                      "warnings": [],
+                      "workload_kind": "chat"
+                    },
+                    {
+                      "compatibility_reason": "unsupported-task",
+                      "compatible": false,
+                      "downloads": 1200,
+                      "gguf_files": [],
+                      "has_gguf": false,
+                      "has_safetensors": true,
+                      "likes": 8,
+                      "pipeline_tag": "text-classification",
+                      "repo_id": "org/text-classifier",
+                      "tags": [
+                        "text-classification"
+                      ],
+                      "warnings": [
+                        "unsupported pipeline task"
+                      ],
+                      "workload_kind": ""
+                    }
+                  ]
                 }
               }
             }
@@ -4861,6 +4942,44 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HuggingFaceModelsResponse"
+                },
+                "example": {
+                  "models": [
+                    {
+                      "compatibility_reason": "",
+                      "compatible": true,
+                      "downloads": 2000000,
+                      "gguf_files": [],
+                      "has_gguf": false,
+                      "has_safetensors": true,
+                      "likes": 3000,
+                      "pipeline_tag": "text-generation",
+                      "repo_id": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                      "tags": [
+                        "transformers"
+                      ],
+                      "warnings": [],
+                      "workload_kind": "chat"
+                    },
+                    {
+                      "compatibility_reason": "unsupported-task",
+                      "compatible": false,
+                      "downloads": 500,
+                      "gguf_files": [],
+                      "has_gguf": false,
+                      "has_safetensors": true,
+                      "likes": 2,
+                      "pipeline_tag": "text-classification",
+                      "repo_id": "org/unsupported-trending",
+                      "tags": [
+                        "text-classification"
+                      ],
+                      "warnings": [
+                        "unsupported pipeline task"
+                      ],
+                      "workload_kind": ""
+                    }
+                  ]
                 }
               }
             }
@@ -8089,17 +8208,21 @@
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Model ID"
                   },
                   "file": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "Audio file"
                   },
                   "language": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Source language"
                   },
                   "response_format": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Response format"
                   }
                 },
                 "required": [
@@ -8404,33 +8527,42 @@
                 "type": "object",
                 "properties": {
                   "model": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Model ID"
                   },
                   "prompt": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Edit prompt"
                   },
                   "image": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "Source image file"
                   },
                   "mask": {
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "description": "Mask image file"
                   },
                   "size": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Output size (WIDTHxHEIGHT)"
                   },
                   "num_inference_steps": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Inference steps (1-200)"
                   },
                   "guidance_scale": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "Guidance scale (0-20)"
                   },
                   "seed": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Random seed"
                   },
                   "strength": {
-                    "type": "number"
+                    "type": "number",
+                    "description": "Denoising strength (0-1, lower preserves original)"
                   }
                 },
                 "required": [
@@ -9464,6 +9596,244 @@
           }
         ]
       }
+    },
+    "/v1/videos": {
+      "post": {
+        "operationId": "postV1VideoGenerations",
+        "summary": "Synchronous video generation",
+        "description": "Generates a video from a prompt and optional image, video, and audio references. Accepts Bearer access tokens or API keys. MiniMax-H3 prompts are limited to 7,000 Unicode characters; image references are limited to 30 MiB, video references to 50 MiB, audio references to 15 MiB, and the aggregate input-reference plus audio bytes to 64 MiB. HTTP(S) audio_reference_url values are limited to 16 KiB; data URLs are limited by the 15 MiB decoded audio payload.",
+        "tags": [
+          "inference-v1"
+        ],
+        "responses": {
+          "200": {
+            "description": "Generated MP4 video bytes",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment Required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request Entity Too Large",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "description": "Model ID"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "maxLength": 7000,
+                    "description": "Video prompt (maximum 7,000 Unicode characters)"
+                  },
+                  "task": {
+                    "type": "string",
+                    "default": "t2va",
+                    "enum": [
+                      "t2va",
+                      "fl2va",
+                      "ref2va"
+                    ],
+                    "description": "Generation task: t2va, fl2va, or ref2va"
+                  },
+                  "duration": {
+                    "type": "number",
+                    "default": 5,
+                    "minimum": 4,
+                    "maximum": 15,
+                    "description": "Duration in seconds"
+                  },
+                  "width": {
+                    "type": "integer",
+                    "minimum": 256,
+                    "maximum": 5760,
+                    "description": "Output width; provide with height; may accompany a matching standard aspect_ratio"
+                  },
+                  "height": {
+                    "type": "integer",
+                    "minimum": 256,
+                    "maximum": 5760,
+                    "description": "Output height; provide with width; may accompany a matching standard aspect_ratio"
+                  },
+                  "aspect_ratio": {
+                    "type": "string",
+                    "enum": [
+                      "21:9",
+                      "16:9",
+                      "4:3",
+                      "1:1",
+                      "3:4",
+                      "9:16",
+                      "adaptive"
+                    ],
+                    "description": "Output aspect ratio: a standard ratio may accompany matching dimensions; adaptive requires short_edge"
+                  },
+                  "short_edge": {
+                    "type": "integer",
+                    "minimum": 256,
+                    "maximum": 5760,
+                    "description": "Output short edge; only valid with aspect_ratio=adaptive"
+                  },
+                  "fps": {
+                    "type": "integer",
+                    "default": 24,
+                    "enum": [
+                      24
+                    ],
+                    "description": "Frames per second; only 24 is supported"
+                  },
+                  "num_inference_steps": {
+                    "type": "integer",
+                    "default": 50,
+                    "minimum": 1,
+                    "maximum": 200,
+                    "description": "Inference steps"
+                  },
+                  "flow_shift": {
+                    "type": "number",
+                    "default": 12,
+                    "minimum": 0,
+                    "description": "Non-negative flow shift"
+                  },
+                  "audio_flow_shift": {
+                    "type": "number",
+                    "default": 3,
+                    "minimum": 0,
+                    "description": "Non-negative audio flow shift"
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 0,
+                    "description": "Random seed"
+                  },
+                  "input_reference": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB"
+                  },
+                  "input_references": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB"
+                  },
+                  "audio_reference": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Audio reference up to 15 MiB"
+                  },
+                  "audio_reference_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "maxLength": 20972544,
+                    "description": "Hosted audio reference URL; HTTP(S) URLs are limited to 16 KiB and data URLs to the bounded decoded-audio ceiling"
+                  }
+                },
+                "required": [
+                  "model",
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -10091,9 +10461,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "workload_kind": {
-            "type": "string"
           }
         },
         "x-go-name": "CreateInstanceRequest"
@@ -10510,6 +10877,12 @@
       "HuggingFaceModelResponse": {
         "type": "object",
         "properties": {
+          "compatibility_reason": {
+            "type": "string"
+          },
+          "compatible": {
+            "type": "boolean"
+          },
           "downloads": {
             "type": "integer"
           },
@@ -10545,6 +10918,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "workload_kind": {
+            "type": "string"
           }
         },
         "x-go-name": "HuggingFaceModelResponse"
@@ -13291,17 +13667,17 @@
         "name": "Authorization",
         "in": "header"
       },
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "TokenFactory API key in the Authorization header."
-      },
       "RuntimeJWTAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Runtime JWT in the Authorization header."
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "TokenFactory API key in the Authorization header."
       }
     }
   }
