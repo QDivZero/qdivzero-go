@@ -8740,6 +8740,75 @@
         }
       }
     },
+    "/v1/realtime": {
+      "get": {
+        "operationId": "getV1Realtime",
+        "summary": "Duplex realtime WebSocket proxy",
+        "description": "Proxies a duplex realtime session (/v1/realtime?duplex=1) to the instance serving the requested omni model. Accepts Bearer access tokens or API keys. Exchanges OpenAI-Realtime-style events (session.update, input_audio_buffer.append, response.create, response.audio.delta).",
+        "tags": [
+          "inference-v1"
+        ],
+        "responses": {
+          "101": {
+            "description": "WebSocket upgrade",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Model serving name"
+          },
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Resume a duplex session id"
+          },
+          {
+            "name": "autostart",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Auto-start the duplex session (1/true/on)"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          },
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
     "/v1/responses": {
       "get": {
         "operationId": "getV1ResponsesWebSocket",
@@ -10018,6 +10087,12 @@
           "model": {
             "type": "string"
           },
+          "ref_audio": {
+            "type": "string"
+          },
+          "ref_text": {
+            "type": "string"
+          },
           "response_format": {
             "type": "string"
           },
@@ -10029,6 +10104,9 @@
           },
           "voice": {
             "type": "string"
+          },
+          "x_vector_only_mode": {
+            "type": "boolean"
           }
         },
         "x-go-name": "AudioSpeechRequest"
@@ -12173,6 +12251,9 @@
           "dtype": {
             "type": "string"
           },
+          "duplex": {
+            "type": "boolean"
+          },
           "gpu_memory_utilization": {
             "type": "number"
           },
@@ -12222,6 +12303,9 @@
           },
           "dtype": {
             "type": "string"
+          },
+          "duplex": {
+            "type": "boolean"
           },
           "gpu_memory_utilization": {
             "type": "number"
@@ -12491,6 +12575,9 @@
           },
           "state": {
             "type": "string"
+          },
+          "supports_duplex": {
+            "type": "boolean"
           },
           "supports_thinking": {
             "type": "boolean"

@@ -186,14 +186,17 @@ type ApiKeyResponse struct {
 
 // AudioSpeechRequest defines model for AudioSpeechRequest.
 type AudioSpeechRequest struct {
-	Input          *string  `json:"input,omitempty"`
-	Instructions   *string  `json:"instructions,omitempty"`
-	Language       *string  `json:"language,omitempty"`
-	Model          *string  `json:"model,omitempty"`
-	ResponseFormat *string  `json:"response_format,omitempty"`
-	Speed          *float32 `json:"speed,omitempty"`
-	TaskType       *string  `json:"task_type,omitempty"`
-	Voice          *string  `json:"voice,omitempty"`
+	Input           *string  `json:"input,omitempty"`
+	Instructions    *string  `json:"instructions,omitempty"`
+	Language        *string  `json:"language,omitempty"`
+	Model           *string  `json:"model,omitempty"`
+	RefAudio        *string  `json:"ref_audio,omitempty"`
+	RefText         *string  `json:"ref_text,omitempty"`
+	ResponseFormat  *string  `json:"response_format,omitempty"`
+	Speed           *float32 `json:"speed,omitempty"`
+	TaskType        *string  `json:"task_type,omitempty"`
+	Voice           *string  `json:"voice,omitempty"`
+	XVectorOnlyMode *bool    `json:"x_vector_only_mode,omitempty"`
 }
 
 // BeginPasskeyRegistrationResponse defines model for BeginPasskeyRegistrationResponse.
@@ -1084,6 +1087,7 @@ type ResponsesRequestEnvelope struct {
 type RuntimeConfigRequest struct {
 	ContextSize          *int     `json:"context_size,omitempty"`
 	Dtype                *string  `json:"dtype,omitempty"`
+	Duplex               *bool    `json:"duplex,omitempty"`
 	GpuMemoryUtilization *float32 `json:"gpu_memory_utilization,omitempty"`
 	KvCacheDtype         *string  `json:"kv_cache_dtype,omitempty"`
 	MaxNumBatchedTokens  *int     `json:"max_num_batched_tokens,omitempty"`
@@ -1102,6 +1106,7 @@ type RuntimeConfigRequest struct {
 type RuntimeConfigResponse struct {
 	ContextSize          *int     `json:"context_size,omitempty"`
 	Dtype                *string  `json:"dtype,omitempty"`
+	Duplex               *bool    `json:"duplex,omitempty"`
 	GpuMemoryUtilization *float32 `json:"gpu_memory_utilization,omitempty"`
 	KvCacheDtype         *string  `json:"kv_cache_dtype,omitempty"`
 	MaxNumBatchedTokens  *int     `json:"max_num_batched_tokens,omitempty"`
@@ -1208,6 +1213,7 @@ type ServingEndpointResponse struct {
 	PublicInputPerMillionEur  *float32                   `json:"public_input_per_million_eur,omitempty"`
 	PublicOutputPerMillionEur *float32                   `json:"public_output_per_million_eur,omitempty"`
 	State                     *string                    `json:"state,omitempty"`
+	SupportsDuplex            *bool                      `json:"supports_duplex,omitempty"`
 	SupportsThinking          *bool                      `json:"supports_thinking,omitempty"`
 	Targets                   *[]ServingTargetResponse   `json:"targets,omitempty"`
 	UpdatedAt                 *string                    `json:"updated_at,omitempty"`
@@ -1757,6 +1763,18 @@ type PostV1ImageEditsMultipartBody struct {
 type GetV1PublicModelPricesParams struct {
 	// Query Search query for model prices
 	Query *string `form:"query,omitempty" json:"query,omitempty"`
+}
+
+// GetV1RealtimeParams defines parameters for GetV1Realtime.
+type GetV1RealtimeParams struct {
+	// Model Model serving name
+	Model string `form:"model" json:"model"`
+
+	// SessionId Resume a duplex session id
+	SessionId *string `form:"session_id,omitempty" json:"session_id,omitempty"`
+
+	// Autostart Auto-start the duplex session (1/true/on)
+	Autostart *string `form:"autostart,omitempty" json:"autostart,omitempty"`
 }
 
 // GetV1ResponsesSessionsListParams defines parameters for GetV1ResponsesSessionsList.

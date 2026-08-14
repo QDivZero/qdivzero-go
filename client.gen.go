@@ -1442,6 +1442,13 @@ type ClientInterface interface {
 	// Corresponds with GET /v1/public/pricing (the `GetV1PublicPricing` operationId).
 	GetV1PublicPricing(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetV1Realtime Duplex realtime WebSocket proxy
+	//
+	// Proxies a duplex realtime session (/v1/realtime?duplex=1) to the instance serving the requested omni model. Accepts Bearer access tokens or API keys. Exchanges OpenAI-Realtime-style events (session.update, input_audio_buffer.append, response.create, response.audio.delta).
+	//
+	// Corresponds with GET /v1/realtime (the `GetV1Realtime` operationId).
+	GetV1Realtime(ctx context.Context, params *GetV1RealtimeParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetV1ResponsesWebSocket OpenAI-compatible Responses API over WebSocket
 	//
 	// WebSocket transport for the Responses API. Accepts Bearer access tokens or API keys. Upgrades the HTTP request to a WebSocket session that exchanges Responses payloads.
@@ -4641,6 +4648,23 @@ func (c *Client) GetV1PublicModelPrices(ctx context.Context, params *GetV1Public
 // Corresponds with GET /v1/public/pricing (the `GetV1PublicPricing` operationId).
 func (c *Client) GetV1PublicPricing(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetV1PublicPricingRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetV1Realtime Duplex realtime WebSocket proxy
+//
+// Proxies a duplex realtime session (/v1/realtime?duplex=1) to the instance serving the requested omni model. Accepts Bearer access tokens or API keys. Exchanges OpenAI-Realtime-style events (session.update, input_audio_buffer.append, response.create, response.audio.delta).
+//
+// Corresponds with GET /v1/realtime (the `GetV1Realtime` operationId).
+func (c *Client) GetV1Realtime(ctx context.Context, params *GetV1RealtimeParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1RealtimeRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -9643,6 +9667,80 @@ func NewGetV1PublicPricingRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewGetV1RealtimeRequest constructs an http.Request for the GetV1Realtime method
+func NewGetV1RealtimeRequest(server string, params *GetV1RealtimeParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/realtime")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "model", params.Model, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else {
+			for _, qp := range strings.Split(queryFrag, "&") {
+				rawQueryFragments = append(rawQueryFragments, qp)
+			}
+		}
+
+		if params.SessionId != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "session_id", *params.SessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Autostart != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "autostart", *params.Autostart, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetV1ResponsesWebSocketRequest constructs an http.Request for the GetV1ResponsesWebSocket method
 func NewGetV1ResponsesWebSocketRequest(server string) (*http.Request, error) {
 	var err error
@@ -11825,6 +11923,15 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /v1/public/pricing (the `GetV1PublicPricing` operationId).
 	GetV1PublicPricingWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1PublicPricingResponse, error)
+
+	// GetV1RealtimeWithResponse Duplex realtime WebSocket proxy
+	//
+	// Proxies a duplex realtime session (/v1/realtime?duplex=1) to the instance serving the requested omni model. Accepts Bearer access tokens or API keys. Exchanges OpenAI-Realtime-style events (session.update, input_audio_buffer.append, response.create, response.audio.delta).
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /v1/realtime (the `GetV1Realtime` operationId).
+	GetV1RealtimeWithResponse(ctx context.Context, params *GetV1RealtimeParams, reqEditors ...RequestEditorFn) (*GetV1RealtimeResponse, error)
 
 	// GetV1ResponsesWebSocketWithResponse OpenAI-compatible Responses API over WebSocket
 	//
@@ -19728,6 +19835,54 @@ func (r GetV1PublicPricingResponse) ContentType() string {
 	return ""
 }
 
+type GetV1RealtimeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON101 the response for an HTTP 101 `application/json` response
+	JSON101 *string
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+}
+
+// GetJSON101 returns the response for an HTTP 101 `application/json` response
+func (r GetV1RealtimeResponse) GetJSON101() *string {
+	return r.JSON101
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetV1RealtimeResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetBody returns the raw response body bytes
+func (r GetV1RealtimeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1RealtimeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1RealtimeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetV1RealtimeResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetV1ResponsesWebSocketResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -23057,6 +23212,21 @@ func (c *ClientWithResponses) GetV1PublicPricingWithResponse(ctx context.Context
 		return nil, err
 	}
 	return ParseGetV1PublicPricingResponse(rsp)
+}
+
+// GetV1RealtimeWithResponse Duplex realtime WebSocket proxy
+//
+// Proxies a duplex realtime session (/v1/realtime?duplex=1) to the instance serving the requested omni model. Accepts Bearer access tokens or API keys. Exchanges OpenAI-Realtime-style events (session.update, input_audio_buffer.append, response.create, response.audio.delta).
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /v1/realtime (the `GetV1Realtime` operationId).
+func (c *ClientWithResponses) GetV1RealtimeWithResponse(ctx context.Context, params *GetV1RealtimeParams, reqEditors ...RequestEditorFn) (*GetV1RealtimeResponse, error) {
+	rsp, err := c.GetV1Realtime(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1RealtimeResponse(rsp)
 }
 
 // GetV1ResponsesWebSocketWithResponse OpenAI-compatible Responses API over WebSocket
@@ -29253,6 +29423,39 @@ func ParseGetV1PublicPricingResponse(rsp *http.Response) (*GetV1PublicPricingRes
 			return nil, err
 		}
 		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetV1RealtimeResponse parses an HTTP response from a GetV1RealtimeWithResponse call
+func ParseGetV1RealtimeResponse(rsp *http.Response) (*GetV1RealtimeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1RealtimeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 101:
+		var dest string
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON101 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
 
 	}
 
