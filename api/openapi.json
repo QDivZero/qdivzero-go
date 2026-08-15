@@ -13754,17 +13754,17 @@
         "name": "Authorization",
         "in": "header"
       },
-      "RuntimeJWTAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "Runtime JWT in the Authorization header."
-      },
       "ApiKeyAuth": {
         "type": "apiKey",
         "name": "Authorization",
         "in": "header",
         "description": "TokenFactory API key in the Authorization header."
+      },
+      "RuntimeJWTAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Runtime JWT in the Authorization header."
       }
     }
   }
