@@ -12576,6 +12576,12 @@
           "state": {
             "type": "string"
           },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "supports_duplex": {
             "type": "boolean"
           },
@@ -12653,6 +12659,12 @@
           },
           "priority": {
             "type": "integer"
+          },
+          "supported_protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "target_ref_id": {
             "type": "string"
@@ -13754,17 +13766,17 @@
         "name": "Authorization",
         "in": "header"
       },
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "TokenFactory API key in the Authorization header."
-      },
       "RuntimeJWTAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Runtime JWT in the Authorization header."
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "TokenFactory API key in the Authorization header."
       }
     }
   }

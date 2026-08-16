@@ -1213,6 +1213,7 @@ type ServingEndpointResponse struct {
 	PublicInputPerMillionEur  *float32                   `json:"public_input_per_million_eur,omitempty"`
 	PublicOutputPerMillionEur *float32                   `json:"public_output_per_million_eur,omitempty"`
 	State                     *string                    `json:"state,omitempty"`
+	SupportedProtocols        *[]string                  `json:"supported_protocols,omitempty"`
 	SupportsDuplex            *bool                      `json:"supports_duplex,omitempty"`
 	SupportsThinking          *bool                      `json:"supports_thinking,omitempty"`
 	Targets                   *[]ServingTargetResponse   `json:"targets,omitempty"`
@@ -1238,15 +1239,16 @@ type ServingTargetRequest struct {
 
 // ServingTargetResponse defines model for ServingTargetResponse.
 type ServingTargetResponse struct {
-	CreatedAt   *string `json:"created_at,omitempty"`
-	Enabled     *bool   `json:"enabled,omitempty"`
-	Id          *string `json:"id,omitempty"`
-	InstanceId  *string `json:"instance_id,omitempty"`
-	Priority    *int    `json:"priority,omitempty"`
-	TargetRefId *string `json:"target_ref_id,omitempty"`
-	Type        *string `json:"type,omitempty"`
-	UpdatedAt   *string `json:"updated_at,omitempty"`
-	Weight      *int    `json:"weight,omitempty"`
+	CreatedAt          *string   `json:"created_at,omitempty"`
+	Enabled            *bool     `json:"enabled,omitempty"`
+	Id                 *string   `json:"id,omitempty"`
+	InstanceId         *string   `json:"instance_id,omitempty"`
+	Priority           *int      `json:"priority,omitempty"`
+	SupportedProtocols *[]string `json:"supported_protocols,omitempty"`
+	TargetRefId        *string   `json:"target_ref_id,omitempty"`
+	Type               *string   `json:"type,omitempty"`
+	UpdatedAt          *string   `json:"updated_at,omitempty"`
+	Weight             *int      `json:"weight,omitempty"`
 }
 
 // SmartBalancerRouteDestinationRequest defines model for SmartBalancerRouteDestinationRequest.
