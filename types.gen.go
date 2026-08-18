@@ -895,6 +895,12 @@ type PricingService struct {
 // PricingStatus defines model for PricingStatus.
 type PricingStatus string
 
+// ProtocolContextManagement defines model for Protocol.ContextManagement.
+type ProtocolContextManagement struct {
+	CompactThreshold *int    `json:"compact_threshold,omitempty"`
+	Type             *string `json:"type,omitempty"`
+}
+
 // PublicGPUPreferenceJSON defines model for PublicGPUPreferenceJSON.
 type PublicGPUPreferenceJSON struct {
 	Count       *int    `json:"count,omitempty"`
@@ -1068,11 +1074,12 @@ type ResourceMetricsResponse struct {
 
 // ResponsesRequestEnvelope defines model for ResponsesRequestEnvelope.
 type ResponsesRequestEnvelope struct {
-	Input              *[]int             `json:"input,omitempty"`
-	Instructions       *string            `json:"instructions,omitempty"`
-	Metadata           *map[string]string `json:"metadata,omitempty"`
-	Model              *string            `json:"model,omitempty"`
-	PreviousResponseId *string            `json:"previous_response_id,omitempty"`
+	ContextManagement  *[]ProtocolContextManagement `json:"context_management,omitempty"`
+	Input              *[]int                       `json:"input,omitempty"`
+	Instructions       *string                      `json:"instructions,omitempty"`
+	Metadata           *map[string]string           `json:"metadata,omitempty"`
+	Model              *string                      `json:"model,omitempty"`
+	PreviousResponseId *string                      `json:"previous_response_id,omitempty"`
 	Reasoning          *struct {
 		Effort *string `json:"effort,omitempty"`
 	} `json:"reasoning,omitempty"`
@@ -1328,15 +1335,6 @@ type StorageVolumeResponse struct {
 	Provider     *string `json:"provider,omitempty"`
 	Status       *string `json:"status,omitempty"`
 	UpdatedAt    *string `json:"updated_at,omitempty"`
-}
-
-// SystemToolOutput defines model for SystemToolOutput.
-type SystemToolOutput struct {
-	ConfigurationSchema *map[string]string `json:"configuration_schema,omitempty"`
-	Description         *string            `json:"description,omitempty"`
-	ManagedBy           *string            `json:"managed_by,omitempty"`
-	Type                *string            `json:"type,omitempty"`
-	Visibility          *string            `json:"visibility,omitempty"`
 }
 
 // TargetGroupMemberRequest defines model for TargetGroupMemberRequest.
@@ -1710,6 +1708,9 @@ type GetInstanceUsageParamsRange string
 // PostRuntimeNotifyCrashJSONBody defines parameters for PostRuntimeNotifyCrash.
 type PostRuntimeNotifyCrashJSONBody = map[string]interface{}
 
+// TryToolJSONBody defines parameters for TryTool.
+type TryToolJSONBody map[string]interface{}
+
 // PostV1AudioTranscriptionsMultipartBody defines parameters for PostV1AudioTranscriptions.
 type PostV1AudioTranscriptionsMultipartBody struct {
 	// File Audio file
@@ -2042,6 +2043,9 @@ type PostTargetGroupJSONRequestBody = CreateTargetGroupRequest
 
 // PatchTargetGroupJSONRequestBody defines body for PatchTargetGroup for application/json ContentType.
 type PatchTargetGroupJSONRequestBody = UpdateTargetGroupRequest
+
+// TryToolJSONRequestBody defines body for TryTool for application/json ContentType.
+type TryToolJSONRequestBody TryToolJSONBody
 
 // PostV1AudioSpeechJSONRequestBody defines body for PostV1AudioSpeech for application/json ContentType.
 type PostV1AudioSpeechJSONRequestBody = AudioSpeechRequest

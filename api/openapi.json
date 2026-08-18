@@ -7496,43 +7496,6 @@
         ]
       }
     },
-    "/system-tools": {
-      "get": {
-        "operationId": "getSystemTools",
-        "summary": "List system tools",
-        "description": "Lists available system tools (code interpreter, web search, etc.) for the authenticated account.",
-        "tags": [
-          "system"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SystemToolOutput"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
-      }
-    },
     "/target-groups": {
       "get": {
         "operationId": "getTargetGroups",
@@ -7903,6 +7866,114 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateTargetGroupRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/tools": {
+      "get": {
+        "operationId": "getTools",
+        "summary": "List tools",
+        "description": "Lists all available platform tools for the authenticated account.",
+        "tags": [
+          "system"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/tools/{toolType}/try": {
+      "post": {
+        "operationId": "tryTool",
+        "summary": "Try a tool",
+        "description": "Runs a single platform tool with the given configuration and returns the raw tool output.",
+        "tags": [
+          "system"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "toolType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Tool type"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
               }
             }
           }
@@ -12195,6 +12266,12 @@
       "ResponsesRequestEnvelope": {
         "type": "object",
         "properties": {
+          "context_management": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Protocol.ContextManagement"
+            }
+          },
           "input": {
             "type": "array",
             "items": {
@@ -13341,30 +13418,6 @@
         },
         "x-go-name": "ViewElementRequest"
       },
-      "SystemToolOutput": {
-        "type": "object",
-        "properties": {
-          "configuration_schema": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "description": {
-            "type": "string"
-          },
-          "managed_by": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "visibility": {
-            "type": "string"
-          }
-        },
-        "x-go-name": "SystemToolOutput"
-      },
       "Model": {
         "type": "object",
         "properties": {
@@ -13494,6 +13547,18 @@
           }
         },
         "x-go-name": "RecommendedGPU"
+      },
+      "Protocol.ContextManagement": {
+        "type": "object",
+        "properties": {
+          "compact_threshold": {
+            "type": "integer"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "x-go-name": "Protocol.ContextManagement"
       },
       "GetTemplateBySlugResponse": {
         "type": "object",
@@ -13766,17 +13831,17 @@
         "name": "Authorization",
         "in": "header"
       },
-      "ApiKeyAuth": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header",
-        "description": "TokenFactory API key in the Authorization header."
-      },
       "RuntimeJWTAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "description": "Runtime JWT in the Authorization header."
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "TokenFactory API key in the Authorization header."
       }
     }
   }

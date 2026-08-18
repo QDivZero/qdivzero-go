@@ -1260,13 +1260,6 @@ type ClientInterface interface {
 	// Corresponds with GET /storage/volumes/{volumeID} (the `GetStorageVolume` operationId).
 	GetStorageVolume(ctx context.Context, volumeID string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetSystemTools List system tools
-	//
-	// Lists available system tools (code interpreter, web search, etc.) for the authenticated account.
-	//
-	// Corresponds with GET /system-tools (the `GetSystemTools` operationId).
-	GetSystemTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
-
 	// GetTargetGroups List target groups
 	//
 	// Corresponds with GET /target-groups (the `GetTargetGroups` operationId).
@@ -1309,6 +1302,31 @@ type ClientInterface interface {
 	//
 	// Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 	PatchTargetGroup(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetTools List tools
+	//
+	// Lists all available platform tools for the authenticated account.
+	//
+	// Corresponds with GET /tools (the `GetTools` operationId).
+	GetTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TryToolWithBody Try a tool
+	//
+	// Runs a single platform tool with the given configuration and returns the raw tool output.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+	TryToolWithBody(ctx context.Context, toolType string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// TryTool Try a tool
+	//
+	// Runs a single platform tool with the given configuration and returns the raw tool output.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+	TryTool(ctx context.Context, toolType string, body TryToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetUserAPIKeys List API keys for the authenticated user
 	//
@@ -4236,23 +4254,6 @@ func (c *Client) GetStorageVolume(ctx context.Context, volumeID string, reqEdito
 	return c.Client.Do(req)
 }
 
-// GetSystemTools List system tools
-//
-// Lists available system tools (code interpreter, web search, etc.) for the authenticated account.
-//
-// Corresponds with GET /system-tools (the `GetSystemTools` operationId).
-func (c *Client) GetSystemTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetSystemToolsRequest(c.Server)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
-		return nil, err
-	}
-	return c.Client.Do(req)
-}
-
 // GetTargetGroups List target groups
 //
 // Corresponds with GET /target-groups (the `GetTargetGroups` operationId).
@@ -4356,6 +4357,61 @@ func (c *Client) PatchTargetGroupWithBody(ctx context.Context, targetGroupID str
 // Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 func (c *Client) PatchTargetGroup(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchTargetGroupRequest(c.Server, targetGroupID, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetTools List tools
+//
+// Lists all available platform tools for the authenticated account.
+//
+// Corresponds with GET /tools (the `GetTools` operationId).
+func (c *Client) GetTools(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetToolsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// TryToolWithBody Try a tool
+//
+// Runs a single platform tool with the given configuration and returns the raw tool output.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+func (c *Client) TryToolWithBody(ctx context.Context, toolType string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTryToolRequestWithBody(c.Server, toolType, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// TryTool Try a tool
+//
+// Runs a single platform tool with the given configuration and returns the raw tool output.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+func (c *Client) TryTool(ctx context.Context, toolType string, body TryToolJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewTryToolRequest(c.Server, toolType, body)
 	if err != nil {
 		return nil, err
 	}
@@ -9021,33 +9077,6 @@ func NewGetStorageVolumeRequest(server string, volumeID string) (*http.Request, 
 	return req, nil
 }
 
-// NewGetSystemToolsRequest constructs an http.Request for the GetSystemTools method
-func NewGetSystemToolsRequest(server string) (*http.Request, error) {
-	var err error
-
-	serverURL, err := url.Parse(server)
-	if err != nil {
-		return nil, err
-	}
-
-	operationPath := fmt.Sprintf("/system-tools")
-	if operationPath[0] == '/' {
-		operationPath = "." + operationPath
-	}
-
-	queryURL, err := serverURL.Parse(operationPath)
-	if err != nil {
-		return nil, err
-	}
-
-	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return req, nil
-}
-
 // NewGetTargetGroupsRequest constructs an http.Request for the GetTargetGroups method
 func NewGetTargetGroupsRequest(server string) (*http.Request, error) {
 	var err error
@@ -9221,6 +9250,80 @@ func NewPatchTargetGroupRequestWithBody(server string, targetGroupID string, con
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetToolsRequest constructs an http.Request for the GetTools method
+func NewGetToolsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/tools")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewTryToolRequest calls the generic TryTool builder with application/json body
+func NewTryToolRequest(server string, toolType string, body TryToolJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewTryToolRequestWithBody(server, toolType, "application/json", bodyReader)
+}
+
+// NewTryToolRequestWithBody constructs an http.Request for the TryTool method, with any body, and a specified content type
+func NewTryToolRequestWithBody(server string, toolType string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "toolType", toolType, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/tools/%s/try", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
 	if err != nil {
 		return nil, err
 	}
@@ -11722,15 +11825,6 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /storage/volumes/{volumeID} (the `GetStorageVolume` operationId).
 	GetStorageVolumeWithResponse(ctx context.Context, volumeID string, reqEditors ...RequestEditorFn) (*GetStorageVolumeResponse, error)
 
-	// GetSystemToolsWithResponse List system tools
-	//
-	// Lists available system tools (code interpreter, web search, etc.) for the authenticated account.
-	//
-	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /system-tools (the `GetSystemTools` operationId).
-	GetSystemToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSystemToolsResponse, error)
-
 	// GetTargetGroupsWithResponse List target groups
 	//
 	// Returns a wrapper object for the known response body format(s).
@@ -11779,6 +11873,33 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PATCH /target-groups/{targetGroupID} (the `PatchTargetGroup` operationId).
 	PatchTargetGroupWithResponse(ctx context.Context, targetGroupID string, body PatchTargetGroupJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchTargetGroupResponse, error)
+
+	// GetToolsWithResponse List tools
+	//
+	// Lists all available platform tools for the authenticated account.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /tools (the `GetTools` operationId).
+	GetToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetToolsResponse, error)
+
+	// TryToolWithBodyWithResponse Try a tool
+	//
+	// Runs a single platform tool with the given configuration and returns the raw tool output.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+	TryToolWithBodyWithResponse(ctx context.Context, toolType string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TryToolResponse, error)
+
+	// TryToolWithResponse Try a tool
+	//
+	// Runs a single platform tool with the given configuration and returns the raw tool output.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+	TryToolWithResponse(ctx context.Context, toolType string, body TryToolJSONRequestBody, reqEditors ...RequestEditorFn) (*TryToolResponse, error)
 
 	// GetUserAPIKeysWithResponse List API keys for the authenticated user
 	//
@@ -18740,54 +18861,6 @@ func (r GetStorageVolumeResponse) ContentType() string {
 	return ""
 }
 
-type GetSystemToolsResponse struct {
-	Body         []byte
-	HTTPResponse *http.Response
-	// JSON200 the response for an HTTP 200 `application/json` response
-	JSON200 *SystemToolOutput
-	// JSON401 the response for an HTTP 401 `application/json` response
-	JSON401 *ErrorResponse
-}
-
-// GetJSON200 returns the response for an HTTP 200 `application/json` response
-func (r GetSystemToolsResponse) GetJSON200() *SystemToolOutput {
-	return r.JSON200
-}
-
-// GetJSON401 returns the response for an HTTP 401 `application/json` response
-func (r GetSystemToolsResponse) GetJSON401() *ErrorResponse {
-	return r.JSON401
-}
-
-// GetBody returns the raw response body bytes
-func (r GetSystemToolsResponse) GetBody() []byte {
-	return r.Body
-}
-
-// Status returns HTTPResponse.Status
-func (r GetSystemToolsResponse) Status() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Status
-	}
-	return http.StatusText(0)
-}
-
-// StatusCode returns HTTPResponse.StatusCode
-func (r GetSystemToolsResponse) StatusCode() int {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.StatusCode
-	}
-	return 0
-}
-
-// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
-func (r GetSystemToolsResponse) ContentType() string {
-	if r.HTTPResponse != nil {
-		return r.HTTPResponse.Header.Get("Content-Type")
-	}
-	return ""
-}
-
 type GetTargetGroupsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19120,6 +19193,109 @@ func (r PatchTargetGroupResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r PatchTargetGroupResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetToolsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetToolsResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetToolsResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetBody returns the raw response body bytes
+func (r GetToolsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetToolsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetToolsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetToolsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type TryToolResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r TryToolResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r TryToolResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r TryToolResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetBody returns the raw response body bytes
+func (r TryToolResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r TryToolResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r TryToolResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r TryToolResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -22868,21 +23044,6 @@ func (c *ClientWithResponses) GetStorageVolumeWithResponse(ctx context.Context, 
 	return ParseGetStorageVolumeResponse(rsp)
 }
 
-// GetSystemToolsWithResponse List system tools
-//
-// Lists available system tools (code interpreter, web search, etc.) for the authenticated account.
-//
-// Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /system-tools (the `GetSystemTools` operationId).
-func (c *ClientWithResponses) GetSystemToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSystemToolsResponse, error) {
-	rsp, err := c.GetSystemTools(ctx, reqEditors...)
-	if err != nil {
-		return nil, err
-	}
-	return ParseGetSystemToolsResponse(rsp)
-}
-
 // GetTargetGroupsWithResponse List target groups
 //
 // Returns a wrapper object for the known response body format(s).
@@ -22972,6 +23133,51 @@ func (c *ClientWithResponses) PatchTargetGroupWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParsePatchTargetGroupResponse(rsp)
+}
+
+// GetToolsWithResponse List tools
+//
+// Lists all available platform tools for the authenticated account.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /tools (the `GetTools` operationId).
+func (c *ClientWithResponses) GetToolsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetToolsResponse, error) {
+	rsp, err := c.GetTools(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetToolsResponse(rsp)
+}
+
+// TryToolWithBodyWithResponse Try a tool
+//
+// Runs a single platform tool with the given configuration and returns the raw tool output.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+func (c *ClientWithResponses) TryToolWithBodyWithResponse(ctx context.Context, toolType string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*TryToolResponse, error) {
+	rsp, err := c.TryToolWithBody(ctx, toolType, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTryToolResponse(rsp)
+}
+
+// TryToolWithResponse Try a tool
+//
+// Runs a single platform tool with the given configuration and returns the raw tool output.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /tools/{toolType}/try (the `TryTool` operationId).
+func (c *ClientWithResponses) TryToolWithResponse(ctx context.Context, toolType string, body TryToolJSONRequestBody, reqEditors ...RequestEditorFn) (*TryToolResponse, error) {
+	rsp, err := c.TryTool(ctx, toolType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseTryToolResponse(rsp)
 }
 
 // GetUserAPIKeysWithResponse List API keys for the authenticated user
@@ -28598,39 +28804,6 @@ func ParseGetStorageVolumeResponse(rsp *http.Response) (*GetStorageVolumeRespons
 	return response, nil
 }
 
-// ParseGetSystemToolsResponse parses an HTTP response from a GetSystemToolsWithResponse call
-func ParseGetSystemToolsResponse(rsp *http.Response) (*GetSystemToolsResponse, error) {
-	bodyBytes, err := io.ReadAll(rsp.Body)
-	defer func() { _ = rsp.Body.Close() }()
-	if err != nil {
-		return nil, err
-	}
-
-	response := &GetSystemToolsResponse{
-		Body:         bodyBytes,
-		HTTPResponse: rsp,
-	}
-
-	switch {
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest SystemToolOutput
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON200 = &dest
-
-	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
-		var dest ErrorResponse
-		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
-			return nil, err
-		}
-		response.JSON401 = &dest
-
-	}
-
-	return response, nil
-}
-
 // ParseGetTargetGroupsResponse parses an HTTP response from a GetTargetGroupsWithResponse call
 func ParseGetTargetGroupsResponse(rsp *http.Response) (*GetTargetGroupsResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -28891,6 +29064,79 @@ func ParsePatchTargetGroupResponse(rsp *http.Response) (*PatchTargetGroupRespons
 			return nil, err
 		}
 		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetToolsResponse parses an HTTP response from a GetToolsWithResponse call
+func ParseGetToolsResponse(rsp *http.Response) (*GetToolsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetToolsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseTryToolResponse parses an HTTP response from a TryToolWithResponse call
+func ParseTryToolResponse(rsp *http.Response) (*TryToolResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &TryToolResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
 
 	}
 
