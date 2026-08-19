@@ -270,6 +270,7 @@ type ChatRequestEnvelope struct {
 	Firewall    *string                `json:"firewall,omitempty"`
 	MaxTokens   *int                   `json:"max_tokens,omitempty"`
 	Messages    *[]ChatMessageEnvelope `json:"messages,omitempty"`
+	Modalities  *[]string              `json:"modalities,omitempty"`
 	Model       *string                `json:"model,omitempty"`
 	Stream      *bool                  `json:"stream,omitempty"`
 	Temperature *float32               `json:"temperature,omitempty"`
