@@ -6403,6 +6403,352 @@
         ]
       }
     },
+    "/notifications": {
+      "get": {
+        "operationId": "getNotifications",
+        "summary": "List notifications",
+        "description": "Returns notifications for the authenticated account, newest first.",
+        "tags": [
+          "notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Return notifications created after this RFC3339 timestamp"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Maximum number of notifications to return (default 50, max 100)"
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by notification kind"
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by severity"
+          },
+          {
+            "name": "include_read",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Include already-read notifications"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/notifications/dismiss": {
+      "post": {
+        "operationId": "postNotificationsDismiss",
+        "summary": "Dismiss notifications",
+        "description": "Dismisses the given notifications for the authenticated account.",
+        "tags": [
+          "notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DismissResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DismissRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/notifications/read-all": {
+      "post": {
+        "operationId": "postNotificationsMarkAllRead",
+        "summary": "Mark all notifications as read",
+        "description": "Marks all notifications matching the optional filters as read.",
+        "tags": [
+          "notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkAllReadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkAllReadRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "operationId": "getNotificationsUnreadCount",
+        "summary": "Get unread notification count",
+        "description": "Returns the number of unread notifications for the authenticated account.",
+        "tags": [
+          "notifications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadCountResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/notifications/{notificationID}/read": {
+      "post": {
+        "operationId": "postNotificationsMarkRead",
+        "summary": "Mark a notification as read",
+        "description": "Marks a single notification as read for the authenticated account.",
+        "tags": [
+          "notifications"
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "notificationID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Notification ID"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
     "/replica-sets": {
       "get": {
         "operationId": "getReplicaSets",
@@ -10768,6 +11114,27 @@
         },
         "x-go-name": "DebitBalanceResponse"
       },
+      "DismissRequest": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "x-go-name": "DismissRequest"
+      },
+      "DismissResponse": {
+        "type": "object",
+        "properties": {
+          "dismissed": {
+            "type": "integer"
+          }
+        },
+        "x-go-name": "DismissResponse"
+      },
       "EmbeddingsRequestEnvelope": {
         "type": "object",
         "properties": {
@@ -11536,6 +11903,21 @@
         },
         "x-go-name": "ListDocumentsResponse"
       },
+      "ListNotificationsResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationResponse"
+            }
+          },
+          "next_since": {
+            "type": "string"
+          }
+        },
+        "x-go-name": "ListNotificationsResponse"
+      },
       "ListedDocumentResponse": {
         "type": "object",
         "properties": {
@@ -11599,6 +11981,103 @@
           }
         },
         "x-go-name": "LoginResponse"
+      },
+      "MarkAllReadRequest": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        },
+        "x-go-name": "MarkAllReadRequest"
+      },
+      "MarkAllReadResponse": {
+        "type": "object",
+        "properties": {
+          "marked": {
+            "type": "integer"
+          }
+        },
+        "x-go-name": "MarkAllReadResponse"
+      },
+      "NotificationLinkResponse": {
+        "type": "object",
+        "properties": {
+          "kind_route": {
+            "type": "string"
+          },
+          "label_key": {
+            "type": "string"
+          },
+          "route_args": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "x-go-name": "NotificationLinkResponse"
+      },
+      "NotificationResponse": {
+        "type": "object",
+        "properties": {
+          "body_args": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "body_key": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "dedupe_key": {
+            "type": "string"
+          },
+          "dismissed": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationLinkResponse"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "read": {
+            "type": "boolean"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "source_topic": {
+            "type": "string"
+          },
+          "title_args": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "title_key": {
+            "type": "string"
+          }
+        },
+        "x-go-name": "NotificationResponse"
       },
       "PasskeyListResponse": {
         "type": "object",
@@ -13039,6 +13518,22 @@
           }
         },
         "x-go-name": "TargetGroupResponse"
+      },
+      "UnreadCountResponse": {
+        "type": "object",
+        "properties": {
+          "by_severity": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "x-go-name": "UnreadCountResponse"
       },
       "UpdateAccountMemberRequest": {
         "type": "object",

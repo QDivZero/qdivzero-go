@@ -1103,6 +1103,63 @@ type ClientInterface interface {
 	// Corresponds with GET /models/fixed (the `GetModelsFixed` operationId).
 	GetModelsFixed(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetNotifications List notifications
+	//
+	// Returns notifications for the authenticated account, newest first.
+	//
+	// Corresponds with GET /notifications (the `GetNotifications` operationId).
+	GetNotifications(ctx context.Context, params *GetNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostNotificationsDismissWithBody Dismiss notifications
+	//
+	// Dismisses the given notifications for the authenticated account.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+	PostNotificationsDismissWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostNotificationsDismiss Dismiss notifications
+	//
+	// Dismisses the given notifications for the authenticated account.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+	PostNotificationsDismiss(ctx context.Context, body PostNotificationsDismissJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostNotificationsMarkAllReadWithBody Mark all notifications as read
+	//
+	// Marks all notifications matching the optional filters as read.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+	PostNotificationsMarkAllReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostNotificationsMarkAllRead Mark all notifications as read
+	//
+	// Marks all notifications matching the optional filters as read.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+	PostNotificationsMarkAllRead(ctx context.Context, body PostNotificationsMarkAllReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetNotificationsUnreadCount Get unread notification count
+	//
+	// Returns the number of unread notifications for the authenticated account.
+	//
+	// Corresponds with GET /notifications/unread-count (the `GetNotificationsUnreadCount` operationId).
+	GetNotificationsUnreadCount(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostNotificationsMarkRead Mark a notification as read
+	//
+	// Marks a single notification as read for the authenticated account.
+	//
+	// Corresponds with POST /notifications/{notificationID}/read (the `PostNotificationsMarkRead` operationId).
+	PostNotificationsMarkRead(ctx context.Context, notificationID string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetReplicaSets List replica sets
 	//
 	// Corresponds with GET /replica-sets (the `GetReplicaSets` operationId).
@@ -3857,6 +3914,133 @@ func (c *Client) PostInvitationsAccept(ctx context.Context, body PostInvitations
 // Corresponds with GET /models/fixed (the `GetModelsFixed` operationId).
 func (c *Client) GetModelsFixed(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetModelsFixedRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetNotifications List notifications
+//
+// Returns notifications for the authenticated account, newest first.
+//
+// Corresponds with GET /notifications (the `GetNotifications` operationId).
+func (c *Client) GetNotifications(ctx context.Context, params *GetNotificationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetNotificationsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostNotificationsDismissWithBody Dismiss notifications
+//
+// Dismisses the given notifications for the authenticated account.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+func (c *Client) PostNotificationsDismissWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostNotificationsDismissRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostNotificationsDismiss Dismiss notifications
+//
+// Dismisses the given notifications for the authenticated account.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+func (c *Client) PostNotificationsDismiss(ctx context.Context, body PostNotificationsDismissJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostNotificationsDismissRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostNotificationsMarkAllReadWithBody Mark all notifications as read
+//
+// Marks all notifications matching the optional filters as read.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+func (c *Client) PostNotificationsMarkAllReadWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostNotificationsMarkAllReadRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostNotificationsMarkAllRead Mark all notifications as read
+//
+// Marks all notifications matching the optional filters as read.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+func (c *Client) PostNotificationsMarkAllRead(ctx context.Context, body PostNotificationsMarkAllReadJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostNotificationsMarkAllReadRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetNotificationsUnreadCount Get unread notification count
+//
+// Returns the number of unread notifications for the authenticated account.
+//
+// Corresponds with GET /notifications/unread-count (the `GetNotificationsUnreadCount` operationId).
+func (c *Client) GetNotificationsUnreadCount(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetNotificationsUnreadCountRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PostNotificationsMarkRead Mark a notification as read
+//
+// Marks a single notification as read for the authenticated account.
+//
+// Corresponds with POST /notifications/{notificationID}/read (the `PostNotificationsMarkRead` operationId).
+func (c *Client) PostNotificationsMarkRead(ctx context.Context, notificationID string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostNotificationsMarkReadRequest(c.Server, notificationID)
 	if err != nil {
 		return nil, err
 	}
@@ -8498,6 +8682,249 @@ func NewGetModelsFixedRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewGetNotificationsRequest constructs an http.Request for the GetNotifications method
+func NewGetNotificationsRequest(server string, params *GetNotificationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/notifications")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Since != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "since", *params.Since, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Kind != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "kind", *params.Kind, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Severity != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "severity", *params.Severity, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.IncludeRead != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "include_read", *params.IncludeRead, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "boolean", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostNotificationsDismissRequest calls the generic PostNotificationsDismiss builder with application/json body
+func NewPostNotificationsDismissRequest(server string, body PostNotificationsDismissJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostNotificationsDismissRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostNotificationsDismissRequestWithBody constructs an http.Request for the PostNotificationsDismiss method, with any body, and a specified content type
+func NewPostNotificationsDismissRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/notifications/dismiss")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostNotificationsMarkAllReadRequest calls the generic PostNotificationsMarkAllRead builder with application/json body
+func NewPostNotificationsMarkAllReadRequest(server string, body PostNotificationsMarkAllReadJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostNotificationsMarkAllReadRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostNotificationsMarkAllReadRequestWithBody constructs an http.Request for the PostNotificationsMarkAllRead method, with any body, and a specified content type
+func NewPostNotificationsMarkAllReadRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/notifications/read-all")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetNotificationsUnreadCountRequest constructs an http.Request for the GetNotificationsUnreadCount method
+func NewGetNotificationsUnreadCountRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/notifications/unread-count")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostNotificationsMarkReadRequest constructs an http.Request for the PostNotificationsMarkRead method
+func NewPostNotificationsMarkReadRequest(server string, notificationID string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "notificationID", notificationID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/notifications/%s/read", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetReplicaSetsRequest constructs an http.Request for the GetReplicaSets method
 func NewGetReplicaSetsRequest(server string) (*http.Request, error) {
 	var err error
@@ -11649,6 +12076,69 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /models/fixed (the `GetModelsFixed` operationId).
 	GetModelsFixedWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetModelsFixedResponse, error)
+
+	// GetNotificationsWithResponse List notifications
+	//
+	// Returns notifications for the authenticated account, newest first.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /notifications (the `GetNotifications` operationId).
+	GetNotificationsWithResponse(ctx context.Context, params *GetNotificationsParams, reqEditors ...RequestEditorFn) (*GetNotificationsResponse, error)
+
+	// PostNotificationsDismissWithBodyWithResponse Dismiss notifications
+	//
+	// Dismisses the given notifications for the authenticated account.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+	PostNotificationsDismissWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationsDismissResponse, error)
+
+	// PostNotificationsDismissWithResponse Dismiss notifications
+	//
+	// Dismisses the given notifications for the authenticated account.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+	PostNotificationsDismissWithResponse(ctx context.Context, body PostNotificationsDismissJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationsDismissResponse, error)
+
+	// PostNotificationsMarkAllReadWithBodyWithResponse Mark all notifications as read
+	//
+	// Marks all notifications matching the optional filters as read.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+	PostNotificationsMarkAllReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationsMarkAllReadResponse, error)
+
+	// PostNotificationsMarkAllReadWithResponse Mark all notifications as read
+	//
+	// Marks all notifications matching the optional filters as read.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+	PostNotificationsMarkAllReadWithResponse(ctx context.Context, body PostNotificationsMarkAllReadJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationsMarkAllReadResponse, error)
+
+	// GetNotificationsUnreadCountWithResponse Get unread notification count
+	//
+	// Returns the number of unread notifications for the authenticated account.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /notifications/unread-count (the `GetNotificationsUnreadCount` operationId).
+	GetNotificationsUnreadCountWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationsUnreadCountResponse, error)
+
+	// PostNotificationsMarkReadWithResponse Mark a notification as read
+	//
+	// Marks a single notification as read for the authenticated account.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /notifications/{notificationID}/read (the `PostNotificationsMarkRead` operationId).
+	PostNotificationsMarkReadWithResponse(ctx context.Context, notificationID string, reqEditors ...RequestEditorFn) (*PostNotificationsMarkReadResponse, error)
 
 	// GetReplicaSetsWithResponse List replica sets
 	//
@@ -17862,6 +18352,302 @@ func (r GetModelsFixedResponse) ContentType() string {
 	return ""
 }
 
+type GetNotificationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ListNotificationsResponse
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetNotificationsResponse) GetJSON200() *ListNotificationsResponse {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r GetNotificationsResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetNotificationsResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r GetNotificationsResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetNotificationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetNotificationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetNotificationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetNotificationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PostNotificationsDismissResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DismissResponse
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PostNotificationsDismissResponse) GetJSON200() *DismissResponse {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PostNotificationsDismissResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostNotificationsDismissResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r PostNotificationsDismissResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PostNotificationsDismissResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostNotificationsDismissResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostNotificationsDismissResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostNotificationsDismissResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PostNotificationsMarkAllReadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *MarkAllReadResponse
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PostNotificationsMarkAllReadResponse) GetJSON200() *MarkAllReadResponse {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PostNotificationsMarkAllReadResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostNotificationsMarkAllReadResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r PostNotificationsMarkAllReadResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PostNotificationsMarkAllReadResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostNotificationsMarkAllReadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostNotificationsMarkAllReadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostNotificationsMarkAllReadResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetNotificationsUnreadCountResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *UnreadCountResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetNotificationsUnreadCountResponse) GetJSON200() *UnreadCountResponse {
+	return r.JSON200
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r GetNotificationsUnreadCountResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r GetNotificationsUnreadCountResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r GetNotificationsUnreadCountResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetNotificationsUnreadCountResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetNotificationsUnreadCountResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetNotificationsUnreadCountResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PostNotificationsMarkReadResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON401 the response for an HTTP 401 `application/json` response
+	JSON401 *ErrorResponse
+	// JSON500 the response for an HTTP 500 `application/json` response
+	JSON500 *ErrorResponse
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r PostNotificationsMarkReadResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON401 returns the response for an HTTP 401 `application/json` response
+func (r PostNotificationsMarkReadResponse) GetJSON401() *ErrorResponse {
+	return r.JSON401
+}
+
+// GetJSON500 returns the response for an HTTP 500 `application/json` response
+func (r PostNotificationsMarkReadResponse) GetJSON500() *ErrorResponse {
+	return r.JSON500
+}
+
+// GetBody returns the raw response body bytes
+func (r PostNotificationsMarkReadResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PostNotificationsMarkReadResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostNotificationsMarkReadResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PostNotificationsMarkReadResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetReplicaSetsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -22729,6 +23515,111 @@ func (c *ClientWithResponses) GetModelsFixedWithResponse(ctx context.Context, re
 		return nil, err
 	}
 	return ParseGetModelsFixedResponse(rsp)
+}
+
+// GetNotificationsWithResponse List notifications
+//
+// Returns notifications for the authenticated account, newest first.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /notifications (the `GetNotifications` operationId).
+func (c *ClientWithResponses) GetNotificationsWithResponse(ctx context.Context, params *GetNotificationsParams, reqEditors ...RequestEditorFn) (*GetNotificationsResponse, error) {
+	rsp, err := c.GetNotifications(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetNotificationsResponse(rsp)
+}
+
+// PostNotificationsDismissWithBodyWithResponse Dismiss notifications
+//
+// Dismisses the given notifications for the authenticated account.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+func (c *ClientWithResponses) PostNotificationsDismissWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationsDismissResponse, error) {
+	rsp, err := c.PostNotificationsDismissWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostNotificationsDismissResponse(rsp)
+}
+
+// PostNotificationsDismissWithResponse Dismiss notifications
+//
+// Dismisses the given notifications for the authenticated account.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /notifications/dismiss (the `PostNotificationsDismiss` operationId).
+func (c *ClientWithResponses) PostNotificationsDismissWithResponse(ctx context.Context, body PostNotificationsDismissJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationsDismissResponse, error) {
+	rsp, err := c.PostNotificationsDismiss(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostNotificationsDismissResponse(rsp)
+}
+
+// PostNotificationsMarkAllReadWithBodyWithResponse Mark all notifications as read
+//
+// Marks all notifications matching the optional filters as read.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+func (c *ClientWithResponses) PostNotificationsMarkAllReadWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostNotificationsMarkAllReadResponse, error) {
+	rsp, err := c.PostNotificationsMarkAllReadWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostNotificationsMarkAllReadResponse(rsp)
+}
+
+// PostNotificationsMarkAllReadWithResponse Mark all notifications as read
+//
+// Marks all notifications matching the optional filters as read.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /notifications/read-all (the `PostNotificationsMarkAllRead` operationId).
+func (c *ClientWithResponses) PostNotificationsMarkAllReadWithResponse(ctx context.Context, body PostNotificationsMarkAllReadJSONRequestBody, reqEditors ...RequestEditorFn) (*PostNotificationsMarkAllReadResponse, error) {
+	rsp, err := c.PostNotificationsMarkAllRead(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostNotificationsMarkAllReadResponse(rsp)
+}
+
+// GetNotificationsUnreadCountWithResponse Get unread notification count
+//
+// Returns the number of unread notifications for the authenticated account.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /notifications/unread-count (the `GetNotificationsUnreadCount` operationId).
+func (c *ClientWithResponses) GetNotificationsUnreadCountWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetNotificationsUnreadCountResponse, error) {
+	rsp, err := c.GetNotificationsUnreadCount(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetNotificationsUnreadCountResponse(rsp)
+}
+
+// PostNotificationsMarkReadWithResponse Mark a notification as read
+//
+// Marks a single notification as read for the authenticated account.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /notifications/{notificationID}/read (the `PostNotificationsMarkRead` operationId).
+func (c *ClientWithResponses) PostNotificationsMarkReadWithResponse(ctx context.Context, notificationID string, reqEditors ...RequestEditorFn) (*PostNotificationsMarkReadResponse, error) {
+	rsp, err := c.PostNotificationsMarkRead(ctx, notificationID, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostNotificationsMarkReadResponse(rsp)
 }
 
 // GetReplicaSetsWithResponse List replica sets
@@ -28027,6 +28918,230 @@ func ParseGetModelsFixedResponse(rsp *http.Response) (*GetModelsFixedResponse, e
 			return nil, err
 		}
 		response.JSON401 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetNotificationsResponse parses an HTTP response from a GetNotificationsWithResponse call
+func ParseGetNotificationsResponse(rsp *http.Response) (*GetNotificationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetNotificationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ListNotificationsResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostNotificationsDismissResponse parses an HTTP response from a PostNotificationsDismissWithResponse call
+func ParsePostNotificationsDismissResponse(rsp *http.Response) (*PostNotificationsDismissResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostNotificationsDismissResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DismissResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostNotificationsMarkAllReadResponse parses an HTTP response from a PostNotificationsMarkAllReadWithResponse call
+func ParsePostNotificationsMarkAllReadResponse(rsp *http.Response) (*PostNotificationsMarkAllReadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostNotificationsMarkAllReadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MarkAllReadResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetNotificationsUnreadCountResponse parses an HTTP response from a GetNotificationsUnreadCountWithResponse call
+func ParseGetNotificationsUnreadCountResponse(rsp *http.Response) (*GetNotificationsUnreadCountResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetNotificationsUnreadCountResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest UnreadCountResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostNotificationsMarkReadResponse parses an HTTP response from a PostNotificationsMarkReadWithResponse call
+func ParsePostNotificationsMarkReadResponse(rsp *http.Response) (*PostNotificationsMarkReadResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostNotificationsMarkReadResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 500:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON500 = &dest
 
 	}
 

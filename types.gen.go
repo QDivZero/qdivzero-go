@@ -427,6 +427,16 @@ type DebitBalanceResponse struct {
 	Success    *bool    `json:"success,omitempty"`
 }
 
+// DismissRequest defines model for DismissRequest.
+type DismissRequest struct {
+	Ids *[]string `json:"ids,omitempty"`
+}
+
+// DismissResponse defines model for DismissResponse.
+type DismissResponse struct {
+	Dismissed *int `json:"dismissed,omitempty"`
+}
+
 // EmbeddingsRequestEnvelope defines model for EmbeddingsRequestEnvelope.
 type EmbeddingsRequestEnvelope struct {
 	Input *[]int  `json:"input,omitempty"`
@@ -738,6 +748,12 @@ type ListDocumentsResponse struct {
 	NextCursor *string                   `json:"next_cursor,omitempty"`
 }
 
+// ListNotificationsResponse defines model for ListNotificationsResponse.
+type ListNotificationsResponse struct {
+	Items     *[]NotificationResponse `json:"items,omitempty"`
+	NextSince *string                 `json:"next_since,omitempty"`
+}
+
 // ListUserVariantsResponse defines model for ListUserVariantsResponse.
 type ListUserVariantsResponse struct {
 	Items *[]VariantWithRelations `json:"items,omitempty"`
@@ -769,6 +785,17 @@ type LoginResponse struct {
 	RefreshToken      *string `json:"refresh_token,omitempty"`
 }
 
+// MarkAllReadRequest defines model for MarkAllReadRequest.
+type MarkAllReadRequest struct {
+	Kind     *string `json:"kind,omitempty"`
+	Severity *string `json:"severity,omitempty"`
+}
+
+// MarkAllReadResponse defines model for MarkAllReadResponse.
+type MarkAllReadResponse struct {
+	Marked *int `json:"marked,omitempty"`
+}
+
 // Model defines model for Model.
 type Model struct {
 	DisplayName         *string         `json:"display_name,omitempty"`
@@ -794,6 +821,33 @@ type ModelPricesResponse struct {
 	Stale        *bool             `json:"stale,omitempty"`
 	UpdatedAt    *string           `json:"updated_at,omitempty"`
 	Version      *int              `json:"version,omitempty"`
+}
+
+// NotificationLinkResponse defines model for NotificationLinkResponse.
+type NotificationLinkResponse struct {
+	KindRoute *string                 `json:"kind_route,omitempty"`
+	LabelKey  *string                 `json:"label_key,omitempty"`
+	RouteArgs *map[string]interface{} `json:"route_args,omitempty"`
+}
+
+// NotificationResponse defines model for NotificationResponse.
+type NotificationResponse struct {
+	BodyArgs    *map[string]interface{}     `json:"body_args,omitempty"`
+	BodyKey     *string                     `json:"body_key,omitempty"`
+	CreatedAt   *string                     `json:"created_at,omitempty"`
+	DedupeKey   *string                     `json:"dedupe_key,omitempty"`
+	Dismissed   *bool                       `json:"dismissed,omitempty"`
+	ExpiresAt   *string                     `json:"expires_at,omitempty"`
+	Icon        *string                     `json:"icon,omitempty"`
+	Id          *string                     `json:"id,omitempty"`
+	Kind        *string                     `json:"kind,omitempty"`
+	Links       *[]NotificationLinkResponse `json:"links,omitempty"`
+	Metadata    *map[string]interface{}     `json:"metadata,omitempty"`
+	Read        *bool                       `json:"read,omitempty"`
+	Severity    *string                     `json:"severity,omitempty"`
+	SourceTopic *string                     `json:"source_topic,omitempty"`
+	TitleArgs   *map[string]interface{}     `json:"title_args,omitempty"`
+	TitleKey    *string                     `json:"title_key,omitempty"`
 }
 
 // PasskeyListResponse defines model for PasskeyListResponse.
@@ -1420,6 +1474,12 @@ type Translation struct {
 	Name        *string `json:"name,omitempty"`
 }
 
+// UnreadCountResponse defines model for UnreadCountResponse.
+type UnreadCountResponse struct {
+	BySeverity *map[string]int64 `json:"by_severity,omitempty"`
+	Count      *int              `json:"count,omitempty"`
+}
+
 // UpdateAccountMemberRequest defines model for UpdateAccountMemberRequest.
 type UpdateAccountMemberRequest struct {
 	Role *string `json:"role,omitempty"`
@@ -1705,6 +1765,24 @@ type GetInstanceUsageParams struct {
 
 // GetInstanceUsageParamsRange defines parameters for GetInstanceUsage.
 type GetInstanceUsageParamsRange string
+
+// GetNotificationsParams defines parameters for GetNotifications.
+type GetNotificationsParams struct {
+	// Since Return notifications created after this RFC3339 timestamp
+	Since *string `form:"since,omitempty" json:"since,omitempty"`
+
+	// Limit Maximum number of notifications to return (default 50, max 100)
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Kind Filter by notification kind
+	Kind *string `form:"kind,omitempty" json:"kind,omitempty"`
+
+	// Severity Filter by severity
+	Severity *string `form:"severity,omitempty" json:"severity,omitempty"`
+
+	// IncludeRead Include already-read notifications
+	IncludeRead *bool `form:"include_read,omitempty" json:"include_read,omitempty"`
+}
 
 // PostRuntimeNotifyCrashJSONBody defines parameters for PostRuntimeNotifyCrash.
 type PostRuntimeNotifyCrashJSONBody = map[string]interface{}
@@ -2017,6 +2095,12 @@ type PatchInstanceScheduleRuleJSONRequestBody = ScheduleRuleRequest
 
 // PostInvitationsAcceptJSONRequestBody defines body for PostInvitationsAccept for application/json ContentType.
 type PostInvitationsAcceptJSONRequestBody = AcceptInvitationRequest
+
+// PostNotificationsDismissJSONRequestBody defines body for PostNotificationsDismiss for application/json ContentType.
+type PostNotificationsDismissJSONRequestBody = DismissRequest
+
+// PostNotificationsMarkAllReadJSONRequestBody defines body for PostNotificationsMarkAllRead for application/json ContentType.
+type PostNotificationsMarkAllReadJSONRequestBody = MarkAllReadRequest
 
 // PatchReplicaSetJSONRequestBody defines body for PatchReplicaSet for application/json ContentType.
 type PatchReplicaSetJSONRequestBody = UpdateReplicaSetRequest
