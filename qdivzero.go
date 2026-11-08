@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 // DefaultBaseURL is the production API endpoint.
@@ -15,9 +16,9 @@ const DefaultBaseURL = "https://api.qdiv0.com"
 
 // API is the client facade. It embeds the generated ClientWithResponses so
 // every typed operation (e.g. GetAccountsWithResponse) is available directly,
-// and adds automatic authentication: tokens set via Login, Refresh or options
-// are attached to requests and refreshed transparently when the API answers
-// 401 Unauthorized.
+// and adds automatic authentication: session cookies set via Login, Refresh or
+// options are attached to requests and refreshed transparently when the API
+// answers 401 Unauthorized. API keys use the Authorization header.
 type API struct {
 	*ClientWithResponses
 	auth *authManager
@@ -48,12 +49,12 @@ func WithCustomHTTPClient(c *http.Client) Option {
 	return func(o *options) { o.httpClient = c }
 }
 
-// WithAccessToken pre-authenticates the client with a bearer access token.
+// WithAccessToken pre-authenticates the client with a session access cookie value.
 func WithAccessToken(token string) Option {
 	return func(o *options) { o.accessToken = token }
 }
 
-// WithRefreshToken sets a refresh token used for automatic token refresh.
+// WithRefreshToken sets a session refresh cookie value used for automatic refresh.
 func WithRefreshToken(token string) Option {
 	return func(o *options) { o.refreshToken = token }
 }
@@ -113,8 +114,25 @@ func NewAPI(opts ...Option) (*API, error) {
 		cfg.apiKey = cf.APIKey
 	}
 
+	origin, err := url.Parse(cfg.baseURL)
+	if err != nil {
+		return nil, fmt.Errorf("qdivzero: invalid server URL: %w", err)
+	}
 	plain, err := NewClientWithResponses(cfg.baseURL, WithHTTPClient(&http.Client{
 		Transport: cfg.httpClient.Transport,
+		Timeout:   cfg.httpClient.Timeout,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			if !sameOrigin(req.URL, origin) {
+				return http.ErrUseLastResponse
+			}
+			if cfg.httpClient.CheckRedirect != nil {
+				return cfg.httpClient.CheckRedirect(req, via)
+			}
+			if len(via) >= 10 {
+				return fmt.Errorf("stopped after 10 redirects")
+			}
+			return nil
+		},
 	}))
 	if err != nil {
 		return nil, fmt.Errorf("qdivzero: %w", err)
@@ -136,7 +154,7 @@ func NewAPI(opts ...Option) (*API, error) {
 		base = http.DefaultTransport
 	}
 	client := &http.Client{
-		Transport:     &authTransport{base: base, auth: auth},
+		Transport:     &authTransport{base: base, auth: auth, origin: origin},
 		Timeout:       cfg.httpClient.Timeout,
 		Jar:           cfg.httpClient.Jar,
 		CheckRedirect: cfg.httpClient.CheckRedirect,
@@ -148,30 +166,25 @@ func NewAPI(opts ...Option) (*API, error) {
 	return &API{ClientWithResponses: gen, auth: auth}, nil
 }
 
-// Login authenticates with email and password, storing the returned access
-// and refresh tokens for automatic use by subsequent requests. Subsequent 401
-// responses re-authenticate with the stored credentials.
+// Login authenticates with email and password and stores the returned session
+// cookies. It returns an error if the API requires additional verification.
 func (a *API) Login(ctx context.Context, email, password string) error {
-	a.auth.mu.Lock()
-	a.auth.email = email
-	a.auth.password = password
-	a.auth.mu.Unlock()
-	return a.auth.refreshNow(ctx)
+	return a.auth.loginNow(ctx, email, password)
 }
 
-// Refresh exchanges the stored refresh token for a new access token.
+// Refresh exchanges the stored refresh cookie for rotated session cookies.
 func (a *API) Refresh(ctx context.Context) error {
 	return a.auth.refreshNow(ctx)
 }
 
-// SetAccessToken replaces the bearer access token used for requests.
+// SetAccessToken replaces the session access cookie value used for requests.
 func (a *API) SetAccessToken(token string) {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()
 	a.auth.accessToken = token
 }
 
-// SetRefreshToken replaces the refresh token used for automatic refresh.
+// SetRefreshToken replaces the session refresh cookie value used for automatic refresh.
 func (a *API) SetRefreshToken(token string) {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()
@@ -193,14 +206,14 @@ func (a *API) SetAPIKey(key string) {
 }
 
 // SetAuthorization sets a raw Authorization header value, overriding the
-// bearer token and API key.
+// session cookie and API key.
 func (a *API) SetAuthorization(value string) {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()
 	a.auth.rawAuth = value
 }
 
-// AccessToken returns the access token currently in use.
+// AccessToken returns the session access cookie value currently in use.
 func (a *API) AccessToken() string {
 	a.auth.mu.Lock()
 	defer a.auth.mu.Unlock()

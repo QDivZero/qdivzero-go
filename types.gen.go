@@ -4,8 +4,133 @@
 package qdivzero
 
 import (
+	"encoding/json"
+	"errors"
+	"time"
+
+	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
+
+// Defines values for CreateInstanceRequestWorkloadKind.
+const (
+	CreateInstanceRequestWorkloadKindDecision CreateInstanceRequestWorkloadKind = "decision"
+)
+
+// Valid indicates whether the value is a known member of the CreateInstanceRequestWorkloadKind enum.
+func (e CreateInstanceRequestWorkloadKind) Valid() bool {
+	switch e {
+	case CreateInstanceRequestWorkloadKindDecision:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionChoiceAnswerType.
+const (
+	ExecutionDecisionChoiceAnswerTypeChoice ExecutionDecisionChoiceAnswerType = "choice"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionChoiceAnswerType enum.
+func (e ExecutionDecisionChoiceAnswerType) Valid() bool {
+	switch e {
+	case ExecutionDecisionChoiceAnswerTypeChoice:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionChoiceQuestionType.
+const (
+	ExecutionDecisionChoiceQuestionTypeChoice ExecutionDecisionChoiceQuestionType = "choice"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionChoiceQuestionType enum.
+func (e ExecutionDecisionChoiceQuestionType) Valid() bool {
+	switch e {
+	case ExecutionDecisionChoiceQuestionTypeChoice:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionNoulAnswerType.
+const (
+	ExecutionDecisionNoulAnswerTypeNoul ExecutionDecisionNoulAnswerType = "noul"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionNoulAnswerType enum.
+func (e ExecutionDecisionNoulAnswerType) Valid() bool {
+	switch e {
+	case ExecutionDecisionNoulAnswerTypeNoul:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionNoulQuestionType.
+const (
+	ExecutionDecisionNoulQuestionTypeNoul ExecutionDecisionNoulQuestionType = "noul"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionNoulQuestionType enum.
+func (e ExecutionDecisionNoulQuestionType) Valid() bool {
+	switch e {
+	case ExecutionDecisionNoulQuestionTypeNoul:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionScoreAnswerType.
+const (
+	ExecutionDecisionScoreAnswerTypeScore ExecutionDecisionScoreAnswerType = "score"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionScoreAnswerType enum.
+func (e ExecutionDecisionScoreAnswerType) Valid() bool {
+	switch e {
+	case ExecutionDecisionScoreAnswerTypeScore:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ExecutionDecisionScoreQuestionType.
+const (
+	ExecutionDecisionScoreQuestionTypeScore ExecutionDecisionScoreQuestionType = "score"
+)
+
+// Valid indicates whether the value is a known member of the ExecutionDecisionScoreQuestionType enum.
+func (e ExecutionDecisionScoreQuestionType) Valid() bool {
+	switch e {
+	case ExecutionDecisionScoreQuestionTypeScore:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PreviewInstanceRequestWorkloadKind.
+const (
+	PreviewInstanceRequestWorkloadKindDecision PreviewInstanceRequestWorkloadKind = "decision"
+)
+
+// Valid indicates whether the value is a known member of the PreviewInstanceRequestWorkloadKind enum.
+func (e PreviewInstanceRequestWorkloadKind) Valid() bool {
+	switch e {
+	case PreviewInstanceRequestWorkloadKindDecision:
+		return true
+	default:
+		return false
+	}
+}
 
 // Defines values for PricingStatus.
 const (
@@ -19,6 +144,33 @@ func (e PricingStatus) Valid() bool {
 	case PricingEstimated:
 		return true
 	case PricingUnavailable:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for ServiceVideoJobResultStatus.
+const (
+	Cancelled ServiceVideoJobResultStatus = "cancelled"
+	Failed    ServiceVideoJobResultStatus = "failed"
+	Queued    ServiceVideoJobResultStatus = "queued"
+	Running   ServiceVideoJobResultStatus = "running"
+	Succeeded ServiceVideoJobResultStatus = "succeeded"
+)
+
+// Valid indicates whether the value is a known member of the ServiceVideoJobResultStatus enum.
+func (e ServiceVideoJobResultStatus) Valid() bool {
+	switch e {
+	case Cancelled:
+		return true
+	case Failed:
+		return true
+	case Queued:
+		return true
+	case Running:
+		return true
+	case Succeeded:
 		return true
 	default:
 		return false
@@ -46,33 +198,258 @@ func (e GetInstanceUsageParamsRange) Valid() bool {
 	}
 }
 
+// Defines values for PostV1VideoJobJSONBodyAspectRatio.
+const (
+	PostV1VideoJobJSONBodyAspectRatioAdaptive PostV1VideoJobJSONBodyAspectRatio = "adaptive"
+	PostV1VideoJobJSONBodyAspectRatioN11      PostV1VideoJobJSONBodyAspectRatio = "1:1"
+	PostV1VideoJobJSONBodyAspectRatioN169     PostV1VideoJobJSONBodyAspectRatio = "16:9"
+	PostV1VideoJobJSONBodyAspectRatioN219     PostV1VideoJobJSONBodyAspectRatio = "21:9"
+	PostV1VideoJobJSONBodyAspectRatioN34      PostV1VideoJobJSONBodyAspectRatio = "3:4"
+	PostV1VideoJobJSONBodyAspectRatioN43      PostV1VideoJobJSONBodyAspectRatio = "4:3"
+	PostV1VideoJobJSONBodyAspectRatioN916     PostV1VideoJobJSONBodyAspectRatio = "9:16"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobJSONBodyAspectRatio enum.
+func (e PostV1VideoJobJSONBodyAspectRatio) Valid() bool {
+	switch e {
+	case PostV1VideoJobJSONBodyAspectRatioAdaptive:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN11:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN169:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN219:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN34:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN43:
+		return true
+	case PostV1VideoJobJSONBodyAspectRatioN916:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoJobJSONBodyFps.
+const (
+	PostV1VideoJobJSONBodyFpsN24 PostV1VideoJobJSONBodyFps = 24
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobJSONBodyFps enum.
+func (e PostV1VideoJobJSONBodyFps) Valid() bool {
+	switch e {
+	case PostV1VideoJobJSONBodyFpsN24:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoJobJSONBodyTask.
+const (
+	PostV1VideoJobJSONBodyTaskFl2va  PostV1VideoJobJSONBodyTask = "fl2va"
+	PostV1VideoJobJSONBodyTaskI2v    PostV1VideoJobJSONBodyTask = "i2v"
+	PostV1VideoJobJSONBodyTaskRef2va PostV1VideoJobJSONBodyTask = "ref2va"
+	PostV1VideoJobJSONBodyTaskT2v    PostV1VideoJobJSONBodyTask = "t2v"
+	PostV1VideoJobJSONBodyTaskT2va   PostV1VideoJobJSONBodyTask = "t2va"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobJSONBodyTask enum.
+func (e PostV1VideoJobJSONBodyTask) Valid() bool {
+	switch e {
+	case PostV1VideoJobJSONBodyTaskFl2va:
+		return true
+	case PostV1VideoJobJSONBodyTaskI2v:
+		return true
+	case PostV1VideoJobJSONBodyTaskRef2va:
+		return true
+	case PostV1VideoJobJSONBodyTaskT2v:
+		return true
+	case PostV1VideoJobJSONBodyTaskT2va:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoJobMultipartBodyAspectRatio.
+const (
+	PostV1VideoJobMultipartBodyAspectRatioAdaptive PostV1VideoJobMultipartBodyAspectRatio = "adaptive"
+	PostV1VideoJobMultipartBodyAspectRatioN11      PostV1VideoJobMultipartBodyAspectRatio = "1:1"
+	PostV1VideoJobMultipartBodyAspectRatioN169     PostV1VideoJobMultipartBodyAspectRatio = "16:9"
+	PostV1VideoJobMultipartBodyAspectRatioN219     PostV1VideoJobMultipartBodyAspectRatio = "21:9"
+	PostV1VideoJobMultipartBodyAspectRatioN34      PostV1VideoJobMultipartBodyAspectRatio = "3:4"
+	PostV1VideoJobMultipartBodyAspectRatioN43      PostV1VideoJobMultipartBodyAspectRatio = "4:3"
+	PostV1VideoJobMultipartBodyAspectRatioN916     PostV1VideoJobMultipartBodyAspectRatio = "9:16"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobMultipartBodyAspectRatio enum.
+func (e PostV1VideoJobMultipartBodyAspectRatio) Valid() bool {
+	switch e {
+	case PostV1VideoJobMultipartBodyAspectRatioAdaptive:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN11:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN169:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN219:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN34:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN43:
+		return true
+	case PostV1VideoJobMultipartBodyAspectRatioN916:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoJobMultipartBodyFps.
+const (
+	PostV1VideoJobMultipartBodyFpsN24 PostV1VideoJobMultipartBodyFps = 24
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobMultipartBodyFps enum.
+func (e PostV1VideoJobMultipartBodyFps) Valid() bool {
+	switch e {
+	case PostV1VideoJobMultipartBodyFpsN24:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoJobMultipartBodyTask.
+const (
+	PostV1VideoJobMultipartBodyTaskFl2va  PostV1VideoJobMultipartBodyTask = "fl2va"
+	PostV1VideoJobMultipartBodyTaskI2v    PostV1VideoJobMultipartBodyTask = "i2v"
+	PostV1VideoJobMultipartBodyTaskRef2va PostV1VideoJobMultipartBodyTask = "ref2va"
+	PostV1VideoJobMultipartBodyTaskT2v    PostV1VideoJobMultipartBodyTask = "t2v"
+	PostV1VideoJobMultipartBodyTaskT2va   PostV1VideoJobMultipartBodyTask = "t2va"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoJobMultipartBodyTask enum.
+func (e PostV1VideoJobMultipartBodyTask) Valid() bool {
+	switch e {
+	case PostV1VideoJobMultipartBodyTaskFl2va:
+		return true
+	case PostV1VideoJobMultipartBodyTaskI2v:
+		return true
+	case PostV1VideoJobMultipartBodyTaskRef2va:
+		return true
+	case PostV1VideoJobMultipartBodyTaskT2v:
+		return true
+	case PostV1VideoJobMultipartBodyTaskT2va:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoGenerationsJSONBodyAspectRatio.
+const (
+	PostV1VideoGenerationsJSONBodyAspectRatioAdaptive PostV1VideoGenerationsJSONBodyAspectRatio = "adaptive"
+	PostV1VideoGenerationsJSONBodyAspectRatioN11      PostV1VideoGenerationsJSONBodyAspectRatio = "1:1"
+	PostV1VideoGenerationsJSONBodyAspectRatioN169     PostV1VideoGenerationsJSONBodyAspectRatio = "16:9"
+	PostV1VideoGenerationsJSONBodyAspectRatioN219     PostV1VideoGenerationsJSONBodyAspectRatio = "21:9"
+	PostV1VideoGenerationsJSONBodyAspectRatioN34      PostV1VideoGenerationsJSONBodyAspectRatio = "3:4"
+	PostV1VideoGenerationsJSONBodyAspectRatioN43      PostV1VideoGenerationsJSONBodyAspectRatio = "4:3"
+	PostV1VideoGenerationsJSONBodyAspectRatioN916     PostV1VideoGenerationsJSONBodyAspectRatio = "9:16"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsJSONBodyAspectRatio enum.
+func (e PostV1VideoGenerationsJSONBodyAspectRatio) Valid() bool {
+	switch e {
+	case PostV1VideoGenerationsJSONBodyAspectRatioAdaptive:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN11:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN169:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN219:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN34:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN43:
+		return true
+	case PostV1VideoGenerationsJSONBodyAspectRatioN916:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoGenerationsJSONBodyFps.
+const (
+	PostV1VideoGenerationsJSONBodyFpsN24 PostV1VideoGenerationsJSONBodyFps = 24
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsJSONBodyFps enum.
+func (e PostV1VideoGenerationsJSONBodyFps) Valid() bool {
+	switch e {
+	case PostV1VideoGenerationsJSONBodyFpsN24:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for PostV1VideoGenerationsJSONBodyTask.
+const (
+	PostV1VideoGenerationsJSONBodyTaskFl2va  PostV1VideoGenerationsJSONBodyTask = "fl2va"
+	PostV1VideoGenerationsJSONBodyTaskI2v    PostV1VideoGenerationsJSONBodyTask = "i2v"
+	PostV1VideoGenerationsJSONBodyTaskRef2va PostV1VideoGenerationsJSONBodyTask = "ref2va"
+	PostV1VideoGenerationsJSONBodyTaskT2v    PostV1VideoGenerationsJSONBodyTask = "t2v"
+	PostV1VideoGenerationsJSONBodyTaskT2va   PostV1VideoGenerationsJSONBodyTask = "t2va"
+)
+
+// Valid indicates whether the value is a known member of the PostV1VideoGenerationsJSONBodyTask enum.
+func (e PostV1VideoGenerationsJSONBodyTask) Valid() bool {
+	switch e {
+	case PostV1VideoGenerationsJSONBodyTaskFl2va:
+		return true
+	case PostV1VideoGenerationsJSONBodyTaskI2v:
+		return true
+	case PostV1VideoGenerationsJSONBodyTaskRef2va:
+		return true
+	case PostV1VideoGenerationsJSONBodyTaskT2v:
+		return true
+	case PostV1VideoGenerationsJSONBodyTaskT2va:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for PostV1VideoGenerationsMultipartBodyAspectRatio.
 const (
-	Adaptive PostV1VideoGenerationsMultipartBodyAspectRatio = "adaptive"
-	N11      PostV1VideoGenerationsMultipartBodyAspectRatio = "1:1"
-	N169     PostV1VideoGenerationsMultipartBodyAspectRatio = "16:9"
-	N219     PostV1VideoGenerationsMultipartBodyAspectRatio = "21:9"
-	N34      PostV1VideoGenerationsMultipartBodyAspectRatio = "3:4"
-	N43      PostV1VideoGenerationsMultipartBodyAspectRatio = "4:3"
-	N916     PostV1VideoGenerationsMultipartBodyAspectRatio = "9:16"
+	PostV1VideoGenerationsMultipartBodyAspectRatioAdaptive PostV1VideoGenerationsMultipartBodyAspectRatio = "adaptive"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN11      PostV1VideoGenerationsMultipartBodyAspectRatio = "1:1"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN169     PostV1VideoGenerationsMultipartBodyAspectRatio = "16:9"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN219     PostV1VideoGenerationsMultipartBodyAspectRatio = "21:9"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN34      PostV1VideoGenerationsMultipartBodyAspectRatio = "3:4"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN43      PostV1VideoGenerationsMultipartBodyAspectRatio = "4:3"
+	PostV1VideoGenerationsMultipartBodyAspectRatioN916     PostV1VideoGenerationsMultipartBodyAspectRatio = "9:16"
 )
 
 // Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyAspectRatio enum.
 func (e PostV1VideoGenerationsMultipartBodyAspectRatio) Valid() bool {
 	switch e {
-	case Adaptive:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioAdaptive:
 		return true
-	case N11:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN11:
 		return true
-	case N169:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN169:
 		return true
-	case N219:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN219:
 		return true
-	case N34:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN34:
 		return true
-	case N43:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN43:
 		return true
-	case N916:
+	case PostV1VideoGenerationsMultipartBodyAspectRatioN916:
 		return true
 	default:
 		return false
@@ -81,13 +458,13 @@ func (e PostV1VideoGenerationsMultipartBodyAspectRatio) Valid() bool {
 
 // Defines values for PostV1VideoGenerationsMultipartBodyFps.
 const (
-	N24 PostV1VideoGenerationsMultipartBodyFps = 24
+	PostV1VideoGenerationsMultipartBodyFpsN24 PostV1VideoGenerationsMultipartBodyFps = 24
 )
 
 // Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyFps enum.
 func (e PostV1VideoGenerationsMultipartBodyFps) Valid() bool {
 	switch e {
-	case N24:
+	case PostV1VideoGenerationsMultipartBodyFpsN24:
 		return true
 	default:
 		return false
@@ -96,19 +473,25 @@ func (e PostV1VideoGenerationsMultipartBodyFps) Valid() bool {
 
 // Defines values for PostV1VideoGenerationsMultipartBodyTask.
 const (
-	Fl2va  PostV1VideoGenerationsMultipartBodyTask = "fl2va"
-	Ref2va PostV1VideoGenerationsMultipartBodyTask = "ref2va"
-	T2va   PostV1VideoGenerationsMultipartBodyTask = "t2va"
+	PostV1VideoGenerationsMultipartBodyTaskFl2va  PostV1VideoGenerationsMultipartBodyTask = "fl2va"
+	PostV1VideoGenerationsMultipartBodyTaskI2v    PostV1VideoGenerationsMultipartBodyTask = "i2v"
+	PostV1VideoGenerationsMultipartBodyTaskRef2va PostV1VideoGenerationsMultipartBodyTask = "ref2va"
+	PostV1VideoGenerationsMultipartBodyTaskT2v    PostV1VideoGenerationsMultipartBodyTask = "t2v"
+	PostV1VideoGenerationsMultipartBodyTaskT2va   PostV1VideoGenerationsMultipartBodyTask = "t2va"
 )
 
 // Valid indicates whether the value is a known member of the PostV1VideoGenerationsMultipartBodyTask enum.
 func (e PostV1VideoGenerationsMultipartBodyTask) Valid() bool {
 	switch e {
-	case Fl2va:
+	case PostV1VideoGenerationsMultipartBodyTaskFl2va:
 		return true
-	case Ref2va:
+	case PostV1VideoGenerationsMultipartBodyTaskI2v:
 		return true
-	case T2va:
+	case PostV1VideoGenerationsMultipartBodyTaskRef2va:
+		return true
+	case PostV1VideoGenerationsMultipartBodyTaskT2v:
+		return true
+	case PostV1VideoGenerationsMultipartBodyTaskT2va:
 		return true
 	default:
 		return false
@@ -157,11 +540,10 @@ type AccountMembershipResponse struct {
 
 // AccountResponse defines model for AccountResponse.
 type AccountResponse struct {
-	CreatedAtUnix      *int    `json:"created_at_unix,omitempty"`
-	Description        *string `json:"description,omitempty"`
-	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
-	Id                 *string `json:"id,omitempty"`
-	Name               *string `json:"name,omitempty"`
+	CreatedAtUnix *int    `json:"created_at_unix,omitempty"`
+	Description   *string `json:"description,omitempty"`
+	Id            *string `json:"id,omitempty"`
+	Name          *string `json:"name,omitempty"`
 }
 
 // AddAccountMemberRequest defines model for AddAccountMemberRequest.
@@ -189,10 +571,12 @@ type AudioSpeechRequest struct {
 	Input           *string  `json:"input,omitempty"`
 	Instructions    *string  `json:"instructions,omitempty"`
 	Language        *string  `json:"language,omitempty"`
+	MaxNewTokens    *int     `json:"max_new_tokens,omitempty"`
 	Model           *string  `json:"model,omitempty"`
 	RefAudio        *string  `json:"ref_audio,omitempty"`
 	RefText         *string  `json:"ref_text,omitempty"`
 	ResponseFormat  *string  `json:"response_format,omitempty"`
+	Seed            *int     `json:"seed,omitempty"`
 	Speed           *float32 `json:"speed,omitempty"`
 	TaskType        *string  `json:"task_type,omitempty"`
 	Voice           *string  `json:"voice,omitempty"`
@@ -223,32 +607,46 @@ type BeginTotpEnrollmentResponse struct {
 	Secret     *string `json:"secret,omitempty"`
 }
 
+// BiomolecularCapabilities defines model for BiomolecularCapabilities.
+type BiomolecularCapabilities struct {
+	CheckedAt *string `json:"checked_at,omitempty"`
+	MsaStatus *string `json:"msa_status,omitempty"`
+}
+
 // CatalogGPUResponse defines model for CatalogGPUResponse.
 type CatalogGPUResponse struct {
-	AvailabilityCount *int     `json:"availability_count,omitempty"`
-	AvailabilityTotal *int     `json:"availability_total,omitempty"`
-	CapacityTier      *string  `json:"capacity_tier,omitempty"`
-	City              *string  `json:"city,omitempty"`
-	ComputeTflops     *float32 `json:"compute_tflops,omitempty"`
-	Continent         *string  `json:"continent,omitempty"`
-	Country           *string  `json:"country,omitempty"`
-	CpuCores          *int     `json:"cpu_cores,omitempty"`
-	CpuName           *string  `json:"cpu_name,omitempty"`
-	CpuRamGb          *int     `json:"cpu_ram_gb,omitempty"`
-	CudaMaxGood       *float32 `json:"cuda_max_good,omitempty"`
-	DiskBandwidthMbps *float32 `json:"disk_bandwidth_mbps,omitempty"`
-	DisplayName       *string  `json:"display_name,omitempty"`
-	Enabled           *bool    `json:"enabled,omitempty"`
-	GpuCount          *int     `json:"gpu_count,omitempty"`
-	InternetDownMbps  *float32 `json:"internet_down_mbps,omitempty"`
-	InternetUpMbps    *float32 `json:"internet_up_mbps,omitempty"`
-	MarketType        *string  `json:"market_type,omitempty"`
-	PricePerHourEur   *float32 `json:"price_per_hour_eur,omitempty"`
-	ProviderCodename  *string  `json:"provider_codename,omitempty"`
-	PublicGpuId       *string  `json:"public_gpu_id,omitempty"`
-	Reliability       *float32 `json:"reliability,omitempty"`
-	StockStatus       *string  `json:"stock_status,omitempty"`
-	VramGb            *float32 `json:"vram_gb,omitempty"`
+	AvailabilityCount            *int     `json:"availability_count,omitempty"`
+	AvailabilityTotal            *int     `json:"availability_total,omitempty"`
+	CapacityTier                 *string  `json:"capacity_tier,omitempty"`
+	City                         *string  `json:"city,omitempty"`
+	ComputeTflops                *float32 `json:"compute_tflops,omitempty"`
+	Continent                    *string  `json:"continent,omitempty"`
+	Country                      *string  `json:"country,omitempty"`
+	CpuCores                     *int     `json:"cpu_cores,omitempty"`
+	CpuName                      *string  `json:"cpu_name,omitempty"`
+	CpuRamGb                     *int     `json:"cpu_ram_gb,omitempty"`
+	CudaMaxGood                  *float32 `json:"cuda_max_good,omitempty"`
+	DiskBandwidthMbps            *float32 `json:"disk_bandwidth_mbps,omitempty"`
+	DisplayName                  *string  `json:"display_name,omitempty"`
+	DownloadSizeBytes            *int     `json:"download_size_bytes,omitempty"`
+	Enabled                      *bool    `json:"enabled,omitempty"`
+	EstimatedDownloadCostEur     *float32 `json:"estimated_download_cost_eur,omitempty"`
+	EstimatedOneHourCostEur      *float32 `json:"estimated_one_hour_cost_eur,omitempty"`
+	EstimatedSpotReserveEur      *float32 `json:"estimated_spot_reserve_eur,omitempty"`
+	GpuCount                     *int     `json:"gpu_count,omitempty"`
+	InternetDownMbps             *float32 `json:"internet_down_mbps,omitempty"`
+	InternetUpMbps               *float32 `json:"internet_up_mbps,omitempty"`
+	MarketType                   *string  `json:"market_type,omitempty"`
+	NetworkDownloadPricePerGbEur *float32 `json:"network_download_price_per_gb_eur,omitempty"`
+	NetworkEstimateAvailable     *bool    `json:"network_estimate_available,omitempty"`
+	NetworkPricingKnown          *bool    `json:"network_pricing_known,omitempty"`
+	NetworkUploadPricePerGbEur   *float32 `json:"network_upload_price_per_gb_eur,omitempty"`
+	PricePerHourEur              *float32 `json:"price_per_hour_eur,omitempty"`
+	ProviderCodename             *string  `json:"provider_codename,omitempty"`
+	PublicGpuId                  *string  `json:"public_gpu_id,omitempty"`
+	Reliability                  *float32 `json:"reliability,omitempty"`
+	StockStatus                  *string  `json:"stock_status,omitempty"`
+	VramGb                       *float32 `json:"vram_gb,omitempty"`
 }
 
 // ChangePasswordRequest defines model for ChangePasswordRequest.
@@ -259,10 +657,12 @@ type ChangePasswordRequest struct {
 
 // ChatMessageEnvelope defines model for ChatMessageEnvelope.
 type ChatMessageEnvelope struct {
-	Content    *[]int                  `json:"content,omitempty"`
-	Role       *string                 `json:"role,omitempty"`
-	ToolCallId *string                 `json:"tool_call_id,omitempty"`
-	ToolCalls  *[]ChatToolCallEnvelope `json:"tool_calls,omitempty"`
+	Content          *[]int                  `json:"content,omitempty"`
+	Reasoning        *string                 `json:"reasoning,omitempty"`
+	ReasoningContent *string                 `json:"reasoning_content,omitempty"`
+	Role             *string                 `json:"role,omitempty"`
+	ToolCallId       *string                 `json:"tool_call_id,omitempty"`
+	ToolCalls        *[]ChatToolCallEnvelope `json:"tool_calls,omitempty"`
 }
 
 // ChatRequestEnvelope defines model for ChatRequestEnvelope.
@@ -272,6 +672,7 @@ type ChatRequestEnvelope struct {
 	Messages    *[]ChatMessageEnvelope `json:"messages,omitempty"`
 	Modalities  *[]string              `json:"modalities,omitempty"`
 	Model       *string                `json:"model,omitempty"`
+	Speaker     *string                `json:"speaker,omitempty"`
 	Stream      *bool                  `json:"stream,omitempty"`
 	Temperature *float32               `json:"temperature,omitempty"`
 	TopP        *float32               `json:"top_p,omitempty"`
@@ -339,31 +740,40 @@ type CreateFirewallRuleRequest struct {
 
 // CreateInstanceRequest defines model for CreateInstanceRequest.
 type CreateInstanceRequest struct {
-	Description             *string                    `json:"description,omitempty"`
-	DownloadSizeBytes       *int                       `json:"download_size_bytes,omitempty"`
-	GgufModelPath           *string                    `json:"gguf_model_path,omitempty"`
-	GpuPreferences          *[]PublicGPUPreferenceJSON `json:"gpu_preferences,omitempty"`
-	HuggingfaceRepoId       *string                    `json:"huggingface_repo_id,omitempty"`
-	IdleTimeoutSeconds      *int                       `json:"idle_timeout_seconds,omitempty"`
-	Name                    *string                    `json:"name,omitempty"`
-	ReplicaCount            *int                       `json:"replica_count,omitempty"`
-	RuntimeConfig           *RuntimeConfigRequest      `json:"runtime_config,omitempty"`
-	RuntimePreset           *string                    `json:"runtime_preset,omitempty"`
-	SchedulingMode          *string                    `json:"scheduling_mode,omitempty"`
-	ServerlessEnabled       *bool                      `json:"serverless_enabled,omitempty"`
-	ServingName             *string                    `json:"serving_name,omitempty"`
-	SmartAllowCommunity     *bool                      `json:"smart_allow_community,omitempty"`
-	SmartAllowSpot          *bool                      `json:"smart_allow_spot,omitempty"`
-	SmartMaxPricePerHourEur *float32                   `json:"smart_max_price_per_hour_eur,omitempty"`
-	SmartMinGpuClass        *string                    `json:"smart_min_gpu_class,omitempty"`
-	SmartMinTotalTflops     *float32                   `json:"smart_min_total_tflops,omitempty"`
-	SmartProviderFilterMode *string                    `json:"smart_provider_filter_mode,omitempty"`
-	SmartProviderPreference *string                    `json:"smart_provider_preference,omitempty"`
-	SmartRegion             *string                    `json:"smart_region,omitempty"`
-	SmartRegions            *[]string                  `json:"smart_regions,omitempty"`
-	SmartSelectionLabel     *string                    `json:"smart_selection_label,omitempty"`
-	SupportedProtocols      *[]string                  `json:"supported_protocols,omitempty"`
+	// CostOptimizationEnabled Opt into automatic replacement with cheaper compatible Smart capacity. Defaults to false; requires smart scheduling.
+	CostOptimizationEnabled *bool `json:"cost_optimization_enabled,omitempty"`
+
+	// CostOptimizationMinSavingsPercent Minimum percentage saving required for replacement. Defaults to 20; must be finite, greater than 0 and less than 100. Decimals are accepted.
+	CostOptimizationMinSavingsPercent *float32                           `json:"cost_optimization_min_savings_percent,omitempty"`
+	Description                       *string                            `json:"description,omitempty"`
+	DownloadSizeBytes                 *int                               `json:"download_size_bytes,omitempty"`
+	GgufModelPath                     *string                            `json:"gguf_model_path,omitempty"`
+	GpuPreferences                    *[]PublicGPUPreferenceJSON         `json:"gpu_preferences,omitempty"`
+	HuggingfaceRepoId                 *string                            `json:"huggingface_repo_id,omitempty"`
+	IdleTimeoutSeconds                *int                               `json:"idle_timeout_seconds,omitempty"`
+	Name                              *string                            `json:"name,omitempty"`
+	ReplicaCount                      *int                               `json:"replica_count,omitempty"`
+	RuntimeConfig                     *RuntimeConfigRequest              `json:"runtime_config,omitempty"`
+	RuntimePreset                     *string                            `json:"runtime_preset,omitempty"`
+	SchedulingMode                    *string                            `json:"scheduling_mode,omitempty"`
+	ServerlessEnabled                 *bool                              `json:"serverless_enabled,omitempty"`
+	ServingName                       *string                            `json:"serving_name,omitempty"`
+	SmartAllowCommunity               *bool                              `json:"smart_allow_community,omitempty"`
+	SmartAllowSpot                    *bool                              `json:"smart_allow_spot,omitempty"`
+	SmartMaxPricePerHourEur           *float32                           `json:"smart_max_price_per_hour_eur,omitempty"`
+	SmartMinGpuClass                  *string                            `json:"smart_min_gpu_class,omitempty"`
+	SmartMinTotalTflops               *float32                           `json:"smart_min_total_tflops,omitempty"`
+	SmartProviderFilterMode           *string                            `json:"smart_provider_filter_mode,omitempty"`
+	SmartProviderPreference           *string                            `json:"smart_provider_preference,omitempty"`
+	SmartRegion                       *string                            `json:"smart_region,omitempty"`
+	SmartRegions                      *[]string                          `json:"smart_regions,omitempty"`
+	SmartSelectionLabel               *string                            `json:"smart_selection_label,omitempty"`
+	SupportedProtocols                *[]string                          `json:"supported_protocols,omitempty"`
+	WorkloadKind                      *CreateInstanceRequestWorkloadKind `json:"workload_kind,omitempty"`
 }
+
+// CreateInstanceRequestWorkloadKind defines model for CreateInstanceRequest.WorkloadKind.
+type CreateInstanceRequestWorkloadKind string
 
 // CreateInvitationRequest defines model for CreateInvitationRequest.
 type CreateInvitationRequest struct {
@@ -381,19 +791,19 @@ type CreateServingEndpointRequest struct {
 
 // CreateSmartBalancerRequest defines model for CreateSmartBalancerRequest.
 type CreateSmartBalancerRequest struct {
-	DisplayName  *string                          `json:"display_name,omitempty"`
-	Enabled      *bool                            `json:"enabled,omitempty"`
-	Name         *string                          `json:"name,omitempty"`
-	RouterModel  *SmartBalancerRouterModelRequest `json:"router_model,omitempty"`
-	Routes       *[]SmartBalancerRouteRequest     `json:"routes,omitempty"`
-	RoutingMode  *string                          `json:"routing_mode,omitempty"`
-	WorkloadKind *string                          `json:"workload_kind,omitempty"`
-}
+	DisplayName *string                          `json:"display_name,omitempty"`
+	Enabled     *bool                            `json:"enabled,omitempty"`
+	Name        *string                          `json:"name,omitempty"`
+	RouterModel *SmartBalancerRouterModelRequest `json:"router_model,omitempty"`
+	Routes      *[]SmartBalancerRouteRequest     `json:"routes,omitempty"`
+	RoutingMode *string                          `json:"routing_mode,omitempty"`
 
-// CreateStorageVolumeRequest defines model for CreateStorageVolumeRequest.
-type CreateStorageVolumeRequest struct {
-	Description *string `json:"description,omitempty"`
-	Name        *string `json:"name,omitempty"`
+	// ServerlessStartRequests Requests in the rolling window required before starting stopped serverless destinations.
+	ServerlessStartRequests *int `json:"serverless_start_requests,omitempty"`
+
+	// ServerlessStartWindowSeconds Rolling request window in seconds.
+	ServerlessStartWindowSeconds *int    `json:"serverless_start_window_seconds,omitempty"`
+	WorkloadKind                 *string `json:"workload_kind,omitempty"`
 }
 
 // CreateTargetGroupRequest defines model for CreateTargetGroupRequest.
@@ -427,6 +837,46 @@ type DebitBalanceResponse struct {
 	Success    *bool    `json:"success,omitempty"`
 }
 
+// DebitOperationResponse defines model for DebitOperationResponse.
+type DebitOperationResponse struct {
+	CreatedAt   *string `json:"created_at,omitempty"`
+	OperationId *string `json:"operation_id,omitempty"`
+	Outcome     *string `json:"outcome,omitempty"`
+	Reference   *string `json:"reference,omitempty"`
+	Source      *string `json:"source,omitempty"`
+	Status      *string `json:"status,omitempty"`
+	UpdatedAt   *string `json:"updated_at,omitempty"`
+}
+
+// DetectionStreamError defines model for DetectionStreamError.
+type DetectionStreamError struct {
+	Code    *string `json:"code,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
+// DetectionStreamEvent defines model for DetectionStreamEvent.
+type DetectionStreamEvent struct {
+	Error         *DetectionStreamError   `json:"error,omitempty"`
+	FrameId       *int                    `json:"frame_id,omitempty"`
+	MaxFrameBytes *int                    `json:"max_frame_bytes,omitempty"`
+	Model         *string                 `json:"model,omitempty"`
+	Options       *DetectionStreamOptions `json:"options,omitempty"`
+	ProcessingMs  *float32                `json:"processing_ms,omitempty"`
+	Result        *ImageDetectionOutput   `json:"result,omitempty"`
+	Status        *int                    `json:"status,omitempty"`
+	Type          *string                 `json:"type,omitempty"`
+}
+
+// DetectionStreamOptions defines model for DetectionStreamOptions.
+type DetectionStreamOptions struct {
+	Classes       *[]int   `json:"classes,omitempty"`
+	Confidence    *float32 `json:"confidence,omitempty"`
+	ImageSize     *int     `json:"image_size,omitempty"`
+	Iou           *float32 `json:"iou,omitempty"`
+	MaxDetections *int     `json:"max_detections,omitempty"`
+	Tracking      *bool    `json:"tracking,omitempty"`
+}
+
 // DismissRequest defines model for DismissRequest.
 type DismissRequest struct {
 	Ids *[]string `json:"ids,omitempty"`
@@ -443,9 +893,232 @@ type EmbeddingsRequestEnvelope struct {
 	Model *string `json:"model,omitempty"`
 }
 
+// EnableSharedCapacityRequest defines model for EnableSharedCapacityRequest.
+type EnableSharedCapacityRequest struct {
+	TermsHash    *string `json:"terms_hash,omitempty"`
+	TermsVersion *string `json:"terms_version,omitempty"`
+	Visibility   *string `json:"visibility,omitempty"`
+}
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	Error *string `json:"error,omitempty"`
+}
+
+// ExecutionDecisionAnswer defines model for Execution.DecisionAnswer.
+type ExecutionDecisionAnswer struct {
+	union json.RawMessage
+}
+
+// ExecutionDecisionChoiceAnswer defines model for Execution.DecisionChoiceAnswer.
+type ExecutionDecisionChoiceAnswer struct {
+	// Choice A declared option with maximal normalized probability.
+	Choice string `json:"choice"`
+
+	// Confidence Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	Confidence ExecutionDecisionProbability `json:"confidence"`
+
+	// Probabilities Complete distribution over declared options; probabilities sum to one within rounding tolerance.
+	Probabilities map[string]ExecutionDecisionProbability `json:"probabilities"`
+	Type          ExecutionDecisionChoiceAnswerType       `json:"type"`
+}
+
+// ExecutionDecisionChoiceAnswerType defines model for ExecutionDecisionChoiceAnswer.Type.
+type ExecutionDecisionChoiceAnswerType string
+
+// ExecutionDecisionChoiceQuestion defines model for Execution.DecisionChoiceQuestion.
+type ExecutionDecisionChoiceQuestion struct {
+	// Criteria Nonblank option IDs (up to 256 UTF-8 bytes) map to text or null descriptions.
+	Criteria map[string]*string `json:"criteria"`
+
+	// Instructions Question instructions as text or null.
+	Instructions *string                             `json:"instructions,omitempty"`
+	Type         ExecutionDecisionChoiceQuestionType `json:"type"`
+}
+
+// ExecutionDecisionChoiceQuestionType defines model for ExecutionDecisionChoiceQuestion.Type.
+type ExecutionDecisionChoiceQuestionType string
+
+// ExecutionDecisionDiagnostics defines model for Execution.DecisionDiagnostics.
+type ExecutionDecisionDiagnostics struct {
+	ArgmaxIsLabel bool `json:"argmax_is_label"`
+
+	// LabelMass Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	LabelMass ExecutionDecisionProbability `json:"label_mass"`
+}
+
+// ExecutionDecisionNoulAnswer defines model for Execution.DecisionNoulAnswer.
+type ExecutionDecisionNoulAnswer struct {
+	// Confidence Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	Confidence *ExecutionDecisionProbability `json:"confidence,omitempty"`
+
+	// Noul Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	Noul ExecutionDecisionProbability `json:"noul"`
+
+	// Probabilities Complete distribution over declared options; probabilities sum to one within rounding tolerance.
+	Probabilities *ExecutionDecisionNoulAnswer_Probabilities `json:"probabilities,omitempty"`
+	Type          ExecutionDecisionNoulAnswerType            `json:"type"`
+}
+
+// ExecutionDecisionNoulAnswerProbabilities0 defines model for ExecutionDecisionNoulAnswer.Probabilities.0.
+type ExecutionDecisionNoulAnswerProbabilities0 struct {
+	// No Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	No ExecutionDecisionProbability `json:"no"`
+
+	// Yes Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	Yes ExecutionDecisionProbability `json:"yes"`
+}
+
+// ExecutionDecisionNoulAnswerProbabilities1 defines model for ExecutionDecisionNoulAnswer.Probabilities.1.
+type ExecutionDecisionNoulAnswerProbabilities1 struct {
+	// False Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	False ExecutionDecisionProbability `json:"false"`
+
+	// True Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	True ExecutionDecisionProbability `json:"true"`
+}
+
+// ExecutionDecisionNoulAnswer_Probabilities Complete distribution over declared options; probabilities sum to one within rounding tolerance.
+type ExecutionDecisionNoulAnswer_Probabilities struct {
+	union json.RawMessage
+}
+
+// ExecutionDecisionNoulAnswerType defines model for ExecutionDecisionNoulAnswer.Type.
+type ExecutionDecisionNoulAnswerType string
+
+// ExecutionDecisionNoulQuestion defines model for Execution.DecisionNoulQuestion.
+type ExecutionDecisionNoulQuestion struct {
+	Criteria *struct {
+		False *string `json:"false,omitempty"`
+		True  *string `json:"true,omitempty"`
+	} `json:"criteria,omitempty"`
+
+	// Instructions Question instructions as text or null.
+	Instructions *string                           `json:"instructions,omitempty"`
+	Type         ExecutionDecisionNoulQuestionType `json:"type"`
+}
+
+// ExecutionDecisionNoulQuestionType defines model for ExecutionDecisionNoulQuestion.Type.
+type ExecutionDecisionNoulQuestionType string
+
+// ExecutionDecisionProbability Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+type ExecutionDecisionProbability = float64
+
+// ExecutionDecisionQuestion defines model for Execution.DecisionQuestion.
+type ExecutionDecisionQuestion struct {
+	union json.RawMessage
+}
+
+// ExecutionDecisionScoreAnswer defines model for Execution.DecisionScoreAnswer.
+type ExecutionDecisionScoreAnswer struct {
+	// Confidence Finite probability. Confidence may be lower than the normalized option probability because native models also report mass outside the answer labels.
+	Confidence ExecutionDecisionProbability `json:"confidence"`
+
+	// Legend Every 0-indexed key matches its requested level description. Native null descriptions are returned as the string None.
+	Legend map[string]*string `json:"legend"`
+
+	// Probabilities Complete distribution over declared options; probabilities sum to one within rounding tolerance.
+	Probabilities map[string]ExecutionDecisionProbability `json:"probabilities"`
+
+	// Score Expected 0-indexed level; bounded by the final declared level.
+	Score float64                          `json:"score"`
+	Type  ExecutionDecisionScoreAnswerType `json:"type"`
+}
+
+// ExecutionDecisionScoreAnswerType defines model for ExecutionDecisionScoreAnswer.Type.
+type ExecutionDecisionScoreAnswerType string
+
+// ExecutionDecisionScoreQuestion defines model for Execution.DecisionScoreQuestion.
+type ExecutionDecisionScoreQuestion struct {
+	Criteria []*string `json:"criteria"`
+
+	// Instructions Question instructions as text or null.
+	Instructions *string                            `json:"instructions,omitempty"`
+	Type         ExecutionDecisionScoreQuestionType `json:"type"`
+}
+
+// ExecutionDecisionScoreQuestionType defines model for ExecutionDecisionScoreQuestion.Type.
+type ExecutionDecisionScoreQuestionType string
+
+// ExecutionDecisionUsage defines model for Execution.DecisionUsage.
+type ExecutionDecisionUsage struct {
+	InputTokens  int64 `json:"input_tokens"`
+	OutputTokens int64 `json:"output_tokens"`
+}
+
+// ExecutionForecastInput defines model for Execution.ForecastInput.
+type ExecutionForecastInput struct {
+	Id                   *string      `json:"id,omitempty"`
+	PastFutureCovariates *[][]float32 `json:"past_future_covariates,omitempty"`
+	PastOnlyCovariates   *[][]float32 `json:"past_only_covariates,omitempty"`
+	Target               *[][]float32 `json:"target,omitempty"`
+}
+
+// ExecutionForecastPrediction defines model for Execution.ForecastPrediction.
+type ExecutionForecastPrediction struct {
+	Forecast  *[][]float32   `json:"forecast,omitempty"`
+	Id        *string        `json:"id,omitempty"`
+	Quantiles *[][][]float32 `json:"quantiles,omitempty"`
+}
+
+// ExecutionForecastRequest defines model for Execution.ForecastRequest.
+type ExecutionForecastRequest struct {
+	Horizon               int                      `json:"horizon"`
+	Inputs                []ExecutionForecastInput `json:"inputs"`
+	Model                 string                   `json:"model"`
+	ReturnQuantiles       *bool                    `json:"return_quantiles,omitempty"`
+	UseSymmetricAveraging *bool                    `json:"use_symmetric_averaging,omitempty"`
+}
+
+// ExecutionForecastResponse defines model for Execution.ForecastResponse.
+type ExecutionForecastResponse struct {
+	Horizon        *int                           `json:"horizon,omitempty"`
+	Model          *string                        `json:"model,omitempty"`
+	Predictions    *[]ExecutionForecastPrediction `json:"predictions,omitempty"`
+	QuantileLevels *[]float32                     `json:"quantile_levels,omitempty"`
+}
+
+// ExecutionSystemOneRequest Request up to 32 MiB and depth 64, with at most 1 MiB of original JSON excluding only the top-level images value; at most 64 questions. Each instructions/criteria value is bounded to 64 KiB of JSON. Images require Qwen3.5-9B, DiffusionGemma, Clef or Clef Flash; Nimble rejects images. Nested media inputs and unknown fields are rejected.
+type ExecutionSystemOneRequest struct {
+	// Images Inline images only, in attachment order. At most 5 MiB decoded and 16 million pixels each. Runtime validates actual image content and its declared MIME type. Remote and file URLs, malformed base64 and null are rejected.
+	Images *[]string `json:"images,omitempty"`
+
+	// Instructions Native Qwen/DiffusionGemma global instructions; Clef/Nimble reject nonempty global instructions.
+	Instructions *string `json:"instructions,omitempty"`
+	Model        string  `json:"model"`
+
+	// Questions Nonblank question IDs up to 256 UTF-8 bytes; insertion order is retained.
+	Questions map[string]ExecutionDecisionQuestion `json:"questions"`
+	State     ExecutionSystemOneRequest_State      `json:"state"`
+}
+
+// ExecutionSystemOneRequestState0 defines model for ExecutionSystemOneRequest.State.0.
+type ExecutionSystemOneRequestState0 = string
+
+// ExecutionSystemOneRequestState1 defines model for ExecutionSystemOneRequest.State.1.
+type ExecutionSystemOneRequestState1 = map[string]interface{}
+
+// ExecutionSystemOneRequestState2 defines model for ExecutionSystemOneRequest.State.2.
+type ExecutionSystemOneRequestState2 = []interface{}
+
+// ExecutionSystemOneRequest_State defines model for ExecutionSystemOneRequest.State.
+type ExecutionSystemOneRequest_State struct {
+	union json.RawMessage
+}
+
+// ExecutionSystemOneResponse Response up to 1 MiB. Answer keys exactly match the requested question IDs; answer types/options match their declarations.
+type ExecutionSystemOneResponse struct {
+	Answers map[string]ExecutionDecisionAnswer `json:"answers"`
+	Created *int64                             `json:"created,omitempty"`
+
+	// Diagnostics When present, contains one diagnostic for every requested question.
+	Diagnostics *map[string]ExecutionDecisionDiagnostics `json:"diagnostics,omitempty"`
+	Id          *string                                  `json:"id,omitempty"`
+
+	// Model The account-owned serving name or instance UUID used by the caller.
+	Model  string                 `json:"model"`
+	Object *string                `json:"object,omitempty"`
+	Usage  ExecutionDecisionUsage `json:"usage"`
 }
 
 // FinishPasskeyRegistrationRequest defines model for FinishPasskeyRegistrationRequest.
@@ -463,11 +1136,7 @@ type FinishPasskeyloginRequest struct {
 }
 
 // FinishPasskeyloginResponse defines model for FinishPasskeyloginResponse.
-type FinishPasskeyloginResponse struct {
-	AccessToken       *string `json:"access_token,omitempty"`
-	AccessTokenExpiry *int    `json:"access_token_expiry,omitempty"`
-	RefreshToken      *string `json:"refresh_token,omitempty"`
-}
+type FinishPasskeyloginResponse = map[string]interface{}
 
 // FirewallEvaluationRequest defines model for FirewallEvaluationRequest.
 type FirewallEvaluationRequest struct {
@@ -550,6 +1219,24 @@ type GpuPreferenceResponse struct {
 	PublicGpuId      *string `json:"public_gpu_id,omitempty"`
 }
 
+// HttpTarget defines model for HttpTarget.
+type HttpTarget struct {
+	Labels  *map[string]string `json:"labels,omitempty"`
+	Targets *[]string          `json:"targets,omitempty"`
+}
+
+// HuggingFaceFileResponse defines model for HuggingFaceFileResponse.
+type HuggingFaceFileResponse struct {
+	Filename     *string `json:"filename,omitempty"`
+	Quantization *string `json:"quantization,omitempty"`
+	SizeBytes    *int    `json:"size_bytes,omitempty"`
+}
+
+// HuggingFaceFilesResponse defines model for HuggingFaceFilesResponse.
+type HuggingFaceFilesResponse struct {
+	Files *[]HuggingFaceFileResponse `json:"files,omitempty"`
+}
+
 // HuggingFaceGGUFFileResponse defines model for HuggingFaceGGUFFileResponse.
 type HuggingFaceGGUFFileResponse struct {
 	Filename     *string `json:"filename,omitempty"`
@@ -561,27 +1248,71 @@ type HuggingFaceGGUFFileResponse struct {
 type HuggingFaceModelResponse struct {
 	CompatibilityReason *string                        `json:"compatibility_reason,omitempty"`
 	Compatible          *bool                          `json:"compatible,omitempty"`
+	Description         *string                        `json:"description,omitempty"`
 	Downloads           *int                           `json:"downloads,omitempty"`
 	GgufFiles           *[]HuggingFaceGGUFFileResponse `json:"gguf_files,omitempty"`
 	HasGguf             *bool                          `json:"has_gguf,omitempty"`
 	HasSafetensors      *bool                          `json:"has_safetensors,omitempty"`
+	LastModified        *string                        `json:"last_modified,omitempty"`
 	Likes               *int                           `json:"likes,omitempty"`
 	PipelineTag         *string                        `json:"pipeline_tag,omitempty"`
 	RepoId              *string                        `json:"repo_id,omitempty"`
+	Siblings            *[]string                      `json:"siblings,omitempty"`
 	Tags                *[]string                      `json:"tags,omitempty"`
 	Warnings            *[]string                      `json:"warnings,omitempty"`
 	WorkloadKind        *string                        `json:"workload_kind,omitempty"`
+	YoloFiles           *[]HuggingFaceYOLOFileResponse `json:"yolo_files,omitempty"`
 }
 
 // HuggingFaceModelsResponse defines model for HuggingFaceModelsResponse.
 type HuggingFaceModelsResponse struct {
-	Models *[]HuggingFaceModelResponse `json:"models,omitempty"`
+	Models     *[]HuggingFaceModelResponse `json:"models,omitempty"`
+	NextCursor *string                     `json:"next_cursor,omitempty"`
 }
 
 // HuggingFaceOrgInfoResponse defines model for HuggingFaceOrgInfoResponse.
 type HuggingFaceOrgInfoResponse struct {
 	AvatarUrl *string `json:"avatar_url,omitempty"`
 	Fullname  *string `json:"fullname,omitempty"`
+}
+
+// HuggingFaceYOLOFileResponse defines model for HuggingFaceYOLOFileResponse.
+type HuggingFaceYOLOFileResponse struct {
+	Filename  *string `json:"filename,omitempty"`
+	SizeBytes *int    `json:"size_bytes,omitempty"`
+}
+
+// ImageDetectionBoxOutput defines model for ImageDetectionBoxOutput.
+type ImageDetectionBoxOutput struct {
+	X1 *float32 `json:"x1,omitempty"`
+	X2 *float32 `json:"x2,omitempty"`
+	Y1 *float32 `json:"y1,omitempty"`
+	Y2 *float32 `json:"y2,omitempty"`
+}
+
+// ImageDetectionKeypointOutput defines model for ImageDetectionKeypointOutput.
+type ImageDetectionKeypointOutput struct {
+	Confidence *float32 `json:"confidence,omitempty"`
+	X          *float32 `json:"x,omitempty"`
+	Y          *float32 `json:"y,omitempty"`
+}
+
+// ImageDetectionOutput defines model for ImageDetectionOutput.
+type ImageDetectionOutput struct {
+	Detections *[]ImageDetectionResultOutput `json:"detections,omitempty"`
+	Height     *int                          `json:"height,omitempty"`
+	Model      *string                       `json:"model,omitempty"`
+	Width      *int                          `json:"width,omitempty"`
+}
+
+// ImageDetectionResultOutput defines model for ImageDetectionResultOutput.
+type ImageDetectionResultOutput struct {
+	Box        *ImageDetectionBoxOutput        `json:"box,omitempty"`
+	ClassId    *int                            `json:"class_id,omitempty"`
+	ClassName  *string                         `json:"class_name,omitempty"`
+	Confidence *float32                        `json:"confidence,omitempty"`
+	Keypoints  *[]ImageDetectionKeypointOutput `json:"keypoints,omitempty"`
+	TrackId    *int                            `json:"track_id,omitempty"`
 }
 
 // ImageGenerationRequest defines model for ImageGenerationRequest.
@@ -601,13 +1332,21 @@ type ImageGenerationRequest struct {
 	Width             *int     `json:"width,omitempty"`
 }
 
+// ImpersonationInfo defines model for ImpersonationInfo.
+type ImpersonationInfo struct {
+	ImpersonatorEmail  *string `json:"impersonator_email,omitempty"`
+	ImpersonatorUserId *string `json:"impersonator_user_id,omitempty"`
+}
+
 // IndexDocumentRequest defines model for IndexDocumentRequest.
 type IndexDocumentRequest struct {
-	Content         *string                     `json:"content,omitempty"`
-	ContentImageUrl *string                     `json:"content_image_url,omitempty"`
-	Id              *string                     `json:"id,omitempty"`
-	Metadata        *map[string]string          `json:"metadata,omitempty"`
-	Source          *IndexDocumentSourceRequest `json:"source,omitempty"`
+	Content         *string `json:"content,omitempty"`
+	ContentImageUrl *string `json:"content_image_url,omitempty"`
+	Id              *string `json:"id,omitempty"`
+
+	// Metadata Up to 28 exact-match filterable metadata fields per document.
+	Metadata *map[string]string          `json:"metadata,omitempty"`
+	Source   *IndexDocumentSourceRequest `json:"source,omitempty"`
 }
 
 // IndexDocumentSourceRequest defines model for IndexDocumentSourceRequest.
@@ -641,42 +1380,46 @@ type InstanceListResponse struct {
 
 // InstanceResponse defines model for InstanceResponse.
 type InstanceResponse struct {
-	AccountId               *string                  `json:"account_id,omitempty"`
-	CapacityTier            *string                  `json:"capacity_tier,omitempty"`
-	CreatedAt               *string                  `json:"created_at,omitempty"`
-	Description             *string                  `json:"description,omitempty"`
-	EstimatedRequiredVramGb *float32                 `json:"estimated_required_vram_gb,omitempty"`
-	FailureReason           *string                  `json:"failure_reason,omitempty"`
-	GpuCount                *int                     `json:"gpu_count,omitempty"`
-	GpuPreferences          *[]GpuPreferenceResponse `json:"gpu_preferences,omitempty"`
-	HuggingfaceRepoId       *string                  `json:"huggingface_repo_id,omitempty"`
-	Id                      *string                  `json:"id,omitempty"`
-	IdleTimeoutSeconds      *int                     `json:"idle_timeout_seconds,omitempty"`
-	LastRequestAt           *string                  `json:"last_request_at,omitempty"`
-	Name                    *string                  `json:"name,omitempty"`
-	PublicGpuId             *string                  `json:"public_gpu_id,omitempty"`
-	PublicPricePerHourEur   *float32                 `json:"public_price_per_hour_eur,omitempty"`
-	ReplicaSetId            *string                  `json:"replica_set_id,omitempty"`
-	RuntimeConfigSnapshot   *string                  `json:"runtime_config_snapshot,omitempty"`
-	RuntimePreset           *string                  `json:"runtime_preset,omitempty"`
-	SchedulingMode          *string                  `json:"scheduling_mode,omitempty"`
-	ServerlessEnabled       *bool                    `json:"serverless_enabled,omitempty"`
-	ServingName             *string                  `json:"serving_name,omitempty"`
-	SmartAllowCommunity     *bool                    `json:"smart_allow_community,omitempty"`
-	SmartAllowSpot          *bool                    `json:"smart_allow_spot,omitempty"`
-	SmartMaxPricePerHourEur *float32                 `json:"smart_max_price_per_hour_eur,omitempty"`
-	SmartMinGpuClass        *string                  `json:"smart_min_gpu_class,omitempty"`
-	SmartMinTotalTflops     *float32                 `json:"smart_min_total_tflops,omitempty"`
-	SmartProviderFilterMode *string                  `json:"smart_provider_filter_mode,omitempty"`
-	SmartProviderPreference *string                  `json:"smart_provider_preference,omitempty"`
-	SmartRegion             *string                  `json:"smart_region,omitempty"`
-	SmartRegions            *[]string                `json:"smart_regions,omitempty"`
-	SmartSelectionLabel     *string                  `json:"smart_selection_label,omitempty"`
-	StartedAt               *string                  `json:"started_at,omitempty"`
-	State                   *string                  `json:"state,omitempty"`
-	StoppedAt               *string                  `json:"stopped_at,omitempty"`
-	SupportedProtocols      *[]string                `json:"supported_protocols,omitempty"`
-	WorkloadKind            *string                  `json:"workload_kind,omitempty"`
+	AccountId                         *string                  `json:"account_id,omitempty"`
+	CapacityTier                      *string                  `json:"capacity_tier,omitempty"`
+	CostOptimizationEnabled           *bool                    `json:"cost_optimization_enabled,omitempty"`
+	CostOptimizationMinSavingsPercent *float32                 `json:"cost_optimization_min_savings_percent,omitempty"`
+	CreatedAt                         *string                  `json:"created_at,omitempty"`
+	Description                       *string                  `json:"description,omitempty"`
+	EstimatedRequiredVramGb           *float32                 `json:"estimated_required_vram_gb,omitempty"`
+	FailureReason                     *string                  `json:"failure_reason,omitempty"`
+	GpuCount                          *int                     `json:"gpu_count,omitempty"`
+	GpuPreferences                    *[]GpuPreferenceResponse `json:"gpu_preferences,omitempty"`
+	HuggingfaceRepoId                 *string                  `json:"huggingface_repo_id,omitempty"`
+	Id                                *string                  `json:"id,omitempty"`
+	IdleTimeoutSeconds                *int                     `json:"idle_timeout_seconds,omitempty"`
+	LastRequestAt                     *string                  `json:"last_request_at,omitempty"`
+	Name                              *string                  `json:"name,omitempty"`
+	PublicGpuId                       *string                  `json:"public_gpu_id,omitempty"`
+	PublicPricePerHourEur             *float32                 `json:"public_price_per_hour_eur,omitempty"`
+	ReplicaSetId                      *string                  `json:"replica_set_id,omitempty"`
+	RuntimeConfigSnapshot             *string                  `json:"runtime_config_snapshot,omitempty"`
+	RuntimePreset                     *string                  `json:"runtime_preset,omitempty"`
+	SchedulingMode                    *string                  `json:"scheduling_mode,omitempty"`
+	ServerlessEnabled                 *bool                    `json:"serverless_enabled,omitempty"`
+	ServingName                       *string                  `json:"serving_name,omitempty"`
+	SmartAllowCommunity               *bool                    `json:"smart_allow_community,omitempty"`
+	SmartAllowSpot                    *bool                    `json:"smart_allow_spot,omitempty"`
+	SmartMaxPricePerHourEur           *float32                 `json:"smart_max_price_per_hour_eur,omitempty"`
+	SmartMinGpuClass                  *string                  `json:"smart_min_gpu_class,omitempty"`
+	SmartMinTotalTflops               *float32                 `json:"smart_min_total_tflops,omitempty"`
+	SmartProviderFilterMode           *string                  `json:"smart_provider_filter_mode,omitempty"`
+	SmartProviderPreference           *string                  `json:"smart_provider_preference,omitempty"`
+	SmartRegion                       *string                  `json:"smart_region,omitempty"`
+	SmartRegions                      *[]string                `json:"smart_regions,omitempty"`
+	SmartSelectionLabel               *string                  `json:"smart_selection_label,omitempty"`
+	StartedAt                         *string                  `json:"started_at,omitempty"`
+	StartupProgress                   *StartupProgress         `json:"startup_progress,omitempty"`
+	State                             *string                  `json:"state,omitempty"`
+	StoppedAt                         *string                  `json:"stopped_at,omitempty"`
+	StoragePricePerHourEur            *float32                 `json:"storage_price_per_hour_eur,omitempty"`
+	SupportedProtocols                *[]string                `json:"supported_protocols,omitempty"`
+	WorkloadKind                      *string                  `json:"workload_kind,omitempty"`
 }
 
 // InstanceUsageBucketResponse defines model for InstanceUsageBucketResponse.
@@ -725,6 +1468,15 @@ type InvitationResponse struct {
 	Token              *string `json:"token,omitempty"`
 }
 
+// JoinSharedCapacityRequest defines model for JoinSharedCapacityRequest.
+type JoinSharedCapacityRequest struct {
+	GroupId       *string `json:"group_id,omitempty"`
+	PublicSlug    *string `json:"public_slug,omitempty"`
+	ReferralToken *string `json:"referral_token,omitempty"`
+	TermsHash     *string `json:"terms_hash,omitempty"`
+	TermsVersion  *string `json:"terms_version,omitempty"`
+}
+
 // LedgerEntryResponse defines model for LedgerEntryResponse.
 type LedgerEntryResponse struct {
 	AccountId *string  `json:"account_id,omitempty"`
@@ -740,6 +1492,19 @@ type LedgerEntryResponse struct {
 type LedgerHistoryResponse struct {
 	Entries *[]LedgerEntryResponse `json:"entries,omitempty"`
 	Total   *int                   `json:"total,omitempty"`
+}
+
+// LegalAcceptanceItem defines model for LegalAcceptanceItem.
+type LegalAcceptanceItem struct {
+	Context      string `json:"context"`
+	DocumentType string `json:"document_type"`
+	Sha256       string `json:"sha256"`
+	Version      string `json:"version"`
+}
+
+// LegalAcceptanceRequest defines model for LegalAcceptanceRequest.
+type LegalAcceptanceRequest struct {
+	Acceptances []LegalAcceptanceItem `json:"acceptances"`
 }
 
 // ListDocumentsResponse defines model for ListDocumentsResponse.
@@ -779,10 +1544,7 @@ type LoginRequest struct {
 
 // LoginResponse defines model for LoginResponse.
 type LoginResponse struct {
-	AccessToken       *string `json:"access_token,omitempty"`
-	AccessTokenExpiry *int    `json:"access_token_expiry,omitempty"`
-	NextStep          *string `json:"next_step,omitempty"`
-	RefreshToken      *string `json:"refresh_token,omitempty"`
+	NextStep *string `json:"next_step,omitempty"`
 }
 
 // MarkAllReadRequest defines model for MarkAllReadRequest.
@@ -850,6 +1612,25 @@ type NotificationResponse struct {
 	TitleKey    *string                     `json:"title_key,omitempty"`
 }
 
+// OauthSignupRequest defines model for OauthSignupRequest.
+type OauthSignupRequest struct {
+	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
+	ContinuationToken   string  `json:"continuation_token"`
+	PrivacyAcknowledged bool    `json:"privacy_acknowledged"`
+	PrivacySha256       string  `json:"privacy_sha256"`
+	PrivacyVersion      string  `json:"privacy_version"`
+	TermsAccepted       bool    `json:"terms_accepted"`
+	TermsSha256         string  `json:"terms_sha256"`
+	TermsVersion        string  `json:"terms_version"`
+}
+
+// OauthTOTPRequest defines model for OauthTOTPRequest.
+type OauthTOTPRequest struct {
+	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
+	ContinuationToken   string  `json:"continuation_token"`
+	TotpCode            string  `json:"totp_code"`
+}
+
 // PasskeyListResponse defines model for PasskeyListResponse.
 type PasskeyListResponse struct {
 	Passkeys *[]PasskeyResponse `json:"passkeys,omitempty"`
@@ -895,6 +1676,30 @@ type PaymentResponse struct {
 type PaymentsResponse struct {
 	Items *[]PaymentResponse `json:"items,omitempty"`
 }
+
+// PreviewInstanceRequest defines model for PreviewInstanceRequest.
+type PreviewInstanceRequest struct {
+	DownloadSizeBytes       *int                                `json:"download_size_bytes,omitempty"`
+	GgufModelPath           *string                             `json:"gguf_model_path,omitempty"`
+	HuggingfaceRepoId       *string                             `json:"huggingface_repo_id,omitempty"`
+	RuntimeConfig           *RuntimeConfigRequest               `json:"runtime_config,omitempty"`
+	RuntimePreset           *string                             `json:"runtime_preset,omitempty"`
+	SchedulingMode          *string                             `json:"scheduling_mode,omitempty"`
+	SmartAllowCommunity     *bool                               `json:"smart_allow_community,omitempty"`
+	SmartAllowSpot          *bool                               `json:"smart_allow_spot,omitempty"`
+	SmartMaxPricePerHourEur *float32                            `json:"smart_max_price_per_hour_eur,omitempty"`
+	SmartMinGpuClass        *string                             `json:"smart_min_gpu_class,omitempty"`
+	SmartMinTotalTflops     *float32                            `json:"smart_min_total_tflops,omitempty"`
+	SmartProviderFilterMode *string                             `json:"smart_provider_filter_mode,omitempty"`
+	SmartProviderPreference *string                             `json:"smart_provider_preference,omitempty"`
+	SmartRegion             *string                             `json:"smart_region,omitempty"`
+	SmartRegions            *[]string                           `json:"smart_regions,omitempty"`
+	SmartSelectionLabel     *string                             `json:"smart_selection_label,omitempty"`
+	WorkloadKind            *PreviewInstanceRequestWorkloadKind `json:"workload_kind,omitempty"`
+}
+
+// PreviewInstanceRequestWorkloadKind defines model for PreviewInstanceRequest.WorkloadKind.
+type PreviewInstanceRequestWorkloadKind string
 
 // PreviewInstanceResponse defines model for PreviewInstanceResponse.
 type PreviewInstanceResponse struct {
@@ -956,6 +1761,24 @@ type ProtocolContextManagement struct {
 	Type             *string `json:"type,omitempty"`
 }
 
+// PublicEndpointPriceResponse defines model for PublicEndpointPriceResponse.
+type PublicEndpointPriceResponse struct {
+	AudioPerHourEur     *float32 `json:"audio_per_hour_eur,omitempty"`
+	InputPerMillionEur  *float32 `json:"input_per_million_eur,omitempty"`
+	OutputPerMillionEur *float32 `json:"output_per_million_eur,omitempty"`
+}
+
+// PublicEndpointResponse defines model for PublicEndpointResponse.
+type PublicEndpointResponse struct {
+	Name  *string                      `json:"name,omitempty"`
+	Price *PublicEndpointPriceResponse `json:"price,omitempty"`
+}
+
+// PublicEndpointsResponse defines model for PublicEndpointsResponse.
+type PublicEndpointsResponse struct {
+	Endpoints *[]PublicEndpointResponse `json:"endpoints,omitempty"`
+}
+
 // PublicGPUPreferenceJSON defines model for PublicGPUPreferenceJSON.
 type PublicGPUPreferenceJSON struct {
 	Count       *int    `json:"count,omitempty"`
@@ -971,18 +1794,26 @@ type PublicPricingAvailability struct {
 
 // PublicPricingGPU defines model for PublicPricingGPU.
 type PublicPricingGPU struct {
-	Availability     *PublicPricingAvailability `json:"availability,omitempty"`
-	CapacityTier     *string                    `json:"capacity_tier,omitempty"`
-	City             *string                    `json:"city,omitempty"`
-	Country          *string                    `json:"country,omitempty"`
-	DisplayName      *string                    `json:"display_name,omitempty"`
-	GpuCount         *int                       `json:"gpu_count,omitempty"`
-	MarketType       *string                    `json:"market_type,omitempty"`
-	PriceEurPerHour  *float32                   `json:"price_eur_per_hour,omitempty"`
-	ProviderCodename *string                    `json:"provider_codename,omitempty"`
-	PublicGpuId      *string                    `json:"public_gpu_id,omitempty"`
-	Region           *string                    `json:"region,omitempty"`
-	VramGb           *float32                   `json:"vram_gb,omitempty"`
+	Availability                 *PublicPricingAvailability `json:"availability,omitempty"`
+	CapacityTier                 *string                    `json:"capacity_tier,omitempty"`
+	City                         *string                    `json:"city,omitempty"`
+	Country                      *string                    `json:"country,omitempty"`
+	DisplayName                  *string                    `json:"display_name,omitempty"`
+	DownloadSizeBytes            *int                       `json:"download_size_bytes,omitempty"`
+	EstimatedDownloadCostEur     *float32                   `json:"estimated_download_cost_eur,omitempty"`
+	EstimatedOneHourCostEur      *float32                   `json:"estimated_one_hour_cost_eur,omitempty"`
+	EstimatedSpotReserveEur      *float32                   `json:"estimated_spot_reserve_eur,omitempty"`
+	GpuCount                     *int                       `json:"gpu_count,omitempty"`
+	MarketType                   *string                    `json:"market_type,omitempty"`
+	NetworkDownloadPricePerGbEur *float32                   `json:"network_download_price_per_gb_eur,omitempty"`
+	NetworkEstimateAvailable     *bool                      `json:"network_estimate_available,omitempty"`
+	NetworkPricingKnown          *bool                      `json:"network_pricing_known,omitempty"`
+	NetworkUploadPricePerGbEur   *float32                   `json:"network_upload_price_per_gb_eur,omitempty"`
+	PriceEurPerHour              *float32                   `json:"price_eur_per_hour,omitempty"`
+	ProviderCodename             *string                    `json:"provider_codename,omitempty"`
+	PublicGpuId                  *string                    `json:"public_gpu_id,omitempty"`
+	Region                       *string                    `json:"region,omitempty"`
+	VramGb                       *float32                   `json:"vram_gb,omitempty"`
 }
 
 // PublicPricingResponse defines model for PublicPricingResponse.
@@ -1004,6 +1835,12 @@ type PublicPricingService struct {
 	Unit              *string             `json:"unit,omitempty"`
 }
 
+// QueuedDebitResponse defines model for QueuedDebitResponse.
+type QueuedDebitResponse struct {
+	OperationId *string `json:"operation_id,omitempty"`
+	Queued      *bool   `json:"queued,omitempty"`
+}
+
 // RecommendRequest defines model for RecommendRequest.
 type RecommendRequest struct {
 	RecommendToken *string `json:"recommend_token,omitempty"`
@@ -1019,16 +1856,8 @@ type RecommendedGPU struct {
 	VramGb       *float32 `json:"vram_gb,omitempty"`
 }
 
-// RefreshRequest defines model for RefreshRequest.
-type RefreshRequest struct {
-	RefreshToken string `json:"refresh_token"`
-}
-
 // RefreshResponse defines model for RefreshResponse.
-type RefreshResponse struct {
-	AccessToken       *string `json:"access_token,omitempty"`
-	AccessTokenExpiry *int    `json:"access_token_expiry,omitempty"`
-}
+type RefreshResponse = map[string]interface{}
 
 // RegisterPasskeyRequest defines model for RegisterPasskeyRequest.
 type RegisterPasskeyRequest struct {
@@ -1042,14 +1871,17 @@ type RegisterRequest struct {
 	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
 	Email               string  `json:"email"`
 	Password            string  `json:"password"`
+	PrivacyAcknowledged bool    `json:"privacy_acknowledged"`
+	PrivacySha256       string  `json:"privacy_sha256"`
+	PrivacyVersion      string  `json:"privacy_version"`
 	Resend              *bool   `json:"resend,omitempty"`
+	TermsAccepted       bool    `json:"terms_accepted"`
+	TermsSha256         string  `json:"terms_sha256"`
+	TermsVersion        string  `json:"terms_version"`
 }
 
 // RegisterResponse defines model for RegisterResponse.
 type RegisterResponse struct {
-	AccessToken          *string `json:"access_token,omitempty"`
-	AccessTokenExpiry    *int    `json:"access_token_expiry,omitempty"`
-	RefreshToken         *string `json:"refresh_token,omitempty"`
 	RequiresVerification *bool   `json:"requires_verification,omitempty"`
 	UserId               *string `json:"user_id,omitempty"`
 }
@@ -1069,6 +1901,7 @@ type ReplicaSetResponse struct {
 	MinReplicas             *int      `json:"min_replicas,omitempty"`
 	ModelRef                *string   `json:"model_ref,omitempty"`
 	Name                    *string   `json:"name,omitempty"`
+	RuntimeConfigSnapshot   *string   `json:"runtime_config_snapshot,omitempty"`
 	SchedulingMode          *string   `json:"scheduling_mode,omitempty"`
 	ServingEndpointId       *string   `json:"serving_endpoint_id,omitempty"`
 	ServingName             *string   `json:"serving_name,omitempty"`
@@ -1089,6 +1922,24 @@ type ReplicaSetResponse struct {
 	WorkloadKind            *string   `json:"workload_kind,omitempty"`
 }
 
+// ResendActivationEmailRequest defines model for ResendActivationEmailRequest.
+type ResendActivationEmailRequest struct {
+	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
+	Email               string  `json:"email"`
+}
+
+// ResendEmailResponse defines model for ResendEmailResponse.
+type ResendEmailResponse struct {
+	Message *string `json:"message,omitempty"`
+}
+
+// ResendLoginEmailRequest defines model for ResendLoginEmailRequest.
+type ResendLoginEmailRequest struct {
+	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
+	Email               string  `json:"email"`
+	Password            string  `json:"password"`
+}
+
 // ResetPasswordRequest defines model for ResetPasswordRequest.
 type ResetPasswordRequest struct {
 	CfTurnstileResponse *string `json:"cf_turnstile_response,omitempty"`
@@ -1098,18 +1949,19 @@ type ResetPasswordRequest struct {
 
 // ResetPasswordResponse defines model for ResetPasswordResponse.
 type ResetPasswordResponse struct {
-	AccessToken       *string `json:"access_token,omitempty"`
-	AccessTokenExpiry *int    `json:"access_token_expiry,omitempty"`
-	Email             *string `json:"email,omitempty"`
-	RefreshToken      *string `json:"refresh_token,omitempty"`
-	UserId            *string `json:"user_id,omitempty"`
+	Email  *string `json:"email,omitempty"`
+	UserId *string `json:"user_id,omitempty"`
 }
 
 // ResourceMetricSnapshot defines model for ResourceMetricSnapshot.
 type ResourceMetricSnapshot struct {
 	E2eRequestLatencyP95Seconds *float32 `json:"e2e_request_latency_p95_seconds,omitempty"`
+	GenerationTokensPerSecond   *float32 `json:"generation_tokens_per_second,omitempty"`
 	GenerationTokensTotal       *float32 `json:"generation_tokens_total,omitempty"`
+	InterTokenLatencyP95Seconds *float32 `json:"inter_token_latency_p95_seconds,omitempty"`
 	KvCacheUsagePercent         *float32 `json:"kv_cache_usage_percent,omitempty"`
+	PrefixCacheHitPercent       *float32 `json:"prefix_cache_hit_percent,omitempty"`
+	PromptTokensPerSecond       *float32 `json:"prompt_tokens_per_second,omitempty"`
 	PromptTokensTotal           *float32 `json:"prompt_tokens_total,omitempty"`
 	RequestsRunning             *float32 `json:"requests_running,omitempty"`
 	RequestsWaiting             *float32 `json:"requests_waiting,omitempty"`
@@ -1132,6 +1984,7 @@ type ResponsesRequestEnvelope struct {
 	ContextManagement  *[]ProtocolContextManagement `json:"context_management,omitempty"`
 	Input              *[]int                       `json:"input,omitempty"`
 	Instructions       *string                      `json:"instructions,omitempty"`
+	MaxOutputTokens    *int                         `json:"max_output_tokens,omitempty"`
 	Metadata           *map[string]string           `json:"metadata,omitempty"`
 	Model              *string                      `json:"model,omitempty"`
 	PreviousResponseId *string                      `json:"previous_response_id,omitempty"`
@@ -1142,6 +1995,7 @@ type ResponsesRequestEnvelope struct {
 	Store               *bool   `json:"store,omitempty"`
 	Stream              *bool   `json:"stream,omitempty"`
 	ThinkingTokenBudget *int    `json:"thinking_token_budget,omitempty"`
+	Tools               *[]int  `json:"tools,omitempty"`
 	Type                *string `json:"type,omitempty"`
 }
 
@@ -1150,9 +2004,12 @@ type RuntimeConfigRequest struct {
 	ContextSize          *int     `json:"context_size,omitempty"`
 	Dtype                *string  `json:"dtype,omitempty"`
 	Duplex               *bool    `json:"duplex,omitempty"`
+	EnableChunkedPrefill *bool    `json:"enable_chunked_prefill,omitempty"`
+	EnablePrefixCaching  *bool    `json:"enable_prefix_caching,omitempty"`
 	GpuMemoryUtilization *float32 `json:"gpu_memory_utilization,omitempty"`
 	KvCacheDtype         *string  `json:"kv_cache_dtype,omitempty"`
 	MaxNumBatchedTokens  *int     `json:"max_num_batched_tokens,omitempty"`
+	MaxNumSeqs           *int     `json:"max_num_seqs,omitempty"`
 	Profile              *string  `json:"profile,omitempty"`
 	Quantization         *string  `json:"quantization,omitempty"`
 	StorageMounts        *[]struct {
@@ -1161,7 +2018,8 @@ type RuntimeConfigRequest struct {
 		Subpath   *string `json:"subpath,omitempty"`
 		VolumeId  *string `json:"volume_id,omitempty"`
 	} `json:"storage_mounts,omitempty"`
-	TensorParallelSize *int `json:"tensor_parallel_size,omitempty"`
+	TensorParallelSize *int    `json:"tensor_parallel_size,omitempty"`
+	YoloModelFile      *string `json:"yolo_model_file,omitempty"`
 }
 
 // RuntimeConfigResponse defines model for RuntimeConfigResponse.
@@ -1169,9 +2027,12 @@ type RuntimeConfigResponse struct {
 	ContextSize          *int     `json:"context_size,omitempty"`
 	Dtype                *string  `json:"dtype,omitempty"`
 	Duplex               *bool    `json:"duplex,omitempty"`
+	EnableChunkedPrefill *bool    `json:"enable_chunked_prefill,omitempty"`
+	EnablePrefixCaching  *bool    `json:"enable_prefix_caching,omitempty"`
 	GpuMemoryUtilization *float32 `json:"gpu_memory_utilization,omitempty"`
 	KvCacheDtype         *string  `json:"kv_cache_dtype,omitempty"`
 	MaxNumBatchedTokens  *int     `json:"max_num_batched_tokens,omitempty"`
+	MaxNumSeqs           *int     `json:"max_num_seqs,omitempty"`
 	Profile              *string  `json:"profile,omitempty"`
 	Quantization         *string  `json:"quantization,omitempty"`
 	StorageMounts        *[]struct {
@@ -1180,7 +2041,9 @@ type RuntimeConfigResponse struct {
 		Subpath   *string `json:"subpath,omitempty"`
 		VolumeId  *string `json:"volume_id,omitempty"`
 	} `json:"storage_mounts,omitempty"`
-	TensorParallelSize *int `json:"tensor_parallel_size,omitempty"`
+	TaskType           *string `json:"task_type,omitempty"`
+	TensorParallelSize *int    `json:"tensor_parallel_size,omitempty"`
+	YoloModelFile      *string `json:"yolo_model_file,omitempty"`
 }
 
 // RuntimeMemoryEstimateResponse defines model for RuntimeMemoryEstimateResponse.
@@ -1194,6 +2057,16 @@ type RuntimeMemoryEstimateResponse struct {
 	PerGpuRequiredVramGb *float32 `json:"per_gpu_required_vram_gb,omitempty"`
 	RequiredVramGb       *float32 `json:"required_vram_gb,omitempty"`
 	TensorParallelSize   *int     `json:"tensor_parallel_size,omitempty"`
+}
+
+// RuntimeProgressRequest defines model for RuntimeProgressRequest.
+type RuntimeProgressRequest struct {
+	// AttemptId Current observation attempt for ordinary phase notifications.
+	AttemptId *string `json:"attempt_id,omitempty"`
+
+	// LaunchId Retained launch identity, sent only once per boot to resolve attempt_id.
+	LaunchId *string `json:"launch_id,omitempty"`
+	Phase    *string `json:"phase,omitempty"`
 }
 
 // ScaleReplicaSetRequest defines model for ScaleReplicaSetRequest.
@@ -1263,6 +2136,89 @@ type SearchRequest struct {
 	TopK      *int                    `json:"top_k,omitempty"`
 }
 
+// ServiceBiomolecularArtifact defines model for Service.BiomolecularArtifact.
+type ServiceBiomolecularArtifact struct {
+	Filename  *string `json:"filename,omitempty"`
+	Id        *string `json:"id,omitempty"`
+	MediaType *string `json:"media_type,omitempty"`
+	SizeBytes *int    `json:"size_bytes,omitempty"`
+}
+
+// ServiceBiomolecularAttachment defines model for Service.BiomolecularAttachment.
+type ServiceBiomolecularAttachment struct {
+	Content *string `json:"content,omitempty"`
+	Name    *string `json:"name,omitempty"`
+}
+
+// ServiceBiomolecularJobResult defines model for Service.BiomolecularJobResult.
+type ServiceBiomolecularJobResult struct {
+	Affinity    *map[string]interface{}        `json:"affinity,omitempty"`
+	Artifacts   *[]ServiceBiomolecularArtifact `json:"artifacts,omitempty"`
+	CompletedAt *string                        `json:"completed_at,omitempty"`
+	Confidence  *[]map[string]interface{}      `json:"confidence,omitempty"`
+	CreatedAt   *string                        `json:"created_at,omitempty"`
+	Error       *string                        `json:"error,omitempty"`
+	Id          *string                        `json:"id,omitempty"`
+	Metadata    *map[string]interface{}        `json:"metadata,omitempty"`
+	Model       *string                        `json:"model,omitempty"`
+	StartedAt   *string                        `json:"started_at,omitempty"`
+	Status      *string                        `json:"status,omitempty"`
+}
+
+// ServiceBiomolecularOptions defines model for Service.BiomolecularOptions.
+type ServiceBiomolecularOptions struct {
+	AffinityMwCorrection     *bool   `json:"affinity_mw_correction,omitempty"`
+	DiffusionSamples         *int    `json:"diffusion_samples,omitempty"`
+	DiffusionSamplesAffinity *int    `json:"diffusion_samples_affinity,omitempty"`
+	MaxMsaSeqs               *int    `json:"max_msa_seqs,omitempty"`
+	MsaPairingStrategy       *string `json:"msa_pairing_strategy,omitempty"`
+	OutputFormat             *string `json:"output_format,omitempty"`
+	RecyclingSteps           *int    `json:"recycling_steps,omitempty"`
+	SamplingSteps            *int    `json:"sampling_steps,omitempty"`
+	SamplingStepsAffinity    *int    `json:"sampling_steps_affinity,omitempty"`
+	Seed                     *int    `json:"seed,omitempty"`
+	UseMsaServer             *bool   `json:"use_msa_server,omitempty"`
+	UsePotentials            *bool   `json:"use_potentials,omitempty"`
+}
+
+// ServiceBiomolecularSubmitRequest defines model for Service.BiomolecularSubmitRequest.
+type ServiceBiomolecularSubmitRequest struct {
+	Attachments *[]ServiceBiomolecularAttachment `json:"attachments,omitempty"`
+	Input       map[string]interface{}           `json:"input"`
+	Model       string                           `json:"model"`
+	Options     *ServiceBiomolecularOptions      `json:"options,omitempty"`
+}
+
+// ServiceVideoJobContentURL defines model for Service.VideoJobContentURL.
+type ServiceVideoJobContentURL struct {
+	DownloadUrl *string `json:"download_url,omitempty"`
+	ExpiresAt   *string `json:"expires_at,omitempty"`
+	Url         *string `json:"url,omitempty"`
+}
+
+// ServiceVideoJobResult defines model for Service.VideoJobResult.
+type ServiceVideoJobResult struct {
+	CancelRequested bool `json:"cancel_requested"`
+
+	// CompletedAt RFC3339 timestamp, or an empty string before this lifecycle event.
+	CompletedAt string    `json:"completed_at"`
+	CreatedAt   time.Time `json:"created_at"`
+	Error       *string   `json:"error,omitempty"`
+
+	// ExpiresAt RFC3339 timestamp, or an empty string before this lifecycle event.
+	ExpiresAt string             `json:"expires_at"`
+	Id        openapi_types.UUID `json:"id"`
+	Model     string             `json:"model"`
+	Prompt    string             `json:"prompt"`
+
+	// StartedAt RFC3339 timestamp, or an empty string before this lifecycle event.
+	StartedAt string                      `json:"started_at"`
+	Status    ServiceVideoJobResultStatus `json:"status"`
+}
+
+// ServiceVideoJobResultStatus defines model for ServiceVideoJobResult.Status.
+type ServiceVideoJobResultStatus string
+
 // ServingEndpointResponse defines model for ServingEndpointResponse.
 type ServingEndpointResponse struct {
 	CreatedAt                 *string                    `json:"created_at,omitempty"`
@@ -1270,13 +2226,19 @@ type ServingEndpointResponse struct {
 	Enabled                   *bool                      `json:"enabled,omitempty"`
 	EndpointType              *string                    `json:"endpoint_type,omitempty"`
 	Id                        *string                    `json:"id,omitempty"`
+	ModelIds                  *[]string                  `json:"model_ids,omitempty"`
 	Name                      *string                    `json:"name,omitempty"`
 	Providers                 *[]ServingProviderResponse `json:"providers,omitempty"`
+	PublicAudioPerHourEur     *float32                   `json:"public_audio_per_hour_eur,omitempty"`
 	PublicInputPerMillionEur  *float32                   `json:"public_input_per_million_eur,omitempty"`
 	PublicOutputPerMillionEur *float32                   `json:"public_output_per_million_eur,omitempty"`
+	RealtimeMode              *string                    `json:"realtime_mode,omitempty"`
+	RealtimeProfile           *string                    `json:"realtime_profile,omitempty"`
 	State                     *string                    `json:"state,omitempty"`
 	SupportedProtocols        *[]string                  `json:"supported_protocols,omitempty"`
 	SupportsDuplex            *bool                      `json:"supports_duplex,omitempty"`
+	SupportsRealtime          *bool                      `json:"supports_realtime,omitempty"`
+	SupportsServerVad         *bool                      `json:"supports_server_vad,omitempty"`
 	SupportsThinking          *bool                      `json:"supports_thinking,omitempty"`
 	Targets                   *[]ServingTargetResponse   `json:"targets,omitempty"`
 	UpdatedAt                 *string                    `json:"updated_at,omitempty"`
@@ -1311,6 +2273,119 @@ type ServingTargetResponse struct {
 	Type               *string   `json:"type,omitempty"`
 	UpdatedAt          *string   `json:"updated_at,omitempty"`
 	Weight             *int      `json:"weight,omitempty"`
+}
+
+// SharedCapacityInstanceResponse defines model for SharedCapacityInstanceResponse.
+type SharedCapacityInstanceResponse struct {
+	CapacityTier                  *string `json:"capacity_tier,omitempty"`
+	CreatedAt                     *string `json:"created_at,omitempty"`
+	Gpu                           *string `json:"gpu,omitempty"`
+	GpuCount                      *int    `json:"gpu_count,omitempty"`
+	ModelRef                      *string `json:"model_ref,omitempty"`
+	PublicPricePerHourMicrocents  *int    `json:"public_price_per_hour_microcents,omitempty"`
+	StartedAt                     *string `json:"started_at,omitempty"`
+	State                         *string `json:"state,omitempty"`
+	StoragePricePerHourMicrocents *int    `json:"storage_price_per_hour_microcents,omitempty"`
+	WorkloadKind                  *string `json:"workload_kind,omitempty"`
+}
+
+// SharedCapacityLinkResponse defines model for SharedCapacityLinkResponse.
+type SharedCapacityLinkResponse struct {
+	CreatedByAccountId *string `json:"created_by_account_id,omitempty"`
+	ExpiresAt          *string `json:"expires_at,omitempty"`
+	GroupId            *string `json:"group_id,omitempty"`
+	Id                 *string `json:"id,omitempty"`
+	Token              *string `json:"token,omitempty"`
+	Url                *string `json:"url,omitempty"`
+}
+
+// SharedCapacityListResponse defines model for SharedCapacityListResponse.
+type SharedCapacityListResponse struct {
+	Capacities *[]SharedCapacityResponse `json:"capacities,omitempty"`
+}
+
+// SharedCapacityMembershipResponse defines model for SharedCapacityMembershipResponse.
+type SharedCapacityMembershipResponse struct {
+	AcceptedAt                          *string                         `json:"accepted_at,omitempty"`
+	AcceptedTermsHash                   *string                         `json:"accepted_terms_hash,omitempty"`
+	AcceptedTermsVersion                *string                         `json:"accepted_terms_version,omitempty"`
+	ActiveMemberCount                   *int                            `json:"active_member_count,omitempty"`
+	AmountMicrocents                    *int                            `json:"amount_microcents,omitempty"`
+	BasePriceEurPerHour                 *float32                        `json:"base_price_eur_per_hour,omitempty"`
+	BasePriceMicrocentsPerHour          *int                            `json:"base_price_microcents_per_hour,omitempty"`
+	BasePriceMicrocentsPerSecond        *int                            `json:"base_price_microcents_per_second,omitempty"`
+	CreatedAt                           *string                         `json:"created_at,omitempty"`
+	CurrentMemberPriceEurPerHour        *float32                        `json:"current_member_price_eur_per_hour,omitempty"`
+	CurrentMemberPriceMicrocentsPerHour *int                            `json:"current_member_price_microcents_per_hour,omitempty"`
+	EffectiveFrom                       *string                         `json:"effective_from,omitempty"`
+	GroupId                             *string                         `json:"group_id,omitempty"`
+	Instance                            *SharedCapacityInstanceResponse `json:"instance,omitempty"`
+	LeaveEffectiveAt                    *string                         `json:"leave_effective_at,omitempty"`
+	LeftAt                              *string                         `json:"left_at,omitempty"`
+	MaxMembers                          *int                            `json:"max_members,omitempty"`
+	MemberPriceMicrocentsPerSecond      *int                            `json:"member_price_microcents_per_second,omitempty"`
+	MembershipId                        *string                         `json:"membership_id,omitempty"`
+	ReservationAttached                 *bool                           `json:"reservation_attached,omitempty"`
+	ReservationState                    *string                         `json:"reservation_state,omitempty"`
+	Role                                *string                         `json:"role,omitempty"`
+	ServingAliasId                      *string                         `json:"serving_alias_id,omitempty"`
+	Status                              *string                         `json:"status,omitempty"`
+	SuspendedAt                         *string                         `json:"suspended_at,omitempty"`
+	UpdatedAt                           *string                         `json:"updated_at,omitempty"`
+}
+
+// SharedCapacityPublicListResponse defines model for SharedCapacityPublicListResponse.
+type SharedCapacityPublicListResponse struct {
+	Capacities *[]SharedCapacityPublicResponse `json:"capacities,omitempty"`
+	NextCursor *string                         `json:"next_cursor,omitempty"`
+}
+
+// SharedCapacityPublicResponse defines model for SharedCapacityPublicResponse.
+type SharedCapacityPublicResponse struct {
+	ActiveMemberCount                   *int     `json:"active_member_count,omitempty"`
+	AvailabilityMode                    *string  `json:"availability_mode,omitempty"`
+	BasePriceEurPerHour                 *float32 `json:"base_price_eur_per_hour,omitempty"`
+	BasePriceMicrocentsPerHour          *int     `json:"base_price_microcents_per_hour,omitempty"`
+	BasePriceMicrocentsPerSecond        *int     `json:"base_price_microcents_per_second,omitempty"`
+	CapacityTier                        *string  `json:"capacity_tier,omitempty"`
+	EstimatedJoinPriceEurPerHour        *float32 `json:"estimated_join_price_eur_per_hour,omitempty"`
+	EstimatedJoinPriceMicrocentsPerHour *int     `json:"estimated_join_price_microcents_per_hour,omitempty"`
+	Gpu                                 *string  `json:"gpu,omitempty"`
+	InstanceState                       *string  `json:"instance_state,omitempty"`
+	MaxMembers                          *int     `json:"max_members,omitempty"`
+	MemberPriceMicrocentsPerSecond      *int     `json:"member_price_microcents_per_second,omitempty"`
+	ModelDescription                    *string  `json:"model_description,omitempty"`
+	ModelRef                            *string  `json:"model_ref,omitempty"`
+	SelectionMode                       *string  `json:"selection_mode,omitempty"`
+	Slug                                *string  `json:"slug,omitempty"`
+	Status                              *string  `json:"status,omitempty"`
+	TermsHash                           *string  `json:"terms_hash,omitempty"`
+	TermsVersion                        *string  `json:"terms_version,omitempty"`
+	Visibility                          *string  `json:"visibility,omitempty"`
+	WorkloadKind                        *string  `json:"workload_kind,omitempty"`
+}
+
+// SharedCapacityResponse defines model for SharedCapacityResponse.
+type SharedCapacityResponse struct {
+	ActiveMemberCount                   *int                                `json:"active_member_count,omitempty"`
+	BackingInstanceId                   *string                             `json:"backing_instance_id,omitempty"`
+	BasePriceEurPerHour                 *float32                            `json:"base_price_eur_per_hour,omitempty"`
+	BasePriceMicrocentsPerHour          *int                                `json:"base_price_microcents_per_hour,omitempty"`
+	BasePriceMicrocentsPerSecond        *int                                `json:"base_price_microcents_per_second,omitempty"`
+	CloseReason                         *string                             `json:"close_reason,omitempty"`
+	CurrentMemberPriceEurPerHour        *float32                            `json:"current_member_price_eur_per_hour,omitempty"`
+	CurrentMemberPriceMicrocentsPerHour *int                                `json:"current_member_price_microcents_per_hour,omitempty"`
+	GroupId                             *string                             `json:"group_id,omitempty"`
+	Instance                            *SharedCapacityInstanceResponse     `json:"instance,omitempty"`
+	MaxMembers                          *int                                `json:"max_members,omitempty"`
+	MemberPriceMicrocentsPerSecond      *int                                `json:"member_price_microcents_per_second,omitempty"`
+	Members                             *[]SharedCapacityMembershipResponse `json:"members,omitempty"`
+	Membership                          *SharedCapacityMembershipResponse   `json:"membership,omitempty"`
+	PublicSlug                          *string                             `json:"public_slug,omitempty"`
+	Status                              *string                             `json:"status,omitempty"`
+	TermsHash                           *string                             `json:"terms_hash,omitempty"`
+	TermsVersion                        *string                             `json:"terms_version,omitempty"`
+	Visibility                          *string                             `json:"visibility,omitempty"`
 }
 
 // SmartBalancerRouteDestinationRequest defines model for SmartBalancerRouteDestinationRequest.
@@ -1363,33 +2438,31 @@ type SmartBalancerRouterModelResponse struct {
 
 // SmartBalancerViewResponse defines model for SmartBalancerViewResponse.
 type SmartBalancerViewResponse struct {
-	CreatedAt         *string                           `json:"created_at,omitempty"`
-	DefaultRouteId    *string                           `json:"default_route_id,omitempty"`
-	DisplayName       *string                           `json:"display_name,omitempty"`
-	Enabled           *bool                             `json:"enabled,omitempty"`
-	Id                *string                           `json:"id,omitempty"`
-	Name              *string                           `json:"name,omitempty"`
-	RouterModel       *SmartBalancerRouterModelResponse `json:"router_model,omitempty"`
-	Routes            *[]SmartBalancerRouteResponse     `json:"routes,omitempty"`
-	RoutingMode       *string                           `json:"routing_mode,omitempty"`
-	ServingEndpointId *string                           `json:"serving_endpoint_id,omitempty"`
-	UpdatedAt         *string                           `json:"updated_at,omitempty"`
-	WorkloadKind      *string                           `json:"workload_kind,omitempty"`
+	CreatedAt      *string                           `json:"created_at,omitempty"`
+	DefaultRouteId *string                           `json:"default_route_id,omitempty"`
+	DisplayName    *string                           `json:"display_name,omitempty"`
+	Enabled        *bool                             `json:"enabled,omitempty"`
+	Id             *string                           `json:"id,omitempty"`
+	Name           *string                           `json:"name,omitempty"`
+	RouterModel    *SmartBalancerRouterModelResponse `json:"router_model,omitempty"`
+	Routes         *[]SmartBalancerRouteResponse     `json:"routes,omitempty"`
+	RoutingMode    *string                           `json:"routing_mode,omitempty"`
+
+	// ServerlessStartRequests Requests in the rolling window required before starting stopped serverless destinations.
+	ServerlessStartRequests *int `json:"serverless_start_requests,omitempty"`
+
+	// ServerlessStartWindowSeconds Rolling request window in seconds.
+	ServerlessStartWindowSeconds *int    `json:"serverless_start_window_seconds,omitempty"`
+	ServingEndpointId            *string `json:"serving_endpoint_id,omitempty"`
+	UpdatedAt                    *string `json:"updated_at,omitempty"`
+	WorkloadKind                 *string `json:"workload_kind,omitempty"`
 }
 
-// StorageVolumeResponse defines model for StorageVolumeResponse.
-type StorageVolumeResponse struct {
-	AccountId    *string `json:"account_id,omitempty"`
-	Bucket       *string `json:"bucket,omitempty"`
-	CreatedAt    *string `json:"created_at,omitempty"`
-	Description  *string `json:"description,omitempty"`
-	ErrorMessage *string `json:"error_message,omitempty"`
-	Id           *string `json:"id,omitempty"`
-	Name         *string `json:"name,omitempty"`
-	Prefix       *string `json:"prefix,omitempty"`
-	Provider     *string `json:"provider,omitempty"`
-	Status       *string `json:"status,omitempty"`
-	UpdatedAt    *string `json:"updated_at,omitempty"`
+// StartupProgress defines model for StartupProgress.
+type StartupProgress struct {
+	Phase     *string `json:"phase,omitempty"`
+	Source    *string `json:"source,omitempty"`
+	UpdatedAt *string `json:"updated_at,omitempty"`
 }
 
 // TargetGroupMemberRequest defines model for TargetGroupMemberRequest.
@@ -1462,7 +2535,7 @@ type Timestamp struct {
 	Nanos *int `json:"nanos,omitempty"`
 
 	// Seconds Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must
-	// be between -315576000000 and 315576000000 inclusive (which corresponds to
+	// be between -62135596800 and 253402300799 inclusive (which corresponds to
 	// 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).
 	Seconds *int `json:"seconds,omitempty"`
 }
@@ -1472,6 +2545,14 @@ type Translation struct {
 	Description *string `json:"description,omitempty"`
 	Locale      *string `json:"locale,omitempty"`
 	Name        *string `json:"name,omitempty"`
+}
+
+// TutorialProgressResponse defines model for TutorialProgressResponse.
+type TutorialProgressResponse struct {
+	CompletedStepIds *[]string `json:"completed_step_ids,omitempty"`
+	ContentVersion   *int      `json:"content_version,omitempty"`
+	Found            *bool     `json:"found,omitempty"`
+	State            *string   `json:"state,omitempty"`
 }
 
 // UnreadCountResponse defines model for UnreadCountResponse.
@@ -1487,9 +2568,8 @@ type UpdateAccountMemberRequest struct {
 
 // UpdateAccountRequest defines model for UpdateAccountRequest.
 type UpdateAccountRequest struct {
-	Description        *string `json:"description,omitempty"`
-	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
-	Name               *string `json:"name,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Name        *string `json:"name,omitempty"`
 }
 
 // UpdateFirewallRequest defines model for UpdateFirewallRequest.
@@ -1512,33 +2592,33 @@ type UpdateFirewallRuleRequest struct {
 	Slug            *string `json:"slug,omitempty"`
 }
 
-// UpdateFiscalProfileRequest defines model for UpdateFiscalProfileRequest.
-type UpdateFiscalProfileRequest struct {
-	FiscalCustomerType *string `json:"fiscal_customer_type,omitempty"`
-}
-
 // UpdateInstanceRequest defines model for UpdateInstanceRequest.
 type UpdateInstanceRequest struct {
-	Description             *string                    `json:"description,omitempty"`
-	GpuPreferences          *[]PublicGPUPreferenceJSON `json:"gpu_preferences,omitempty"`
-	IdleTimeoutSeconds      *int                       `json:"idle_timeout_seconds,omitempty"`
-	Name                    *string                    `json:"name,omitempty"`
-	RuntimeConfig           *RuntimeConfigRequest      `json:"runtime_config,omitempty"`
-	RuntimePreset           *string                    `json:"runtime_preset,omitempty"`
-	SchedulingMode          *string                    `json:"scheduling_mode,omitempty"`
-	ServerlessEnabled       *bool                      `json:"serverless_enabled,omitempty"`
-	ServingName             *string                    `json:"serving_name,omitempty"`
-	SmartAllowCommunity     *bool                      `json:"smart_allow_community,omitempty"`
-	SmartAllowSpot          *bool                      `json:"smart_allow_spot,omitempty"`
-	SmartMaxPricePerHourEur *float32                   `json:"smart_max_price_per_hour_eur,omitempty"`
-	SmartMinGpuClass        *string                    `json:"smart_min_gpu_class,omitempty"`
-	SmartMinTotalTflops     *float32                   `json:"smart_min_total_tflops,omitempty"`
-	SmartProviderFilterMode *string                    `json:"smart_provider_filter_mode,omitempty"`
-	SmartProviderPreference *string                    `json:"smart_provider_preference,omitempty"`
-	SmartRegion             *string                    `json:"smart_region,omitempty"`
-	SmartRegions            *[]string                  `json:"smart_regions,omitempty"`
-	SmartSelectionLabel     *string                    `json:"smart_selection_label,omitempty"`
-	SupportedProtocols      *[]string                  `json:"supported_protocols,omitempty"`
+	// CostOptimizationEnabled Opt into automatic Smart cost optimization. Omission preserves the saved setting; switching to manual disables it.
+	CostOptimizationEnabled *bool `json:"cost_optimization_enabled,omitempty"`
+
+	// CostOptimizationMinSavingsPercent Minimum percentage saving required for replacement. Defaults to 20; must be finite, greater than 0 and less than 100. Decimals are accepted.
+	CostOptimizationMinSavingsPercent *float32                   `json:"cost_optimization_min_savings_percent,omitempty"`
+	Description                       *string                    `json:"description,omitempty"`
+	GpuPreferences                    *[]PublicGPUPreferenceJSON `json:"gpu_preferences,omitempty"`
+	IdleTimeoutSeconds                *int                       `json:"idle_timeout_seconds,omitempty"`
+	Name                              *string                    `json:"name,omitempty"`
+	RuntimeConfig                     *RuntimeConfigRequest      `json:"runtime_config,omitempty"`
+	RuntimePreset                     *string                    `json:"runtime_preset,omitempty"`
+	SchedulingMode                    *string                    `json:"scheduling_mode,omitempty"`
+	ServerlessEnabled                 *bool                      `json:"serverless_enabled,omitempty"`
+	ServingName                       *string                    `json:"serving_name,omitempty"`
+	SmartAllowCommunity               *bool                      `json:"smart_allow_community,omitempty"`
+	SmartAllowSpot                    *bool                      `json:"smart_allow_spot,omitempty"`
+	SmartMaxPricePerHourEur           *float32                   `json:"smart_max_price_per_hour_eur,omitempty"`
+	SmartMinGpuClass                  *string                    `json:"smart_min_gpu_class,omitempty"`
+	SmartMinTotalTflops               *float32                   `json:"smart_min_total_tflops,omitempty"`
+	SmartProviderFilterMode           *string                    `json:"smart_provider_filter_mode,omitempty"`
+	SmartProviderPreference           *string                    `json:"smart_provider_preference,omitempty"`
+	SmartRegion                       *string                    `json:"smart_region,omitempty"`
+	SmartRegions                      *[]string                  `json:"smart_regions,omitempty"`
+	SmartSelectionLabel               *string                    `json:"smart_selection_label,omitempty"`
+	SupportedProtocols                *[]string                  `json:"supported_protocols,omitempty"`
 }
 
 // UpdatePreferencesRequest defines model for UpdatePreferencesRequest.
@@ -1564,13 +2644,19 @@ type UpdateReplicaSetRequest struct {
 
 // UpdateSmartBalancerRequest defines model for UpdateSmartBalancerRequest.
 type UpdateSmartBalancerRequest struct {
-	DisplayName  *string                          `json:"display_name,omitempty"`
-	Enabled      *bool                            `json:"enabled,omitempty"`
-	Name         *string                          `json:"name,omitempty"`
-	RouterModel  *SmartBalancerRouterModelRequest `json:"router_model,omitempty"`
-	Routes       *[]SmartBalancerRouteRequest     `json:"routes,omitempty"`
-	RoutingMode  *string                          `json:"routing_mode,omitempty"`
-	WorkloadKind *string                          `json:"workload_kind,omitempty"`
+	DisplayName *string                          `json:"display_name,omitempty"`
+	Enabled     *bool                            `json:"enabled,omitempty"`
+	Name        *string                          `json:"name,omitempty"`
+	RouterModel *SmartBalancerRouterModelRequest `json:"router_model,omitempty"`
+	Routes      *[]SmartBalancerRouteRequest     `json:"routes,omitempty"`
+	RoutingMode *string                          `json:"routing_mode,omitempty"`
+
+	// ServerlessStartRequests Requests in the rolling window required before starting stopped serverless destinations. Omitted settings retain their stored values.
+	ServerlessStartRequests *int `json:"serverless_start_requests,omitempty"`
+
+	// ServerlessStartWindowSeconds Rolling request window in seconds.
+	ServerlessStartWindowSeconds *int    `json:"serverless_start_window_seconds,omitempty"`
+	WorkloadKind                 *string `json:"workload_kind,omitempty"`
 }
 
 // UpdateTargetGroupRequest defines model for UpdateTargetGroupRequest.
@@ -1582,17 +2668,26 @@ type UpdateTargetGroupRequest struct {
 	SelectionPolicy *string                     `json:"selection_policy,omitempty"`
 }
 
+// UpdateTutorialProgressRequest defines model for UpdateTutorialProgressRequest.
+type UpdateTutorialProgressRequest struct {
+	CompletedStepIds *[]string `json:"completed_step_ids,omitempty"`
+	ContentVersion   *int      `json:"content_version,omitempty"`
+	State            *string   `json:"state,omitempty"`
+}
+
 // UpdateVectorDatabaseRequest defines model for UpdateVectorDatabaseRequest.
 type UpdateVectorDatabaseRequest struct {
-	Description *string `json:"description,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Slug        *string `json:"slug,omitempty"`
+	Description          *string `json:"description,omitempty"`
+	EmbeddingServingName *string `json:"embedding_serving_name,omitempty"`
+	Name                 *string `json:"name,omitempty"`
+	Slug                 *string `json:"slug,omitempty"`
 }
 
 // UserInfoResponse defines model for UserInfoResponse.
 type UserInfoResponse struct {
-	Email  *string `json:"email,omitempty"`
-	UserId *string `json:"user_id,omitempty"`
+	Email         *string            `json:"email,omitempty"`
+	Impersonating *ImpersonationInfo `json:"impersonating,omitempty"`
+	UserId        *string            `json:"user_id,omitempty"`
 }
 
 // UserPreferencesResponse defines model for UserPreferencesResponse.
@@ -1662,11 +2757,13 @@ type VectorDatabaseResponse struct {
 
 // VerifyEmailResponse defines model for VerifyEmailResponse.
 type VerifyEmailResponse struct {
-	AccessToken       *string `json:"access_token,omitempty"`
-	AccessTokenExpiry *int    `json:"access_token_expiry,omitempty"`
-	Email             *string `json:"email,omitempty"`
-	RefreshToken      *string `json:"refresh_token,omitempty"`
-	UserId            *string `json:"user_id,omitempty"`
+	Email  *string `json:"email,omitempty"`
+	UserId *string `json:"user_id,omitempty"`
+}
+
+// VideoJobsListResponse defines model for VideoJobsListResponse.
+type VideoJobsListResponse struct {
+	Data []ServiceVideoJobResult `json:"data"`
 }
 
 // ViewElementRequest defines model for ViewElementRequest.
@@ -1676,15 +2773,108 @@ type ViewElementRequest struct {
 	Weight         *float32 `json:"weight,omitempty"`
 }
 
+// PostOllamaShowJSONBody defines parameters for PostOllamaShow.
+type PostOllamaShowJSONBody = map[string]interface{}
+
+// PostRuntimeNotifyCrashJSONBody defines parameters for PostRuntimeNotifyCrash.
+type PostRuntimeNotifyCrashJSONBody = map[string]interface{}
+
+// PostV1AgentChatJSONBody defines parameters for PostV1AgentChat.
+type PostV1AgentChatJSONBody interface{}
+
+// PostV1AudioTranscriptionsMultipartBody defines parameters for PostV1AudioTranscriptions.
+type PostV1AudioTranscriptionsMultipartBody struct {
+	// File Audio file
+	File openapi_types.File `json:"file"`
+
+	// Language Source language
+	Language *string `json:"language,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// ResponseFormat Response format: json, verbose_json, or diarized_json
+	ResponseFormat *string `json:"response_format,omitempty"`
+
+	// TimestampGranularities Timestamp granularity (word or segment); requires verbose_json
+	TimestampGranularities *string `json:"timestamp_granularities[],omitempty"`
+}
+
+// GetV1AudioVoicesParams defines parameters for GetV1AudioVoices.
+type GetV1AudioVoicesParams struct {
+	// Model Model ID
+	Model string `form:"model" json:"model"`
+}
+
+// GetV1AuditParams defines parameters for GetV1Audit.
+type GetV1AuditParams struct {
+	// UserId Filter by user ID
+	UserId *string `form:"user_id,omitempty" json:"user_id,omitempty"`
+
+	// Action Filter by semantic action
+	Action *string `form:"action,omitempty" json:"action,omitempty"`
+
+	// Method Filter by HTTP method
+	Method *string `form:"method,omitempty" json:"method,omitempty"`
+
+	// Path Filter by route path
+	Path *string `form:"path,omitempty" json:"path,omitempty"`
+
+	// From RFC3339 lower time bound
+	From *string `form:"from,omitempty" json:"from,omitempty"`
+
+	// To RFC3339 upper time bound
+	To *string `form:"to,omitempty" json:"to,omitempty"`
+
+	// Status Filter by HTTP status code
+	Status *string `form:"status,omitempty" json:"status,omitempty"`
+
+	// Limit Maximum number of events
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Offset Pagination offset
+	Offset *int `form:"offset,omitempty" json:"offset,omitempty"`
+}
+
+// GetAuthOauthProviderBeginParams defines parameters for GetAuthOauthProviderBegin.
+type GetAuthOauthProviderBeginParams struct {
+	// RedirectUri Optional allowlisted callback URI
+	RedirectUri *string `form:"redirect_uri,omitempty" json:"redirect_uri,omitempty"`
+}
+
+// GetAuthOauthProviderCallbackParams defines parameters for GetAuthOauthProviderCallback.
+type GetAuthOauthProviderCallbackParams struct {
+	// Code Provider authorization code
+	Code *string `form:"code,omitempty" json:"code,omitempty"`
+
+	// State OAuth state
+	State *string `form:"state,omitempty" json:"state,omitempty"`
+
+	// Error Provider error
+	Error *string `form:"error,omitempty" json:"error,omitempty"`
+}
+
 // GetAuthVerifyEmailParams defines parameters for GetAuthVerifyEmail.
 type GetAuthVerifyEmailParams struct {
 	// Token Activation token from the email
 	Token string `form:"token" json:"token"`
 }
 
+// PostV1AutomationsJSONBody defines parameters for PostV1Automations.
+type PostV1AutomationsJSONBody interface{}
+
+// PatchV1AutomationsAutomationIDJSONBody defines parameters for PatchV1AutomationsAutomationID.
+type PatchV1AutomationsAutomationIDJSONBody interface{}
+
 // PostBillingCheckoutParams defines parameters for PostBillingCheckout.
 type PostBillingCheckoutParams struct {
 	// IdempotencyKey Checkout idempotency key
+	IdempotencyKey string `json:"Idempotency-Key"`
+}
+
+// PostBillingDebitParams defines parameters for PostBillingDebit.
+type PostBillingDebitParams struct {
+	// IdempotencyKey Debit idempotency key
 	IdempotencyKey string `json:"Idempotency-Key"`
 }
 
@@ -1696,6 +2886,24 @@ type GetBillingLedgerParams struct {
 	// Offset Number of entries to skip
 	Offset *int `form:"offset,omitempty" json:"offset,omitempty"`
 }
+
+// GetV1BiomolecularCapabilitiesParams defines parameters for GetV1BiomolecularCapabilities.
+type GetV1BiomolecularCapabilitiesParams struct {
+	// Model Account-owned serving name or instance UUID
+	Model string `form:"model" json:"model"`
+}
+
+// PostV1BiomolecularJobParams defines parameters for PostV1BiomolecularJob.
+type PostV1BiomolecularJobParams struct {
+	// IdempotencyKey Account-scoped request identity
+	IdempotencyKey *string `json:"Idempotency-Key,omitempty"`
+}
+
+// PostV1ConnectorsJSONBody defines parameters for PostV1Connectors.
+type PostV1ConnectorsJSONBody interface{}
+
+// PatchV1ConnectorsConnectorIDJSONBody defines parameters for PatchV1ConnectorsConnectorID.
+type PatchV1ConnectorsConnectorIDJSONBody interface{}
 
 // GetVectorDatabaseDocumentsParams defines parameters for GetVectorDatabaseDocuments.
 type GetVectorDatabaseDocumentsParams struct {
@@ -1719,12 +2927,24 @@ type GetHuggingfaceEmbeddingsParams struct {
 type GetHuggingfaceFilesParams struct {
 	// Repo Hugging Face repository ID (e.g. owner/model)
 	Repo string `form:"repo" json:"repo"`
+
+	// Format Checkpoint format: gguf (default) or yolo
+	Format *string `form:"format,omitempty" json:"format,omitempty"`
 }
 
 // GetHuggingfaceModelsParams defines parameters for GetHuggingfaceModels.
 type GetHuggingfaceModelsParams struct {
 	// Q Search query
 	Q *string `form:"q,omitempty" json:"q,omitempty"`
+
+	// Limit Number of models (default 100, max 500)
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Sort Catalog sort order
+	Sort *string `form:"sort,omitempty" json:"sort,omitempty"`
+
+	// Cursor Pagination cursor
+	Cursor *string `form:"cursor,omitempty" json:"cursor,omitempty"`
 }
 
 // GetHuggingfaceSearchTagParams defines parameters for GetHuggingfaceSearchTag.
@@ -1741,74 +2961,41 @@ type GetHuggingfaceSearchTagParams struct {
 
 // GetHuggingfaceTrendingParams defines parameters for GetHuggingfaceTrending.
 type GetHuggingfaceTrendingParams struct {
-	// Limit Number of models (default 20, max 100)
+	// Limit Number of models (default 20, max 20)
 	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
-// GetInstancesParams defines parameters for GetInstances.
-type GetInstancesParams struct {
-	// State Optional state filter (non_bootstrap, pending, running, stopped, failed)
-	State *string `form:"state,omitempty" json:"state,omitempty"`
-}
+// PostV1ImageDetectionsMultipartBody defines parameters for PostV1ImageDetections.
+type PostV1ImageDetectionsMultipartBody struct {
+	// Classes Comma-separated nonnegative class IDs
+	Classes *string `json:"classes,omitempty"`
 
-// PostInstancesParams defines parameters for PostInstances.
-type PostInstancesParams struct {
-	// IdempotencyKey Optional idempotency key
-	IdempotencyKey *string `json:"Idempotency-Key,omitempty"`
-}
+	// Confidence Confidence threshold (0-1, default 0.25)
+	Confidence *float32 `json:"confidence,omitempty"`
 
-// GetInstanceUsageParams defines parameters for GetInstanceUsage.
-type GetInstanceUsageParams struct {
-	// Range Time range (24h, 7d, 30d)
-	Range *GetInstanceUsageParamsRange `form:"range,omitempty" json:"range,omitempty"`
-}
+	// Image PNG or JPEG image (maximum 16 MiB)
+	Image openapi_types.File `json:"image"`
 
-// GetInstanceUsageParamsRange defines parameters for GetInstanceUsage.
-type GetInstanceUsageParamsRange string
+	// ImageSize Inference image size (32-2048, divisible by 32, default 640)
+	ImageSize *int `json:"image_size,omitempty"`
 
-// GetNotificationsParams defines parameters for GetNotifications.
-type GetNotificationsParams struct {
-	// Since Return notifications created after this RFC3339 timestamp
-	Since *string `form:"since,omitempty" json:"since,omitempty"`
+	// Iou IoU threshold (0-1, default 0.7)
+	Iou *float32 `json:"iou,omitempty"`
 
-	// Limit Maximum number of notifications to return (default 50, max 100)
-	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+	// MaxDetections Maximum detections (1-1000, default 300)
+	MaxDetections *int `json:"max_detections,omitempty"`
 
-	// Kind Filter by notification kind
-	Kind *string `form:"kind,omitempty" json:"kind,omitempty"`
-
-	// Severity Filter by severity
-	Severity *string `form:"severity,omitempty" json:"severity,omitempty"`
-
-	// IncludeRead Include already-read notifications
-	IncludeRead *bool `form:"include_read,omitempty" json:"include_read,omitempty"`
-}
-
-// PostRuntimeNotifyCrashJSONBody defines parameters for PostRuntimeNotifyCrash.
-type PostRuntimeNotifyCrashJSONBody = map[string]interface{}
-
-// TryToolJSONBody defines parameters for TryTool.
-type TryToolJSONBody map[string]interface{}
-
-// PostV1AudioTranscriptionsMultipartBody defines parameters for PostV1AudioTranscriptions.
-type PostV1AudioTranscriptionsMultipartBody struct {
-	// File Audio file
-	File openapi_types.File `json:"file"`
-
-	// Language Source language
-	Language *string `json:"language,omitempty"`
-
-	// Model Model ID
+	// Model Serving name or instance UUID
 	Model string `json:"model"`
-
-	// ResponseFormat Response format
-	ResponseFormat *string `json:"response_format,omitempty"`
 }
 
-// GetV1AudioVoicesParams defines parameters for GetV1AudioVoices.
-type GetV1AudioVoicesParams struct {
-	// Model Model ID
+// GetV1ImageDetectionsStreamParams defines parameters for GetV1ImageDetectionsStream.
+type GetV1ImageDetectionsStreamParams struct {
+	// Model Serving name or instance UUID
 	Model string `form:"model" json:"model"`
+
+	// AccountId Preferred account; validated through user membership
+	AccountId *string `form:"account_id,omitempty" json:"account_id,omitempty"`
 }
 
 // PostV1ImageEditsMultipartBody defines parameters for PostV1ImageEdits.
@@ -1841,10 +3028,73 @@ type PostV1ImageEditsMultipartBody struct {
 	Strength *float32 `json:"strength,omitempty"`
 }
 
+// GetInstancesParams defines parameters for GetInstances.
+type GetInstancesParams struct {
+	// State Optional state filter (non_bootstrap, pending, running, stopped, failed)
+	State *string `form:"state,omitempty" json:"state,omitempty"`
+}
+
+// PostInstancesParams defines parameters for PostInstances.
+type PostInstancesParams struct {
+	// IdempotencyKey Optional idempotency key
+	IdempotencyKey *string `json:"Idempotency-Key,omitempty"`
+}
+
+// PostV1InstancesInstanceIDSharedCapacityParams defines parameters for PostV1InstancesInstanceIDSharedCapacity.
+type PostV1InstancesInstanceIDSharedCapacityParams struct {
+	// IdempotencyKey Enable idempotency key
+	IdempotencyKey string `json:"Idempotency-Key"`
+}
+
+// GetInstanceUsageParams defines parameters for GetInstanceUsage.
+type GetInstanceUsageParams struct {
+	// Range Time range (24h, 7d, 30d)
+	Range *GetInstanceUsageParamsRange `form:"range,omitempty" json:"range,omitempty"`
+}
+
+// GetInstanceUsageParamsRange defines parameters for GetInstanceUsage.
+type GetInstanceUsageParamsRange string
+
+// GetNotificationsParams defines parameters for GetNotifications.
+type GetNotificationsParams struct {
+	// Since Return notifications created after this RFC3339 timestamp
+	Since *string `form:"since,omitempty" json:"since,omitempty"`
+
+	// Limit Maximum number of notifications to return (default 50, max 100)
+	Limit *int `form:"limit,omitempty" json:"limit,omitempty"`
+
+	// Kind Filter by notification kind
+	Kind *string `form:"kind,omitempty" json:"kind,omitempty"`
+
+	// Severity Filter by severity
+	Severity *string `form:"severity,omitempty" json:"severity,omitempty"`
+
+	// IncludeRead Include already-read notifications
+	IncludeRead *bool `form:"include_read,omitempty" json:"include_read,omitempty"`
+}
+
+// GetPrometheusVLLMMetricsParams defines parameters for GetPrometheusVLLMMetrics.
+type GetPrometheusVLLMMetricsParams struct {
+	// Instance Inference instance ID
+	Instance string `form:"instance" json:"instance"`
+}
+
 // GetV1PublicModelPricesParams defines parameters for GetV1PublicModelPrices.
 type GetV1PublicModelPricesParams struct {
 	// Query Search query for model prices
 	Query *string `form:"query,omitempty" json:"query,omitempty"`
+}
+
+// GetV1PublicTokenUsageParams defines parameters for GetV1PublicTokenUsage.
+type GetV1PublicTokenUsageParams struct {
+	// From Inclusive date YYYY-MM-DD; supply with to
+	From *string `form:"from,omitempty" json:"from,omitempty"`
+
+	// To Exclusive date YYYY-MM-DD; supply with from
+	To *string `form:"to,omitempty" json:"to,omitempty"`
+
+	// Timezone IANA timezone; default UTC
+	Timezone *string `form:"timezone,omitempty" json:"timezone,omitempty"`
 }
 
 // GetV1RealtimeParams defines parameters for GetV1Realtime.
@@ -1852,10 +3102,16 @@ type GetV1RealtimeParams struct {
 	// Model Model serving name
 	Model string `form:"model" json:"model"`
 
-	// SessionId Resume a duplex session id
+	// Mode Realtime mode (turn, duplex, or transcription)
+	Mode *string `form:"mode,omitempty" json:"mode,omitempty"`
+
+	// Duplex Legacy native-duplex alias (1/true/on); requires a duplex-capable model
+	Duplex *string `form:"duplex,omitempty" json:"duplex,omitempty"`
+
+	// SessionId Resume a realtime session id
 	SessionId *string `form:"session_id,omitempty" json:"session_id,omitempty"`
 
-	// Autostart Auto-start the duplex session (1/true/on)
+	// Autostart Auto-start the realtime session (1/true/on)
 	Autostart *string `form:"autostart,omitempty" json:"autostart,omitempty"`
 }
 
@@ -1881,6 +3137,12 @@ type PutV1ResponsesSessionsStatusJSONBody map[string]interface{}
 type DeleteV1ResponsesSessionParams struct {
 	// Conversation Delete the full conversation chain
 	Conversation *string `form:"conversation,omitempty" json:"conversation,omitempty"`
+}
+
+// PostV1SharedCapacitiesJoinParams defines parameters for PostV1SharedCapacitiesJoin.
+type PostV1SharedCapacitiesJoinParams struct {
+	// IdempotencyKey Join idempotency key
+	IdempotencyKey string `json:"Idempotency-Key"`
 }
 
 // GetV1TemplatesParams defines parameters for GetV1Templates.
@@ -1916,6 +3178,201 @@ type GetV1TemplateParams struct {
 	Locale *string `form:"locale,omitempty" json:"locale,omitempty"`
 }
 
+// PostV1ToolDeploymentsJSONBody defines parameters for PostV1ToolDeployments.
+type PostV1ToolDeploymentsJSONBody interface{}
+
+// PostV1ToolDeploymentsDeploymentIDFinalizeJSONBody defines parameters for PostV1ToolDeploymentsDeploymentIDFinalize.
+type PostV1ToolDeploymentsDeploymentIDFinalizeJSONBody interface{}
+
+// PostV1ToolDeploymentsDeploymentIDFinalizeParams defines parameters for PostV1ToolDeploymentsDeploymentIDFinalize.
+type PostV1ToolDeploymentsDeploymentIDFinalizeParams struct {
+	// XValendraGitHubOIDCToken Short-lived GitHub Actions OIDC token. Never include this value in the request body or logs.
+	XValendraGitHubOIDCToken string `json:"X-Valendra-GitHub-OIDC-Token"`
+}
+
+// PostV1ToolDeploymentsDeploymentIDRollbackJSONBody defines parameters for PostV1ToolDeploymentsDeploymentIDRollback.
+type PostV1ToolDeploymentsDeploymentIDRollbackJSONBody interface{}
+
+// PostV1ToolDeploymentsDeploymentIDUploadSessionJSONBody defines parameters for PostV1ToolDeploymentsDeploymentIDUploadSession.
+type PostV1ToolDeploymentsDeploymentIDUploadSessionJSONBody interface{}
+
+// PostV1ToolDeploymentsDeploymentIDUploadSessionParams defines parameters for PostV1ToolDeploymentsDeploymentIDUploadSession.
+type PostV1ToolDeploymentsDeploymentIDUploadSessionParams struct {
+	// XValendraGitHubOIDCToken Short-lived GitHub Actions OIDC token. Never include this value in the request body or logs.
+	XValendraGitHubOIDCToken string `json:"X-Valendra-GitHub-OIDC-Token"`
+}
+
+// TryToolJSONBody defines parameters for TryTool.
+type TryToolJSONBody map[string]interface{}
+
+// PostV1VideoJobJSONBody defines parameters for PostV1VideoJob.
+type PostV1VideoJobJSONBody struct {
+	// AspectRatio Standard aspect ratio or adaptive
+	AspectRatio *PostV1VideoJobJSONBodyAspectRatio `json:"aspect_ratio,omitempty"`
+
+	// AudioFlowShift Non-negative audio flow shift
+	AudioFlowShift *float32 `json:"audio_flow_shift,omitempty"`
+
+	// AudioReferenceUrl HTTP(S) audio URL up to 16 KiB or data URL with decoded audio up to 15 MiB
+	AudioReferenceUrl *string `json:"audio_reference_url,omitempty"`
+
+	// Duration Duration in seconds
+	Duration *float32 `json:"duration,omitempty"`
+
+	// FlowShift Non-negative flow shift
+	FlowShift *float32 `json:"flow_shift,omitempty"`
+
+	// Fps Frames per second
+	Fps *PostV1VideoJobJSONBodyFps `json:"fps,omitempty"`
+
+	// Height Output height; provide with width
+	Height *int `json:"height,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// NumInferenceSteps Inference steps
+	NumInferenceSteps *int `json:"num_inference_steps,omitempty"`
+
+	// Prompt Video prompt (maximum 7,000 Unicode characters)
+	Prompt string `json:"prompt"`
+
+	// Seed Random seed
+	Seed *int64 `json:"seed,omitempty"`
+
+	// ShortEdge Output short edge; only with adaptive aspect ratio
+	ShortEdge *int `json:"short_edge,omitempty"`
+
+	// Task Generation task
+	Task *PostV1VideoJobJSONBodyTask `json:"task,omitempty"`
+
+	// Width Output width; provide with height
+	Width *int `json:"width,omitempty"`
+}
+
+// PostV1VideoJobMultipartBody defines parameters for PostV1VideoJob.
+type PostV1VideoJobMultipartBody struct {
+	// AspectRatio Standard aspect ratio or adaptive
+	AspectRatio *PostV1VideoJobMultipartBodyAspectRatio `json:"aspect_ratio,omitempty"`
+
+	// AudioFlowShift Non-negative audio flow shift
+	AudioFlowShift *float32 `json:"audio_flow_shift,omitempty"`
+
+	// AudioReference Optional H3 Ref2VA audio reference up to 15 MiB; requires at least one image or video reference
+	AudioReference *openapi_types.File `json:"audio_reference,omitempty"`
+
+	// AudioReferenceUrl HTTP(S) audio URL up to 16 KiB or data URL with decoded audio up to 15 MiB
+	AudioReferenceUrl *string `json:"audio_reference_url,omitempty"`
+
+	// Duration Duration in seconds
+	Duration *float32 `json:"duration,omitempty"`
+
+	// FlowShift Non-negative flow shift
+	FlowShift *float32 `json:"flow_shift,omitempty"`
+
+	// Fps Frames per second
+	Fps *PostV1VideoJobMultipartBodyFps `json:"fps,omitempty"`
+
+	// Height Output height; provide with width
+	Height *int `json:"height,omitempty"`
+
+	// InputReference Image up to 30 MiB or video up to 50 MiB; may be repeated. H3 Ref2VA allows mixed references, up to nine images, three videos, and twelve total; aggregate references plus audio up to 64 MiB
+	InputReference *openapi_types.File `json:"input_reference,omitempty"`
+
+	// InputReferences Repeated image or video references with the same limits as input_reference
+	InputReferences *openapi_types.File `json:"input_references,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// NumInferenceSteps Inference steps
+	NumInferenceSteps *int `json:"num_inference_steps,omitempty"`
+
+	// Prompt Video prompt (maximum 7,000 Unicode characters)
+	Prompt string `json:"prompt"`
+
+	// Seed Random seed
+	Seed *int64 `json:"seed,omitempty"`
+
+	// ShortEdge Output short edge; only with adaptive aspect ratio
+	ShortEdge *int `json:"short_edge,omitempty"`
+
+	// Task Generation task
+	Task *PostV1VideoJobMultipartBodyTask `json:"task,omitempty"`
+
+	// Width Output width; provide with height
+	Width *int `json:"width,omitempty"`
+}
+
+// PostV1VideoJobParams defines parameters for PostV1VideoJob.
+type PostV1VideoJobParams struct {
+	// IdempotencyKey Account-scoped submission identity
+	IdempotencyKey *string `json:"Idempotency-Key,omitempty"`
+}
+
+// PostV1VideoJobJSONBodyAspectRatio defines parameters for PostV1VideoJob.
+type PostV1VideoJobJSONBodyAspectRatio string
+
+// PostV1VideoJobJSONBodyFps defines parameters for PostV1VideoJob.
+type PostV1VideoJobJSONBodyFps int
+
+// PostV1VideoJobJSONBodyTask defines parameters for PostV1VideoJob.
+type PostV1VideoJobJSONBodyTask string
+
+// PostV1VideoJobMultipartBodyAspectRatio defines parameters for PostV1VideoJob.
+type PostV1VideoJobMultipartBodyAspectRatio string
+
+// PostV1VideoJobMultipartBodyFps defines parameters for PostV1VideoJob.
+type PostV1VideoJobMultipartBodyFps int
+
+// PostV1VideoJobMultipartBodyTask defines parameters for PostV1VideoJob.
+type PostV1VideoJobMultipartBodyTask string
+
+// PostV1VideoGenerationsJSONBody defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsJSONBody struct {
+	// AspectRatio Output aspect ratio: a standard ratio may accompany matching dimensions; adaptive requires short_edge
+	AspectRatio *PostV1VideoGenerationsJSONBodyAspectRatio `json:"aspect_ratio,omitempty"`
+
+	// AudioFlowShift Non-negative audio flow shift
+	AudioFlowShift *float32 `json:"audio_flow_shift,omitempty"`
+
+	// AudioReferenceUrl Hosted audio reference URL; HTTP(S) URLs are limited to 16 KiB and data URLs to the bounded decoded-audio ceiling
+	AudioReferenceUrl *string `json:"audio_reference_url,omitempty"`
+
+	// Duration Duration in seconds
+	Duration *float32 `json:"duration,omitempty"`
+
+	// FlowShift Non-negative flow shift
+	FlowShift *float32 `json:"flow_shift,omitempty"`
+
+	// Fps Frames per second; only 24 is supported
+	Fps *PostV1VideoGenerationsJSONBodyFps `json:"fps,omitempty"`
+
+	// Height Output height; provide with width; may accompany a matching standard aspect_ratio
+	Height *int `json:"height,omitempty"`
+
+	// Model Model ID
+	Model string `json:"model"`
+
+	// NumInferenceSteps Inference steps
+	NumInferenceSteps *int `json:"num_inference_steps,omitempty"`
+
+	// Prompt Video prompt (maximum 7,000 Unicode characters)
+	Prompt string `json:"prompt"`
+
+	// Seed Random seed
+	Seed *int64 `json:"seed,omitempty"`
+
+	// ShortEdge Output short edge; only valid with aspect_ratio=adaptive
+	ShortEdge *int `json:"short_edge,omitempty"`
+
+	// Task Generation task: t2va, fl2va, ref2va, t2v, or i2v
+	Task *PostV1VideoGenerationsJSONBodyTask `json:"task,omitempty"`
+
+	// Width Output width; provide with height; may accompany a matching standard aspect_ratio
+	Width *int `json:"width,omitempty"`
+}
+
 // PostV1VideoGenerationsMultipartBody defines parameters for PostV1VideoGenerations.
 type PostV1VideoGenerationsMultipartBody struct {
 	// AspectRatio Output aspect ratio: a standard ratio may accompany matching dimensions; adaptive requires short_edge
@@ -1942,10 +3399,10 @@ type PostV1VideoGenerationsMultipartBody struct {
 	// Height Output height; provide with width; may accompany a matching standard aspect_ratio
 	Height *int `json:"height,omitempty"`
 
-	// InputReference Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB
+	// InputReference Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated. H3 Ref2VA allows mixed references (up to nine images, three videos, and twelve total); FL2VA accepts up to two images; aggregate references plus audio are limited to 64 MiB
 	InputReference *openapi_types.File `json:"input_reference,omitempty"`
 
-	// InputReferences Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated; aggregate input references plus optional audio are limited to 64 MiB
+	// InputReferences Image reference up to 30 MiB or video reference up to 50 MiB; may be repeated. H3 Ref2VA allows mixed references (up to nine images, three videos, and twelve total); FL2VA accepts up to two images; aggregate references plus audio are limited to 64 MiB
 	InputReferences *openapi_types.File `json:"input_references,omitempty"`
 
 	// Model Model ID
@@ -1963,12 +3420,21 @@ type PostV1VideoGenerationsMultipartBody struct {
 	// ShortEdge Output short edge; only valid with aspect_ratio=adaptive
 	ShortEdge *int `json:"short_edge,omitempty"`
 
-	// Task Generation task: t2va, fl2va, or ref2va
+	// Task Generation task: t2va, fl2va, ref2va, t2v, or i2v
 	Task *PostV1VideoGenerationsMultipartBodyTask `json:"task,omitempty"`
 
 	// Width Output width; provide with height; may accompany a matching standard aspect_ratio
 	Width *int `json:"width,omitempty"`
 }
+
+// PostV1VideoGenerationsJSONBodyAspectRatio defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsJSONBodyAspectRatio string
+
+// PostV1VideoGenerationsJSONBodyFps defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsJSONBodyFps int
+
+// PostV1VideoGenerationsJSONBodyTask defines parameters for PostV1VideoGenerations.
+type PostV1VideoGenerationsJSONBodyTask string
 
 // PostV1VideoGenerationsMultipartBodyAspectRatio defines parameters for PostV1VideoGenerations.
 type PostV1VideoGenerationsMultipartBodyAspectRatio string
@@ -1979,14 +3445,20 @@ type PostV1VideoGenerationsMultipartBodyFps int
 // PostV1VideoGenerationsMultipartBodyTask defines parameters for PostV1VideoGenerations.
 type PostV1VideoGenerationsMultipartBodyTask string
 
+// PostOllamaShowJSONRequestBody defines body for PostOllamaShow for application/json ContentType.
+type PostOllamaShowJSONRequestBody = PostOllamaShowJSONBody
+
+// PostRuntimeNotifyCrashJSONRequestBody defines body for PostRuntimeNotifyCrash for application/json ContentType.
+type PostRuntimeNotifyCrashJSONRequestBody = PostRuntimeNotifyCrashJSONBody
+
+// PostRuntimeNotifyProgressJSONRequestBody defines body for PostRuntimeNotifyProgress for application/json ContentType.
+type PostRuntimeNotifyProgressJSONRequestBody = RuntimeProgressRequest
+
 // PostAccountsJSONRequestBody defines body for PostAccounts for application/json ContentType.
 type PostAccountsJSONRequestBody = CreateAccountRequest
 
 // PatchAccountsCurrentJSONRequestBody defines body for PatchAccountsCurrent for application/json ContentType.
 type PatchAccountsCurrentJSONRequestBody = UpdateAccountRequest
-
-// PatchAccountsCurrentFiscalProfileJSONRequestBody defines body for PatchAccountsCurrentFiscalProfile for application/json ContentType.
-type PatchAccountsCurrentFiscalProfileJSONRequestBody = UpdateFiscalProfileRequest
 
 // PostAccountsCurrentInvitationsJSONRequestBody defines body for PostAccountsCurrentInvitations for application/json ContentType.
 type PostAccountsCurrentInvitationsJSONRequestBody = CreateInvitationRequest
@@ -1997,11 +3469,32 @@ type PostAccountsCurrentMembersJSONRequestBody = AddAccountMemberRequest
 // PatchAccountsCurrentMembersByUserIDJSONRequestBody defines body for PatchAccountsCurrentMembersByUserID for application/json ContentType.
 type PatchAccountsCurrentMembersByUserIDJSONRequestBody = UpdateAccountMemberRequest
 
+// PostV1AgentChatJSONRequestBody defines body for PostV1AgentChat for application/json ContentType.
+type PostV1AgentChatJSONRequestBody PostV1AgentChatJSONBody
+
+// PostV1AudioSpeechJSONRequestBody defines body for PostV1AudioSpeech for application/json ContentType.
+type PostV1AudioSpeechJSONRequestBody = AudioSpeechRequest
+
+// PostV1AudioTranscriptionsMultipartRequestBody defines body for PostV1AudioTranscriptions for multipart/form-data ContentType.
+type PostV1AudioTranscriptionsMultipartRequestBody PostV1AudioTranscriptionsMultipartBody
+
 // PostAuthForgotPasswordJSONRequestBody defines body for PostAuthForgotPassword for application/json ContentType.
 type PostAuthForgotPasswordJSONRequestBody = ForgotPasswordRequest
 
+// PostAuthLegalAcceptancesJSONRequestBody defines body for PostAuthLegalAcceptances for application/json ContentType.
+type PostAuthLegalAcceptancesJSONRequestBody = LegalAcceptanceRequest
+
 // PostAuthLoginJSONRequestBody defines body for PostAuthLogin for application/json ContentType.
 type PostAuthLoginJSONRequestBody = LoginRequest
+
+// PostAuthLoginResendJSONRequestBody defines body for PostAuthLoginResend for application/json ContentType.
+type PostAuthLoginResendJSONRequestBody = ResendLoginEmailRequest
+
+// PostAuthOauthSignupJSONRequestBody defines body for PostAuthOauthSignup for application/json ContentType.
+type PostAuthOauthSignupJSONRequestBody = OauthSignupRequest
+
+// PostAuthOauthTotpJSONRequestBody defines body for PostAuthOauthTotp for application/json ContentType.
+type PostAuthOauthTotpJSONRequestBody = OauthTOTPRequest
 
 // PostAuthPasskeysJSONRequestBody defines body for PostAuthPasskeys for application/json ContentType.
 type PostAuthPasskeysJSONRequestBody = RegisterPasskeyRequest
@@ -2021,11 +3514,11 @@ type PatchAuthPasswordJSONRequestBody = ChangePasswordRequest
 // PatchAuthPreferencesJSONRequestBody defines body for PatchAuthPreferences for application/json ContentType.
 type PatchAuthPreferencesJSONRequestBody = UpdatePreferencesRequest
 
-// PostAuthRefreshJSONRequestBody defines body for PostAuthRefresh for application/json ContentType.
-type PostAuthRefreshJSONRequestBody = RefreshRequest
-
 // PostAuthRegisterJSONRequestBody defines body for PostAuthRegister for application/json ContentType.
 type PostAuthRegisterJSONRequestBody = RegisterRequest
+
+// PostAuthActivationResendJSONRequestBody defines body for PostAuthActivationResend for application/json ContentType.
+type PostAuthActivationResendJSONRequestBody = ResendActivationEmailRequest
 
 // PostAuthResetPasswordJSONRequestBody defines body for PostAuthResetPassword for application/json ContentType.
 type PostAuthResetPasswordJSONRequestBody = ResetPasswordRequest
@@ -2033,11 +3526,32 @@ type PostAuthResetPasswordJSONRequestBody = ResetPasswordRequest
 // PostAuthTotpConfirmJSONRequestBody defines body for PostAuthTotpConfirm for application/json ContentType.
 type PostAuthTotpConfirmJSONRequestBody = ConfirmTotpEnrollmentRequest
 
+// PostV1AutomationsJSONRequestBody defines body for PostV1Automations for application/json ContentType.
+type PostV1AutomationsJSONRequestBody PostV1AutomationsJSONBody
+
+// PatchV1AutomationsAutomationIDJSONRequestBody defines body for PatchV1AutomationsAutomationID for application/json ContentType.
+type PatchV1AutomationsAutomationIDJSONRequestBody PatchV1AutomationsAutomationIDJSONBody
+
 // PostBillingCheckoutJSONRequestBody defines body for PostBillingCheckout for application/json ContentType.
 type PostBillingCheckoutJSONRequestBody = CreateCheckoutSessionRequest
 
 // PostBillingDebitJSONRequestBody defines body for PostBillingDebit for application/json ContentType.
 type PostBillingDebitJSONRequestBody = DebitBalanceRequest
+
+// PostV1BiomolecularJobJSONRequestBody defines body for PostV1BiomolecularJob for application/json ContentType.
+type PostV1BiomolecularJobJSONRequestBody = ServiceBiomolecularSubmitRequest
+
+// PostV1ChatCompletionsJSONRequestBody defines body for PostV1ChatCompletions for application/json ContentType.
+type PostV1ChatCompletionsJSONRequestBody = ChatRequestEnvelope
+
+// PostV1ConnectorsJSONRequestBody defines body for PostV1Connectors for application/json ContentType.
+type PostV1ConnectorsJSONRequestBody PostV1ConnectorsJSONBody
+
+// PatchV1ConnectorsConnectorIDJSONRequestBody defines body for PatchV1ConnectorsConnectorID for application/json ContentType.
+type PatchV1ConnectorsConnectorIDJSONRequestBody PatchV1ConnectorsConnectorIDJSONBody
+
+// PostV1EmbeddingsJSONRequestBody defines body for PostV1Embeddings for application/json ContentType.
+type PostV1EmbeddingsJSONRequestBody = EmbeddingsRequestEnvelope
 
 // PostFirewallRuleJSONRequestBody defines body for PostFirewallRule for application/json ContentType.
 type PostFirewallRuleJSONRequestBody = CreateFirewallRuleRequest
@@ -2078,8 +3592,20 @@ type PostVectorDatabaseSearchJSONRequestBody = SearchRequest
 // PostVectorDatabaseViewElementJSONRequestBody defines body for PostVectorDatabaseViewElement for application/json ContentType.
 type PostVectorDatabaseViewElementJSONRequestBody = ViewElementRequest
 
+// PostV1ImageDetectionsMultipartRequestBody defines body for PostV1ImageDetections for multipart/form-data ContentType.
+type PostV1ImageDetectionsMultipartRequestBody PostV1ImageDetectionsMultipartBody
+
+// PostV1ImageEditsMultipartRequestBody defines body for PostV1ImageEdits for multipart/form-data ContentType.
+type PostV1ImageEditsMultipartRequestBody PostV1ImageEditsMultipartBody
+
+// PostV1ImageGenerationsJSONRequestBody defines body for PostV1ImageGenerations for application/json ContentType.
+type PostV1ImageGenerationsJSONRequestBody = ImageGenerationRequest
+
 // PostInstancesJSONRequestBody defines body for PostInstances for application/json ContentType.
 type PostInstancesJSONRequestBody = CreateInstanceRequest
+
+// PostInstancesPreviewJSONRequestBody defines body for PostInstancesPreview for application/json ContentType.
+type PostInstancesPreviewJSONRequestBody = PreviewInstanceRequest
 
 // PatchInstanceJSONRequestBody defines body for PatchInstance for application/json ContentType.
 type PatchInstanceJSONRequestBody = UpdateInstanceRequest
@@ -2092,6 +3618,9 @@ type PostInstanceScheduleRuleJSONRequestBody = ScheduleRuleRequest
 
 // PatchInstanceScheduleRuleJSONRequestBody defines body for PatchInstanceScheduleRule for application/json ContentType.
 type PatchInstanceScheduleRuleJSONRequestBody = ScheduleRuleRequest
+
+// PostV1InstancesInstanceIDSharedCapacityJSONRequestBody defines body for PostV1InstancesInstanceIDSharedCapacity for application/json ContentType.
+type PostV1InstancesInstanceIDSharedCapacityJSONRequestBody = EnableSharedCapacityRequest
 
 // PostInvitationsAcceptJSONRequestBody defines body for PostInvitationsAccept for application/json ContentType.
 type PostInvitationsAcceptJSONRequestBody = AcceptInvitationRequest
@@ -2108,48 +3637,6 @@ type PatchReplicaSetJSONRequestBody = UpdateReplicaSetRequest
 // PostReplicaSetScaleJSONRequestBody defines body for PostReplicaSetScale for application/json ContentType.
 type PostReplicaSetScaleJSONRequestBody = ScaleReplicaSetRequest
 
-// PostRuntimeNotifyCrashJSONRequestBody defines body for PostRuntimeNotifyCrash for application/json ContentType.
-type PostRuntimeNotifyCrashJSONRequestBody = PostRuntimeNotifyCrashJSONBody
-
-// PostServingEndpointJSONRequestBody defines body for PostServingEndpoint for application/json ContentType.
-type PostServingEndpointJSONRequestBody = CreateServingEndpointRequest
-
-// PostSmartBalancerJSONRequestBody defines body for PostSmartBalancer for application/json ContentType.
-type PostSmartBalancerJSONRequestBody = CreateSmartBalancerRequest
-
-// PatchSmartBalancerJSONRequestBody defines body for PatchSmartBalancer for application/json ContentType.
-type PatchSmartBalancerJSONRequestBody = UpdateSmartBalancerRequest
-
-// PostStorageVolumesJSONRequestBody defines body for PostStorageVolumes for application/json ContentType.
-type PostStorageVolumesJSONRequestBody = CreateStorageVolumeRequest
-
-// PostTargetGroupJSONRequestBody defines body for PostTargetGroup for application/json ContentType.
-type PostTargetGroupJSONRequestBody = CreateTargetGroupRequest
-
-// PatchTargetGroupJSONRequestBody defines body for PatchTargetGroup for application/json ContentType.
-type PatchTargetGroupJSONRequestBody = UpdateTargetGroupRequest
-
-// TryToolJSONRequestBody defines body for TryTool for application/json ContentType.
-type TryToolJSONRequestBody TryToolJSONBody
-
-// PostV1AudioSpeechJSONRequestBody defines body for PostV1AudioSpeech for application/json ContentType.
-type PostV1AudioSpeechJSONRequestBody = AudioSpeechRequest
-
-// PostV1AudioTranscriptionsMultipartRequestBody defines body for PostV1AudioTranscriptions for multipart/form-data ContentType.
-type PostV1AudioTranscriptionsMultipartRequestBody PostV1AudioTranscriptionsMultipartBody
-
-// PostV1ChatCompletionsJSONRequestBody defines body for PostV1ChatCompletions for application/json ContentType.
-type PostV1ChatCompletionsJSONRequestBody = ChatRequestEnvelope
-
-// PostV1EmbeddingsJSONRequestBody defines body for PostV1Embeddings for application/json ContentType.
-type PostV1EmbeddingsJSONRequestBody = EmbeddingsRequestEnvelope
-
-// PostV1ImageEditsMultipartRequestBody defines body for PostV1ImageEdits for multipart/form-data ContentType.
-type PostV1ImageEditsMultipartRequestBody PostV1ImageEditsMultipartBody
-
-// PostV1ImageGenerationsJSONRequestBody defines body for PostV1ImageGenerations for application/json ContentType.
-type PostV1ImageGenerationsJSONRequestBody = ImageGenerationRequest
-
 // PostV1ResponsesJSONRequestBody defines body for PostV1Responses for application/json ContentType.
 type PostV1ResponsesJSONRequestBody = ResponsesRequestEnvelope
 
@@ -2159,5 +3646,480 @@ type PostV1ResponsesCompactJSONRequestBody = ResponsesRequestEnvelope
 // PutV1ResponsesSessionsStatusJSONRequestBody defines body for PutV1ResponsesSessionsStatus for application/json ContentType.
 type PutV1ResponsesSessionsStatusJSONRequestBody PutV1ResponsesSessionsStatusJSONBody
 
+// PostServingEndpointJSONRequestBody defines body for PostServingEndpoint for application/json ContentType.
+type PostServingEndpointJSONRequestBody = CreateServingEndpointRequest
+
+// PostV1SharedCapacitiesJoinJSONRequestBody defines body for PostV1SharedCapacitiesJoin for application/json ContentType.
+type PostV1SharedCapacitiesJoinJSONRequestBody = JoinSharedCapacityRequest
+
+// PostSmartBalancerJSONRequestBody defines body for PostSmartBalancer for application/json ContentType.
+type PostSmartBalancerJSONRequestBody = CreateSmartBalancerRequest
+
+// PatchSmartBalancerJSONRequestBody defines body for PatchSmartBalancer for application/json ContentType.
+type PatchSmartBalancerJSONRequestBody = UpdateSmartBalancerRequest
+
+// PostV1SystemOneJSONRequestBody defines body for PostV1SystemOne for application/json ContentType.
+type PostV1SystemOneJSONRequestBody = ExecutionSystemOneRequest
+
+// PostTargetGroupJSONRequestBody defines body for PostTargetGroup for application/json ContentType.
+type PostTargetGroupJSONRequestBody = CreateTargetGroupRequest
+
+// PatchTargetGroupJSONRequestBody defines body for PatchTargetGroup for application/json ContentType.
+type PatchTargetGroupJSONRequestBody = UpdateTargetGroupRequest
+
+// PostV1TimeseriesForecastJSONRequestBody defines body for PostV1TimeseriesForecast for application/json ContentType.
+type PostV1TimeseriesForecastJSONRequestBody = ExecutionForecastRequest
+
+// PostV1ToolDeploymentsJSONRequestBody defines body for PostV1ToolDeployments for application/json ContentType.
+type PostV1ToolDeploymentsJSONRequestBody PostV1ToolDeploymentsJSONBody
+
+// PostV1ToolDeploymentsDeploymentIDFinalizeJSONRequestBody defines body for PostV1ToolDeploymentsDeploymentIDFinalize for application/json ContentType.
+type PostV1ToolDeploymentsDeploymentIDFinalizeJSONRequestBody PostV1ToolDeploymentsDeploymentIDFinalizeJSONBody
+
+// PostV1ToolDeploymentsDeploymentIDRollbackJSONRequestBody defines body for PostV1ToolDeploymentsDeploymentIDRollback for application/json ContentType.
+type PostV1ToolDeploymentsDeploymentIDRollbackJSONRequestBody PostV1ToolDeploymentsDeploymentIDRollbackJSONBody
+
+// PostV1ToolDeploymentsDeploymentIDUploadSessionJSONRequestBody defines body for PostV1ToolDeploymentsDeploymentIDUploadSession for application/json ContentType.
+type PostV1ToolDeploymentsDeploymentIDUploadSessionJSONRequestBody PostV1ToolDeploymentsDeploymentIDUploadSessionJSONBody
+
+// TryToolJSONRequestBody defines body for TryTool for application/json ContentType.
+type TryToolJSONRequestBody TryToolJSONBody
+
+// PutTutorialProgressJSONRequestBody defines body for PutTutorialProgress for application/json ContentType.
+type PutTutorialProgressJSONRequestBody = UpdateTutorialProgressRequest
+
+// PostV1VideoJobJSONRequestBody defines body for PostV1VideoJob for application/json ContentType.
+type PostV1VideoJobJSONRequestBody PostV1VideoJobJSONBody
+
+// PostV1VideoJobMultipartRequestBody defines body for PostV1VideoJob for multipart/form-data ContentType.
+type PostV1VideoJobMultipartRequestBody PostV1VideoJobMultipartBody
+
+// PostV1VideoGenerationsJSONRequestBody defines body for PostV1VideoGenerations for application/json ContentType.
+type PostV1VideoGenerationsJSONRequestBody PostV1VideoGenerationsJSONBody
+
 // PostV1VideoGenerationsMultipartRequestBody defines body for PostV1VideoGenerations for multipart/form-data ContentType.
 type PostV1VideoGenerationsMultipartRequestBody PostV1VideoGenerationsMultipartBody
+
+// AsExecutionDecisionChoiceAnswer returns the union data inside the ExecutionDecisionAnswer as a ExecutionDecisionChoiceAnswer
+func (t ExecutionDecisionAnswer) AsExecutionDecisionChoiceAnswer() (ExecutionDecisionChoiceAnswer, error) {
+	var body ExecutionDecisionChoiceAnswer
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionChoiceAnswer overwrites any union data inside the ExecutionDecisionAnswer as the provided ExecutionDecisionChoiceAnswer
+func (t *ExecutionDecisionAnswer) FromExecutionDecisionChoiceAnswer(v ExecutionDecisionChoiceAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"choice"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionChoiceAnswer performs a merge with any union data inside the ExecutionDecisionAnswer, using the provided ExecutionDecisionChoiceAnswer
+func (t *ExecutionDecisionAnswer) MergeExecutionDecisionChoiceAnswer(v ExecutionDecisionChoiceAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"choice"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionDecisionNoulAnswer returns the union data inside the ExecutionDecisionAnswer as a ExecutionDecisionNoulAnswer
+func (t ExecutionDecisionAnswer) AsExecutionDecisionNoulAnswer() (ExecutionDecisionNoulAnswer, error) {
+	var body ExecutionDecisionNoulAnswer
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionNoulAnswer overwrites any union data inside the ExecutionDecisionAnswer as the provided ExecutionDecisionNoulAnswer
+func (t *ExecutionDecisionAnswer) FromExecutionDecisionNoulAnswer(v ExecutionDecisionNoulAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"noul"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionNoulAnswer performs a merge with any union data inside the ExecutionDecisionAnswer, using the provided ExecutionDecisionNoulAnswer
+func (t *ExecutionDecisionAnswer) MergeExecutionDecisionNoulAnswer(v ExecutionDecisionNoulAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"noul"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionDecisionScoreAnswer returns the union data inside the ExecutionDecisionAnswer as a ExecutionDecisionScoreAnswer
+func (t ExecutionDecisionAnswer) AsExecutionDecisionScoreAnswer() (ExecutionDecisionScoreAnswer, error) {
+	var body ExecutionDecisionScoreAnswer
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionScoreAnswer overwrites any union data inside the ExecutionDecisionAnswer as the provided ExecutionDecisionScoreAnswer
+func (t *ExecutionDecisionAnswer) FromExecutionDecisionScoreAnswer(v ExecutionDecisionScoreAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"score"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionScoreAnswer performs a merge with any union data inside the ExecutionDecisionAnswer, using the provided ExecutionDecisionScoreAnswer
+func (t *ExecutionDecisionAnswer) MergeExecutionDecisionScoreAnswer(v ExecutionDecisionScoreAnswer) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"score"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ExecutionDecisionAnswer) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ExecutionDecisionAnswer) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "choice":
+		return t.AsExecutionDecisionChoiceAnswer()
+	case "noul":
+		return t.AsExecutionDecisionNoulAnswer()
+	case "score":
+		return t.AsExecutionDecisionScoreAnswer()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ExecutionDecisionAnswer) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ExecutionDecisionAnswer) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsExecutionDecisionNoulAnswerProbabilities0 returns the union data inside the ExecutionDecisionNoulAnswer_Probabilities as a ExecutionDecisionNoulAnswerProbabilities0
+func (t ExecutionDecisionNoulAnswer_Probabilities) AsExecutionDecisionNoulAnswerProbabilities0() (ExecutionDecisionNoulAnswerProbabilities0, error) {
+	var body ExecutionDecisionNoulAnswerProbabilities0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionNoulAnswerProbabilities0 overwrites any union data inside the ExecutionDecisionNoulAnswer_Probabilities as the provided ExecutionDecisionNoulAnswerProbabilities0
+func (t *ExecutionDecisionNoulAnswer_Probabilities) FromExecutionDecisionNoulAnswerProbabilities0(v ExecutionDecisionNoulAnswerProbabilities0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionNoulAnswerProbabilities0 performs a merge with any union data inside the ExecutionDecisionNoulAnswer_Probabilities, using the provided ExecutionDecisionNoulAnswerProbabilities0
+func (t *ExecutionDecisionNoulAnswer_Probabilities) MergeExecutionDecisionNoulAnswerProbabilities0(v ExecutionDecisionNoulAnswerProbabilities0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionDecisionNoulAnswerProbabilities1 returns the union data inside the ExecutionDecisionNoulAnswer_Probabilities as a ExecutionDecisionNoulAnswerProbabilities1
+func (t ExecutionDecisionNoulAnswer_Probabilities) AsExecutionDecisionNoulAnswerProbabilities1() (ExecutionDecisionNoulAnswerProbabilities1, error) {
+	var body ExecutionDecisionNoulAnswerProbabilities1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionNoulAnswerProbabilities1 overwrites any union data inside the ExecutionDecisionNoulAnswer_Probabilities as the provided ExecutionDecisionNoulAnswerProbabilities1
+func (t *ExecutionDecisionNoulAnswer_Probabilities) FromExecutionDecisionNoulAnswerProbabilities1(v ExecutionDecisionNoulAnswerProbabilities1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionNoulAnswerProbabilities1 performs a merge with any union data inside the ExecutionDecisionNoulAnswer_Probabilities, using the provided ExecutionDecisionNoulAnswerProbabilities1
+func (t *ExecutionDecisionNoulAnswer_Probabilities) MergeExecutionDecisionNoulAnswerProbabilities1(v ExecutionDecisionNoulAnswerProbabilities1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ExecutionDecisionNoulAnswer_Probabilities) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ExecutionDecisionNoulAnswer_Probabilities) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsExecutionDecisionChoiceQuestion returns the union data inside the ExecutionDecisionQuestion as a ExecutionDecisionChoiceQuestion
+func (t ExecutionDecisionQuestion) AsExecutionDecisionChoiceQuestion() (ExecutionDecisionChoiceQuestion, error) {
+	var body ExecutionDecisionChoiceQuestion
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionChoiceQuestion overwrites any union data inside the ExecutionDecisionQuestion as the provided ExecutionDecisionChoiceQuestion
+func (t *ExecutionDecisionQuestion) FromExecutionDecisionChoiceQuestion(v ExecutionDecisionChoiceQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"choice"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionChoiceQuestion performs a merge with any union data inside the ExecutionDecisionQuestion, using the provided ExecutionDecisionChoiceQuestion
+func (t *ExecutionDecisionQuestion) MergeExecutionDecisionChoiceQuestion(v ExecutionDecisionChoiceQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"choice"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionDecisionNoulQuestion returns the union data inside the ExecutionDecisionQuestion as a ExecutionDecisionNoulQuestion
+func (t ExecutionDecisionQuestion) AsExecutionDecisionNoulQuestion() (ExecutionDecisionNoulQuestion, error) {
+	var body ExecutionDecisionNoulQuestion
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionNoulQuestion overwrites any union data inside the ExecutionDecisionQuestion as the provided ExecutionDecisionNoulQuestion
+func (t *ExecutionDecisionQuestion) FromExecutionDecisionNoulQuestion(v ExecutionDecisionNoulQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"noul"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionNoulQuestion performs a merge with any union data inside the ExecutionDecisionQuestion, using the provided ExecutionDecisionNoulQuestion
+func (t *ExecutionDecisionQuestion) MergeExecutionDecisionNoulQuestion(v ExecutionDecisionNoulQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"noul"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionDecisionScoreQuestion returns the union data inside the ExecutionDecisionQuestion as a ExecutionDecisionScoreQuestion
+func (t ExecutionDecisionQuestion) AsExecutionDecisionScoreQuestion() (ExecutionDecisionScoreQuestion, error) {
+	var body ExecutionDecisionScoreQuestion
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionDecisionScoreQuestion overwrites any union data inside the ExecutionDecisionQuestion as the provided ExecutionDecisionScoreQuestion
+func (t *ExecutionDecisionQuestion) FromExecutionDecisionScoreQuestion(v ExecutionDecisionScoreQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"score"}`))
+	t.union = b
+	return err
+}
+
+// MergeExecutionDecisionScoreQuestion performs a merge with any union data inside the ExecutionDecisionQuestion, using the provided ExecutionDecisionScoreQuestion
+func (t *ExecutionDecisionQuestion) MergeExecutionDecisionScoreQuestion(v ExecutionDecisionScoreQuestion) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	b, err = runtime.JSONMerge(b, []byte(`{"type":"score"}`))
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ExecutionDecisionQuestion) Discriminator() (string, error) {
+	var discriminator struct {
+		Discriminator string `json:"type"`
+	}
+	err := json.Unmarshal(t.union, &discriminator)
+	return discriminator.Discriminator, err
+}
+
+func (t ExecutionDecisionQuestion) ValueByDiscriminator() (interface{}, error) {
+	discriminator, err := t.Discriminator()
+	if err != nil {
+		return nil, err
+	}
+	switch discriminator {
+	case "choice":
+		return t.AsExecutionDecisionChoiceQuestion()
+	case "noul":
+		return t.AsExecutionDecisionNoulQuestion()
+	case "score":
+		return t.AsExecutionDecisionScoreQuestion()
+	default:
+		return nil, errors.New("unknown discriminator value: " + discriminator)
+	}
+}
+
+func (t ExecutionDecisionQuestion) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ExecutionDecisionQuestion) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsExecutionSystemOneRequestState0 returns the union data inside the ExecutionSystemOneRequest_State as a ExecutionSystemOneRequestState0
+func (t ExecutionSystemOneRequest_State) AsExecutionSystemOneRequestState0() (ExecutionSystemOneRequestState0, error) {
+	var body ExecutionSystemOneRequestState0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionSystemOneRequestState0 overwrites any union data inside the ExecutionSystemOneRequest_State as the provided ExecutionSystemOneRequestState0
+func (t *ExecutionSystemOneRequest_State) FromExecutionSystemOneRequestState0(v ExecutionSystemOneRequestState0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeExecutionSystemOneRequestState0 performs a merge with any union data inside the ExecutionSystemOneRequest_State, using the provided ExecutionSystemOneRequestState0
+func (t *ExecutionSystemOneRequest_State) MergeExecutionSystemOneRequestState0(v ExecutionSystemOneRequestState0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionSystemOneRequestState1 returns the union data inside the ExecutionSystemOneRequest_State as a ExecutionSystemOneRequestState1
+func (t ExecutionSystemOneRequest_State) AsExecutionSystemOneRequestState1() (ExecutionSystemOneRequestState1, error) {
+	var body ExecutionSystemOneRequestState1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionSystemOneRequestState1 overwrites any union data inside the ExecutionSystemOneRequest_State as the provided ExecutionSystemOneRequestState1
+func (t *ExecutionSystemOneRequest_State) FromExecutionSystemOneRequestState1(v ExecutionSystemOneRequestState1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeExecutionSystemOneRequestState1 performs a merge with any union data inside the ExecutionSystemOneRequest_State, using the provided ExecutionSystemOneRequestState1
+func (t *ExecutionSystemOneRequest_State) MergeExecutionSystemOneRequestState1(v ExecutionSystemOneRequestState1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsExecutionSystemOneRequestState2 returns the union data inside the ExecutionSystemOneRequest_State as a ExecutionSystemOneRequestState2
+func (t ExecutionSystemOneRequest_State) AsExecutionSystemOneRequestState2() (ExecutionSystemOneRequestState2, error) {
+	var body ExecutionSystemOneRequestState2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromExecutionSystemOneRequestState2 overwrites any union data inside the ExecutionSystemOneRequest_State as the provided ExecutionSystemOneRequestState2
+func (t *ExecutionSystemOneRequest_State) FromExecutionSystemOneRequestState2(v ExecutionSystemOneRequestState2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeExecutionSystemOneRequestState2 performs a merge with any union data inside the ExecutionSystemOneRequest_State, using the provided ExecutionSystemOneRequestState2
+func (t *ExecutionSystemOneRequest_State) MergeExecutionSystemOneRequestState2(v ExecutionSystemOneRequestState2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t ExecutionSystemOneRequest_State) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *ExecutionSystemOneRequest_State) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}

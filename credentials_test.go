@@ -2,7 +2,6 @@ package qdivzero
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -39,13 +38,12 @@ func TestCredentialsFileLoginOnDemand(t *testing.T) {
 	var loginCalls int32
 	validToken := "file-login-token"
 	mux := http.NewServeMux()
-	mux.HandleFunc("/auth/login", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/auth/login", func(w http.ResponseWriter, r *http.Request) {
 		atomic.AddInt32(&loginCalls, 1)
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(LoginResponse{AccessToken: strPtr(validToken), RefreshToken: strPtr("file-refresh")})
+		setSessionCookies(w, validToken, "file-refresh")
 	})
-	mux.HandleFunc("/auth/me", func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Authorization") != "Bearer "+validToken {
+	mux.HandleFunc("/v1/auth/me", func(w http.ResponseWriter, r *http.Request) {
+		if !hasCookie(r, "qdiv0_access", validToken) {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

@@ -59,20 +59,23 @@ func deref(s *string) string {
 
 ## Authentication
 
-Token-based authentication is the primary way to use the client:
+API keys are recommended for programmatic access:
 
 - `WithAPIKey(key)` authenticates with a QDivZero API key
   (`Authorization: Bearer <key>`); `WithAuthorization(value)` sends a raw
   Authorization header for other formats.
-- `WithAccessToken(token)` / `WithRefreshToken(token)` pre-configure bearer
-  tokens without calling Login.
 - `client.Login(ctx, email, password)` authenticates with credentials and
-  stores the access and refresh tokens.
+  stores the `qdiv0_access` and `qdiv0_refresh` session cookies. If the API
+  requires additional verification, Login returns an error describing the
+  required next step.
+- `WithAccessToken(token)` / `WithRefreshToken(token)` pre-configure those
+  session cookie values without calling Login; user session tokens are not sent
+  as bearer credentials.
 - When a request fails with `401`, the client transparently refreshes the
-  access token (using the refresh token, or re-logging in with stored
-  credentials) and retries the request once. Concurrent 401s trigger a single
-  refresh.
-- `client.Refresh(ctx)` forces a token refresh.
+  session (using the refresh cookie, or logging in with stored credentials)
+  and retries the request once. Concurrent 401s share one refresh, and rotated
+  cookies are saved for subsequent requests.
+- `client.Refresh(ctx)` forces a session refresh.
 
 ## Credentials file
 
@@ -90,7 +93,7 @@ If `~/.qdivzero/credentials` exists, the client loads it automatically on
 ````
 
 `email`/`password` enable on-demand login; `access_token`/`refresh_token`
-authenticate directly. Explicit `With*` options override file values. Keep the
+provide session-cookie values. Explicit `With*` options override file values. Keep the
 file private (`chmod 600 ~/.qdivzero/credentials`) and never commit it.
 
 ## Error handling
